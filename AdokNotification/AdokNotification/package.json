@@ -1,0 +1,9 @@
+{
+  "name": "adok-notification",
+  "version": "0.0.0",
+  "description": "AdokNotification",
+  "main": "app.js",
+  "author": {
+    "name": "ARP"
+  }
+}

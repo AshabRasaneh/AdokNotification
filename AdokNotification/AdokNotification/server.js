@@ -1,6 +1,7 @@
 ﻿var net = require("net");
 var http = require('http');
 var mysql = require('mysql');
+var jalaali = require('jalaali-js')
 
 var con = mysql.createConnection({
     host: "localhost",
@@ -42,7 +43,7 @@ var Players = [];
     }
 })();
 
-/*
+
 (function () {
 
     try {
@@ -79,7 +80,7 @@ var Players = [];
         console.log("2: " + e.message);
     }
 })();
-*/
+
 
 
 
@@ -765,3 +766,105 @@ function GetCurrentTime() {
     tm = hour + minute;
     return tm;
 }
+
+(function () {
+    try {
+        var timeout = setInterval(function () {
+            var curDate= GetCurrentDate();
+            var curtime = GetCurrentTime();
+
+            var query = "SELECT id,startDate,startTime,endDate,endTime,isAutomated,isDaily,isWeekly,isMounthly,myCount,lastCreteDate,lastCreateTime,startDay,endDay,startMounth,endMounth,isActive from league where isActive=1 and isAutomated=1;";
+            con.query(query, function (err, result, fields) {
+                if (err) throw err;
+                if (result.length > 0) {
+                    result.forEach((row) => {
+                        var id = row.id;
+                        var startDate = row.startDate;
+                        var startTime = row.startTime;
+                        var endDate = row.endDate;
+                        var endTime = row.endTime;
+                        var isAutomated = row.isAutomated;
+                        var isDaily = row.isDaily;
+                        var isWeekly = row.isWeekly;
+                        var isMounthly = row.isMounthly;
+                        var myCount = row.myCount;
+                        var lastCreteDate = row.lastCreteDate;
+                        var lastCreateTime = row.lastCreateTime;
+                        var startDay = row.startDay;
+                        var endDay = row.endDay;
+                        var startMounth = row.startMounth;
+                        var endMounth = row.endMounth;
+                        var isActive = row.isActive;
+
+                        if (parseInt(curDate) < parseInt(endDate))
+                        {
+                            if (parseInt(isDaily) > 0) {
+                                if (parseInt(curtime) > parseInt(endTime)) {
+                                    if (parseInt(lastCreteDate) != parseInt(curDate)) {
+                                        var cnt = parseInt(myCount);
+                                        cnt++;
+                                        var q = "update league set lastCreteDate=" + curDate + ",lastCreateTime='" + curtime + "',myCount=" + cnt + " where id=" + id;
+                                        con.query(q, function (errq, resultq, fieldsq) {
+                                        });
+
+                                    }
+                                }
+                            }
+                            else if (parseInt(isWeekly) > 0) {
+                                var d = new Date();
+                                var n = d.getDay();
+                                n += 2;
+                                if (n > 7) {
+                                    n = 1;
+                                }
+
+                                if (n >= parseInt(endDay)) {
+                                    if (parseInt(curtime) > parseInt(endTime)) {
+                                        if ( parseInt(lastCreteDate) != parseInt(curDate)) {
+                                            var cnt = parseInt(myCount);
+                                            cnt++;
+                                            var q = "update league set lastCreteDate=" + curDate + ",lastCreateTime='" + curtime + "',myCount=" + cnt + " where id=" + id;
+                                            con.query(q, function (errq, resultq, fieldsq) {
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                            else if (parseInt(isMounthly) > 0) {
+                                var d = new Date();
+                                var y = d.getFullYear();
+                                var m = d.getMonth();
+                                m++;
+                                var day = d.getDate();
+                                var dateHijri = gregorian_to_jalali(y, m, day);
+                                y = dateHijri[0];
+                                m = dateHijri[1];
+                                day = dateHijri[2];
+
+                                var dateM = lastCreteDate.substring(4, 6);
+
+                                if (day >= parseInt(endMounth)) {
+                                    if (parseInt(curtime) > parseInt(endTime)) {
+                                        if (parseInt(dateM) < parseInt(m)) {
+                                            var cnt = parseInt(myCount);
+                                            cnt++;
+                                            var q = "update league set lastCreteDate=" + curDate + ",lastCreateTime='" + curtime + "',myCount=" + cnt + " where id=" + id;
+                                            con.query(q, function (errq, resultq, fieldsq) {
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+                else {
+                    itemp.socket.write(JSON.stringify(noti) + "\n");
+                }
+            });
+        }, 600000);
+    }
+    catch (e) {
+        console.log("11: " + e.message);
+    }
+})();

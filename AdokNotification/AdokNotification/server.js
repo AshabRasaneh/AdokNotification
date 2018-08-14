@@ -68,8 +68,7 @@ var Players = [];
                 }
             }
 
-            if (i > 0)
-            {
+            if (i > 0) {
                 con.query(query, function (errcn, rescn, fieldscn) { });
                 con.query(query2, function (errdcn, resdcn, fieldsdcn) { });
             }
@@ -770,7 +769,7 @@ function GetCurrentTime() {
 (function () {
     try {
         var timeout = setInterval(function () {
-            var curDate= GetCurrentDate();
+            var curDate = GetCurrentDate();
             var curtime = GetCurrentTime();
 
             var query = "SELECT id,startDate,startTime,endDate,endTime,isAutomated,isDaily,isWeekly,isMounthly,myCount,lastCreteDate,lastCreateTime,startDay,endDay,startMounth,endMounth,isActive from league where isActive=1 and isAutomated=1;";
@@ -796,8 +795,7 @@ function GetCurrentTime() {
                         var endMounth = row.endMounth;
                         var isActive = row.isActive;
 
-                        if (parseInt(curDate) < parseInt(endDate))
-                        {
+                        if (parseInt(curDate) < parseInt(endDate)) {
                             if (parseInt(isDaily) > 0) {
                                 if (parseInt(curtime) > parseInt(endTime)) {
                                     if (parseInt(lastCreteDate) != parseInt(curDate)) {
@@ -817,16 +815,96 @@ function GetCurrentTime() {
                                 if (n > 7) {
                                     n = 1;
                                 }
+                                if (lastCreteDate.length < 8) {
+                                    var cnt = parseInt(myCount);
+                                    cnt++;
+                                    var q = "update league set lastCreteDate=" + curDate + ",lastCreateTime='" + curtime + "',myCount=" + cnt + " where id=" + id;
+                                    con.query(q, function (errq, resultq, fieldsq) {
+                                    });
+                                }
+                                else {
+                                    var y = d.getFullYear();
+                                    var m = d.getMonth();
+                                    m++;
+                                    var day = d.getDate();
+                                    var dateHijri = gregorian_to_jalali(y, m, day);
+                                    y = dateHijri[0];
+                                    m = dateHijri[1];
+                                    day = dateHijri[2];
 
-                                if (n >= parseInt(endDay)) {
-                                    if (parseInt(curtime) > parseInt(endTime)) {
-                                        if ( parseInt(lastCreteDate) != parseInt(curDate)) {
-                                            var cnt = parseInt(myCount);
-                                            cnt++;
-                                            var q = "update league set lastCreteDate=" + curDate + ",lastCreateTime='" + curtime + "',myCount=" + cnt + " where id=" + id;
-                                            con.query(q, function (errq, resultq, fieldsq) {
-                                            });
+                                    var st = n - startDay;
+                                    var en = n - endDay;
+                                    var bet = Math.abs(endDay - startDay);
+
+                                    var stDateD = parseInt(day) - parseInt(st);
+                                    var stDateY = parseInt(y);
+                                    var stDateM = parseInt(m);
+
+                                    if (stDateD < 1) {
+                                        stDateM = parseInt(stDateM) - 1;
+                                        if (stDateM == 12) {
+                                            stDateY = parseInt(stDatey) - 1;
+                                            if (stDateY % 4 == 3) {
+                                                stDateD = 30 + stDateD;
+                                            }
+                                            else {
+                                                stDateD = 29 + stDateD;
+                                            }
                                         }
+                                        else if (stDateM < 7) {
+                                            stDateD = 31 + stDateD;
+                                        }
+                                        else {
+                                            stDateD = 30 + stDateD;
+                                        }
+                                    }
+
+                                    var mm = stDateM.toString();
+                                    if (mm.length == 1) mm = "0" + mm;
+
+                                    var dd = stDateD.toString();
+                                    if (dd.length == 1) dd = "0" + dd;
+
+                                    var dtStart = stDateY + "" + mm + "" + dd;
+                                    //============================================================================
+                                    stDateD = parseInt(day) - parseInt(st) - bet;
+                                    stDateY = parseInt(y);
+                                    stDateM = parseInt(m);
+
+                                    if (stDateD < 1) {
+                                        stDateM = parseInt(stDateM) - 1;
+                                        if (stDateM == 12) {
+                                            stDateY = parseInt(stDatey) - 1;
+                                            if (stDateY % 4 == 3) {
+                                                stDateD = 30 + stDateD;
+                                            }
+                                            else {
+                                                stDateD = 29 + stDateD;
+                                            }
+                                        }
+                                        else if (stDateM < 7) {
+                                            stDateD = 31 + stDateD;
+                                        }
+                                        else {
+                                            stDateD = 30 + stDateD;
+                                        }
+                                    }
+
+                                    mm = stDateM.toString();
+                                    if (mm.length == 1) mm = "0" + mm;
+
+                                    dd = stDateD.toString();
+                                    if (dd.length == 1) dd = "0" + dd;
+
+                                    var dtEnd = stDateY + "" + mm + "" + dd;
+
+                                    if (parseInt(lastCreteDate) < parseInt(dtEnd))
+                                    {
+                                        var cnt = parseInt(myCount);
+                                        cnt++;
+                                        var q = "update league set lastCreteDate=" + curDate + ",lastCreateTime='" + curtime + "',myCount=" + cnt + " where id=" + id;
+                                        con.query(q, function (errq, resultq, fieldsq) {
+                                        });
                                     }
                                 }
                             }
@@ -857,9 +935,6 @@ function GetCurrentTime() {
                             }
                         }
                     });
-                }
-                else {
-                    itemp.socket.write(JSON.stringify(noti) + "\n");
                 }
             });
         }, 600000);

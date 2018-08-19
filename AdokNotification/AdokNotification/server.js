@@ -980,7 +980,7 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                                     i = 0;
                                     for (var prop in rowRq) {
 
-                                        if (prop == "nickname")
+                                        if (prop == "nickname" || prop == "id" )
                                         { }
                                         else {
                                             if (i == 0) {

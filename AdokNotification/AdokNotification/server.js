@@ -126,7 +126,6 @@ try {
                 if (data && data.byteLength != undefined) {
                     data = new Buffer(data).toString('utf8');
                 }
-                console.log(data);
                 var dt = JSON.parse(data);
                 var playerId = dt.playerId;
                 var pkgName = dt.pkgName;
@@ -594,10 +593,7 @@ function GetNotifications() {
                 }
                 else {
                     curDatev = "" + dateStartSend;
-                    //console.log("gotoSend");
                     if (parseInt(curDatev) < parseInt(curDateEnd) || (parseInt(curDatev) == parseInt(curDateEnd) && parseInt(hcur) <= parseInt(HAfter))) {
-                        //console.log("canSend");
-
                         if (IsStop == 0) {
 
                             if (Players[pkgNameAndroid] != undefined) {
@@ -612,18 +608,11 @@ function GetNotifications() {
                                             if (err) throw err;
                                             console.log("resultDelivery.length " + resultDelivery.length);
                                             if (resultDelivery.length > 0) {
-                                                //resultDelivery.forEach((rowDelivery) => {
-                                                //    var cn = rowDelivery.count;
-                                                //    if (cn <= 5) {
-                                                //        itemp.socket.write(JSON.stringify(noti) + "\n");
-                                                //    }
-                                                //});
                                             }
                                             else {
                                                 var query3 = "insert into nodeDelivery (nid,playerId,count) values (" + noti.id + "," + itemp.playerId + ",0);";
                                                 con.query(query3, function (err, resultDelivery, fields) {
                                                 });
-                                                //console.log("send not");
                                                 itemp.socket.write(JSON.stringify(noti) + "\n");
                                             }
                                         });
@@ -802,7 +791,6 @@ function GetCurrentTime() {
         try {
             var curDate = GetCurrentDate();
             var curtime = GetCurrentTime();
-            console.log(curDate + " " + curtime);
             var query = "SELECT id,startDate,startTime,endDate,endTime,isAutomated,isDaily,isWeekly,isMounthly,myCount,lastCreteDate,lastCreateTime,startDay,endDay,startMounth,endMounth,isActive,appId,isEnd from league where isActive=1 and isAutomated=1;";
             conLeague.query(query, function (err, result, fields) {
 
@@ -936,7 +924,6 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
     try {
         var cnt = parseInt(myCount) + 1;
         var q = "update league set lastCreteDate=" + curDate + ",lastCreateTime='" + curtime + "',myCount=" + cnt + ",isEnd=1 where id=" + lId;
-        // console.log(q);
         conLeagueBest.query(q, function (errq, resultq, fieldsq) {
             if (errq) console.log("erro 8: " + errq);
         });
@@ -958,13 +945,9 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                     var i = 0;
                     conLeagueBest.query(qCol, function (errCol, resultCol, fieldscol) {
                         if (errCol) console.log("erro 10: " + errCol);
-                        //console.log(resultCol);
                         resultCol.forEach((rowCol) => {
                             var clName = rowCol.COLUMN_NAME;
                             var clType = rowCol.DATA_TYPE;
-
-                            //console.log(clName + " " + clType);
-
                             Cols.push(clName);
                             typs[clName] = clType;
 
@@ -982,7 +965,6 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                         i = 0;
                         conLeagueBest.query(qOlaviat, function (errOlaviat, resultOlaviat, fieldsOlaviat) {
                             if (errOlaviat) console.log("erro 11: " + errOlaviat);
-                            //console.log(resultOlaviat);
                             resultOlaviat.forEach((rowOlaviat) => {
                                 var olvN = rowOlaviat.name;
                                 var olaviatA = rowOlaviat.olaviat;

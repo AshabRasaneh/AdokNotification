@@ -983,20 +983,20 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                                         if (i == 0) {
                                             qIns += prop;
                                             if (typs[prop] == "int") {
-                                                qValues += obj[prop];
+                                                qValues += rowRq[prop];
                                             }
                                             else {
-                                                qValues += "'" + obj[prop] + "'";
+                                                qValues += "'" + rowRq[prop] + "'";
                                             }
 
                                         }
                                         else {
                                             qIns += "," + prop;
                                             if (typs[prop] == "int") {
-                                                qValues += "," + obj[prop];
+                                                qValues += "," + rowRq[prop];
                                             }
                                             else {
-                                                qValues += ",'" + obj[prop] + "'";
+                                                qValues += ",'" + rowRq[prop] + "'";
                                             }
                                         }
                                     }

@@ -928,6 +928,7 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                     var i = 0;
                     con.query(qCol, function (errCol, resultCol, fieldscol) {
                         if (errCol) console.log("erro 10: " + errCol);
+                        console.log(resultCol);
                         resultCol.forEach((rowCol) => {
                             var clName = rowCol.COLUMN_NAME;
                             var clType = rowCol.DATA_TYPE;

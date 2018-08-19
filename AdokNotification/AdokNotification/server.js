@@ -913,7 +913,8 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
 
         var query = "select id,uid from apps where id=" + appId + ";";
         con.query(query, function (err, result, fields) {
-            if (err) if (errq) console.log("erro 9: " + err);
+            if (err) console.log("erro 9: " + err);
+
             if (result.length > 0) {
                 result.forEach((row) => {
                     var id = row.id;
@@ -948,6 +949,7 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                     i = 0;
                     con.query(qOlaviat, function (errOlaviat, resultOlaviat, fieldsOlaviat) {
                         if (errOlaviat) console.log("erro 11: " + errOlaviat);
+                        console.log(resultOlaviat);
                         resultOlaviat.forEach((rowOlaviat) => {
                             var olvN = rowOlaviat.name;
                             var olaviatA = rowOlaviat.olaviat;

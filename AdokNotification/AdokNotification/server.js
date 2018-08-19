@@ -775,7 +775,9 @@ function GetCurrentTime() {
             var query = "SELECT id,startDate,startTime,endDate,endTime,isAutomated,isDaily,isWeekly,isMounthly,myCount,lastCreteDate,lastCreateTime,startDay,endDay,startMounth,endMounth,isActive,appId,isEnd from league where isActive=1 and isAutomated=1;";
             con.query(query, function (err, result, fields) {
 
-                if (err) console.log("erro 1: "+err);
+                if (err) { console.log("erro 1: " + err); }
+                console.log(result);
+                console.log(result.length);
                 if (result.length > 0) {
                     result.forEach((row) => {
                         var id = row.id;

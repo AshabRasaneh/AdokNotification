@@ -933,7 +933,7 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                             var clName = rowCol.COLUMN_NAME;
                             var clType = rowCol.DATA_TYPE;
 
-                            console.log(clName + " " + clType);
+                            //console.log(clName + " " + clType);
 
                             Cols.push(clName);
                             typs[clName] = clType;
@@ -960,7 +960,7 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                                 olaviat.push(olvN);
                                 if (i == 0) {
                                     i++;
-                                    olvQO += "," + olvN + " DESC ";
+                                    olvQO += olvN + " DESC ";
                                 }
                                 else {
                                     olvQO += "," + olvN + " DESC ";
@@ -1001,6 +1001,7 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                                         }
                                     }
                                     qins += " ) values " + qValues + ")";
+                                    console.log(qins);
                                     con.query(qins, function (errins, resultins, fieldsins) {
                                         if (errins) console.log("erro 13: " + errins);
                                     });

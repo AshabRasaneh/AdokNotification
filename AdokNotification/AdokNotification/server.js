@@ -767,8 +767,9 @@ function GetCurrentTime() {
 }
 
 (function () {
-    try {
-        var timeout = setInterval(function () {
+
+    var timeout = setInterval(function () {
+        try {
             var curDate = GetCurrentDate();
             var curtime = GetCurrentTime();
             console.log(curDate + " " + curtime);
@@ -806,11 +807,10 @@ function GetCurrentTime() {
                             if (parseInt(isDaily) > 0) {
                                 if (parseInt(curtime) > parseInt(endTime)) {
                                     if (parseInt(isEnd) == 0) {
-                                        setLeagueBest(id, myCount, appId, curDate, curtime); 
+                                        setLeagueBest(id, myCount, appId, curDate, curtime);
                                     }
                                 }
-                                else if (parseInt(curtime) > parseInt(startTime) && parseInt(isEnd) == 1)
-                                {
+                                else if (parseInt(curtime) > parseInt(startTime) && parseInt(isEnd) == 1) {
                                     var q = "update league set isEnd=0 where id=" + id;
                                     con.query(q, function (errq, resultq, fieldsq) {
                                         if (errq) console.log("erro 2: " + errq);
@@ -838,16 +838,14 @@ function GetCurrentTime() {
                                     if (parseInt(curtime) >= parseInt(endTime) && isEnd == 0) {
                                         setLeagueBest(id, myCount, appId, curDate, curtime);
                                     }
-                                    else if (isEnd == 1)
-                                    {
+                                    else if (isEnd == 1) {
                                         var q = "update league set isEnd=0 where id=" + id;
                                         con.query(q, function (errq, resultq, fieldsq) {
                                             if (errq) console.log("erro 3: " + errq);
                                         });
                                     }
                                 }
-                                else if (n == parseInt(startDay) && parseInt(curtime) >= parseInt(startTime) && isEnd == 1)
-                                {
+                                else if (n == parseInt(startDay) && parseInt(curtime) >= parseInt(startTime) && isEnd == 1) {
                                     var q = "update league set isEnd=0 where id=" + id;
                                     con.query(q, function (errq, resultq, fieldsq) {
                                         if (errq) console.log("erro 4: " + errq);
@@ -868,15 +866,13 @@ function GetCurrentTime() {
                                 if ((day > parseInt(endMounth) || day < parseInt(startMounth)) && isEnd == 0) {
                                     setLeagueBest(id, myCount, appId, curDate, curtime);
                                 }
-                                else if (day < parseInt(endMounth) && day > parseInt(startMounth) && isEnd == 1)
-                                {
+                                else if (day < parseInt(endMounth) && day > parseInt(startMounth) && isEnd == 1) {
                                     var q = "update league set isEnd=0 where id=" + id;
                                     con.query(q, function (errq, resultq, fieldsq) {
                                         if (errq) console.log("erro 5: " + errq);
                                     });
                                 }
-                                else if (day == parseInt(endMounth))
-                                {
+                                else if (day == parseInt(endMounth)) {
                                     if (parseInt(curtime) >= parseInt(endTime) && isEnd == 0) {
                                         setLeagueBest(id, myCount, appId, curDate, curtime);
                                     }
@@ -898,115 +894,119 @@ function GetCurrentTime() {
                     });
                 }
             });
-        }, 10000);
+        }
+        catch (e) {
+            console.log("11: " + e.message);
+        }
+    }, 60000);
+
+})();
+
+function setLeagueBest(lId, myCount, appId, curDate, curtime) {
+    try {
+        var cnt = parseInt(myCount) + 1;
+        var q = "update league set lastCreteDate=" + curDate + ",lastCreateTime='" + curtime + "',myCount=" + cnt + ",isEnd=1 where id=" + lId;
+        console.log(q);
+        con.query(q, function (errq, resultq, fieldsq) {
+            if (errq) console.log("erro 8: " + errq);
+        });
+
+        var query = "select id,uid from apps where id=" + appId + ";";
+        con.query(query, function (err, result, fields) {
+            if (err) if (errq) console.log("erro 9: " + err);
+            if (result.length > 0) {
+                result.forEach((row) => {
+                    var id = row.id;
+                    var uid = row.uid;
+                    var tbName = "zz_" + appId + "_" + uid + "_lud";
+                    var crq = "select ";
+                    var Cols = [];
+                    var typs = [];
+                    var olaviat = [];
+                    var qCol = "SELECT `COLUMN_NAME`,`DATA_TYPE`  FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA`='kingofmeta_ADok' AND `TABLE_NAME`='" + tbName + "';";
+                    var i = 0;
+                    con.query(qCol, function (errCol, resultCol, fieldscol) {
+                        if (errCol) console.log("erro 10: " + errCol);
+                        resultCol.forEach((rowCol) => {
+                            var clName = rowCol.COLUMN_NAME;
+                            var clType = rowCol.DATA_TYPE;
+                            Cols.push(clName);
+                            typs[clName] = clType;
+
+                            if (i == 0) {
+                                i++;
+                                crq += "tb." + clName;
+                            }
+                            else {
+                                crq += ",tb." + clName;
+                            }
+                        });
+                    });
+
+                    var qOlaviat = "select name,olaviat from leagueData where appId=" + appId + " and leagueId=" + lId + " and olaviat>0 order by olaviat DESC";
+                    var olvQO = "";
+                    i = 0;
+                    con.query(qOlaviat, function (errOlaviat, resultOlaviat, fieldsOlaviat) {
+                        if (errOlaviat) console.log("erro 11: " + errOlaviat);
+                        resultOlaviat.forEach((rowOlaviat) => {
+                            var olvN = rowOlaviat.name;
+                            var olaviatA = rowOlaviat.olaviat;
+
+                            olaviat.push(olvN);
+                            if (i == 0) {
+                                i++;
+                                olvQO += "," + olvN + " DESC ";
+                            }
+                            else {
+                                olvQO += "," + olvN + " DESC ";
+                            }
+                        });
+                    });
+
+                    crq += ",p.nickname from " + tbName + " as tb inner join players as p on tb.playerId=p.id ";
+                    crq += " where myCount=" + myCount + " and lId=" + lId;
+                    crq += " ORDER by " + olvQO + "limit 1000 ";
+
+                    con.query(crq, function (errRq, resultRq, fieldsRq) {
+                        if (errRq) console.log("erro 12: " + errRq);
+                        resultRq.forEach((rowRq) => {
+                            var qIns = "insert into " + tbName + "_res" + " (";
+                            var qValues = "(";
+                            i = 0;
+                            for (var prop in rowRq) {
+
+                                if (i == 0) {
+                                    qIns += prop;
+                                    if (typs[prop] == "int") {
+                                        qValues += obj[prop];
+                                    }
+                                    else {
+                                        qValues += "'" + obj[prop] + "'";
+                                    }
+
+                                }
+                                else {
+                                    qIns += "," + prop;
+                                    if (typs[prop] == "int") {
+                                        qValues += "," + obj[prop];
+                                    }
+                                    else {
+                                        qValues += ",'" + obj[prop] + "'";
+                                    }
+                                }
+                            }
+                            qins += " ) values " + qValues + ")";
+                            con.query(qins, function (errins, resultins, fieldsins) {
+                                if (errins) console.log("erro 13: " + errins);
+                            });
+                        });
+                    });
+
+                });
+            }
+        });
     }
     catch (e) {
         console.log("11: " + e.message);
     }
-})();
-
-function setLeagueBest(lId, myCount, appId, curDate, curtime)
-{
-    var cnt = parseInt(myCount) + 1;
-    var q = "update league set lastCreteDate=" + curDate + ",lastCreateTime='" + curtime + "',myCount=" + cnt + ",isEnd=1 where id=" + lId;
-    con.query(q, function (errq, resultq, fieldsq) {
-        if (errq) console.log("erro 8: " + errq);
-    });
-
-    var query = "select id,uid from apps where id=" + appId+";";
-    con.query(query, function (err, result, fields) {
-        if (err) if (errq) console.log("erro 9: " + err);
-        if (result.length > 0) {
-            result.forEach((row) => {
-                var id = row.id;
-                var uid = row.uid;
-                var tbName = "zz_" + appId + "_" + uid + "_lud";
-                var crq = "select ";
-                var Cols = [];
-                var typs = [];
-                var olaviat = [];
-                var qCol = "SELECT `COLUMN_NAME`,`DATA_TYPE`  FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA`='kingofmeta_ADok' AND `TABLE_NAME`='" + tbName + "';";
-                var i = 0;
-                con.query(qCol, function (errCol, resultCol, fieldscol) {
-                    if (errCol) console.log("erro 10: " + errCol);
-                    resultCol.forEach((rowCol) => {
-                        var clName = rowCol.COLUMN_NAME;
-                        var clType = rowCol.DATA_TYPE;
-                        Cols.push(clName);
-                        typs[clName]=clType;
-
-                        if (i == 0) {
-                            i++;
-                            crq+="tb."+clName;
-                        }
-                        else {
-                            crq+=",tb."+clName;
-                        }
-                    });
-                });
-
-                var qOlaviat = "select name,olaviat from leagueData where appId=" + appId + " and leagueId=" + lId + " and olaviat>0 order by olaviat DESC";
-                var olvQO = "";
-                i = 0;
-                con.query(qOlaviat, function (errOlaviat, resultOlaviat, fieldsOlaviat) {
-                    if (errOlaviat) console.log("erro 11: " + errOlaviat);
-                    resultOlaviat.forEach((rowOlaviat) => {
-                        var olvN = rowOlaviat.name;
-                        var olaviatA = rowOlaviat.olaviat;
-
-                        olaviat.push(olvN);
-                        if (i == 0) {
-                            i++;
-                            olvQO += "," + olvN + " DESC ";
-                        }
-                        else {
-                            olvQO += ","+olvN+" DESC ";
-                        }
-                    });
-                });
-
-                crq += ",p.nickname from " + tbName + " as tb inner join players as p on tb.playerId=p.id ";
-                crq += " where myCount=" + myCount + " and lId=" + lId;
-                crq += " ORDER by " + olvQO +"limit 1000 ";
-
-                con.query(crq, function (errRq, resultRq, fieldsRq) {
-                    if (errRq) console.log("erro 12: " + errRq);
-                    resultRq.forEach((rowRq) => {
-                        var qIns = "insert into " + tbName + "_res" + " (";
-                        var qValues = "(";
-                        i = 0;
-                        for (var prop in rowRq) {
-                            
-                            if (i == 0) {
-                                qIns += prop;
-                                if (typs[prop] == "int") {
-                                    qValues += obj[prop];
-                                }
-                                else
-                                {
-                                    qValues += "'" + obj[prop] + "'";
-                                }
-                               
-                            }
-                            else
-                            {
-                                qIns += "," + prop;
-                                if (typs[prop] == "int") {
-                                    qValues += ","+obj[prop];
-                                }
-                                else {
-                                    qValues += ",'" + obj[prop] + "'";
-                                }
-                            }
-                        }
-                        qins += " ) values " + qValues + ")";
-                        con.query(qins, function (errins, resultins, fieldsins) {
-                            if (errins) console.log("erro 13: " + errins);
-                        });
-                    });
-                });
-
-            });
-        }
-    });
 }

@@ -777,8 +777,8 @@ function GetCurrentTime() {
             con.query(query, function (err, result, fields) {
 
                 if (err) { console.log("erro 1: " + err); }
-                console.log(result);
-                console.log(result.length);
+                //console.log(result);
+                //console.log(result.length);
                 if (result.length > 0) {
                     result.forEach((row) => {
                         var id = row.id;
@@ -801,7 +801,7 @@ function GetCurrentTime() {
                         var appId = row.appId;
                         var isEnd = parseInt(row.isEnd);
 
-                        console.log(row);
+                        //console.log(row);
 
                         if (parseInt(curDate) < parseInt(endDate)) {
                             if (parseInt(isDaily) > 0) {
@@ -967,6 +967,7 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                     crq += " where myCount=" + myCount + " and lId=" + lId;
                     crq += " ORDER by " + olvQO + "limit 1000 ";
 
+                    console.log(crq);
                     con.query(crq, function (errRq, resultRq, fieldsRq) {
                         if (errRq) console.log("erro 12: " + errRq);
                         resultRq.forEach((rowRq) => {

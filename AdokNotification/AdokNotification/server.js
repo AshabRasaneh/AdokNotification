@@ -969,7 +969,7 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
 
                             crq += ",p.nickname from " + tbName + " as tb inner join players as p on tb.playerId=p.id ";
                             crq += " where myCount=" + myCount + " and lId=" + lId;
-                            crq += " ORDER by " + olvQO + "limit 1000 ";
+                            crq += " ORDER by " + olvQO + "limit 10 ";
 
                             console.log(crq);
                             con.query(crq, function (errRq, resultRq, fieldsRq) {

@@ -906,7 +906,7 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
     try {
         var cnt = parseInt(myCount) + 1;
         var q = "update league set lastCreteDate=" + curDate + ",lastCreateTime='" + curtime + "',myCount=" + cnt + ",isEnd=1 where id=" + lId;
-        console.log(q);
+       // console.log(q);
         con.query(q, function (errq, resultq, fieldsq) {
             if (errq) console.log("erro 8: " + errq);
         });
@@ -928,10 +928,13 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                     var i = 0;
                     con.query(qCol, function (errCol, resultCol, fieldscol) {
                         if (errCol) console.log("erro 10: " + errCol);
-                        console.log(resultCol);
+                        //console.log(resultCol);
                         resultCol.forEach((rowCol) => {
                             var clName = rowCol.COLUMN_NAME;
                             var clType = rowCol.DATA_TYPE;
+
+                            console.log(clName + " " + clType);
+
                             Cols.push(clName);
                             typs[clName] = clType;
 
@@ -943,65 +946,65 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                                 crq += ",tb." + clName;
                             }
                         });
-                    });
 
-                    var qOlaviat = "select name,olaviat from leagueData where appId=" + appId + " and leagueId=" + lId + " and olaviat>0 order by olaviat DESC";
-                    var olvQO = "";
-                    i = 0;
-                    con.query(qOlaviat, function (errOlaviat, resultOlaviat, fieldsOlaviat) {
-                        if (errOlaviat) console.log("erro 11: " + errOlaviat);
-                        console.log(resultOlaviat);
-                        resultOlaviat.forEach((rowOlaviat) => {
-                            var olvN = rowOlaviat.name;
-                            var olaviatA = rowOlaviat.olaviat;
+                        var qOlaviat = "select name,olaviat from leagueData where appId=" + appId + " and leagueId=" + lId + " and olaviat>0 order by olaviat DESC";
+                        var olvQO = "";
+                        i = 0;
+                        con.query(qOlaviat, function (errOlaviat, resultOlaviat, fieldsOlaviat) {
+                            if (errOlaviat) console.log("erro 11: " + errOlaviat);
+                            //console.log(resultOlaviat);
+                            resultOlaviat.forEach((rowOlaviat) => {
+                                var olvN = rowOlaviat.name;
+                                var olaviatA = rowOlaviat.olaviat;
 
-                            olaviat.push(olvN);
-                            if (i == 0) {
-                                i++;
-                                olvQO += "," + olvN + " DESC ";
-                            }
-                            else {
-                                olvQO += "," + olvN + " DESC ";
-                            }
-                        });
-                    });
-
-                    crq += ",p.nickname from " + tbName + " as tb inner join players as p on tb.playerId=p.id ";
-                    crq += " where myCount=" + myCount + " and lId=" + lId;
-                    crq += " ORDER by " + olvQO + "limit 1000 ";
-
-                    console.log(crq);
-                    con.query(crq, function (errRq, resultRq, fieldsRq) {
-                        if (errRq) console.log("erro 12: " + errRq);
-                        resultRq.forEach((rowRq) => {
-                            var qIns = "insert into " + tbName + "_res" + " (";
-                            var qValues = "(";
-                            i = 0;
-                            for (var prop in rowRq) {
-
+                                olaviat.push(olvN);
                                 if (i == 0) {
-                                    qIns += prop;
-                                    if (typs[prop] == "int") {
-                                        qValues += obj[prop];
-                                    }
-                                    else {
-                                        qValues += "'" + obj[prop] + "'";
-                                    }
-
+                                    i++;
+                                    olvQO += "," + olvN + " DESC ";
                                 }
                                 else {
-                                    qIns += "," + prop;
-                                    if (typs[prop] == "int") {
-                                        qValues += "," + obj[prop];
-                                    }
-                                    else {
-                                        qValues += ",'" + obj[prop] + "'";
-                                    }
+                                    olvQO += "," + olvN + " DESC ";
                                 }
-                            }
-                            qins += " ) values " + qValues + ")";
-                            con.query(qins, function (errins, resultins, fieldsins) {
-                                if (errins) console.log("erro 13: " + errins);
+                            });
+
+                            crq += ",p.nickname from " + tbName + " as tb inner join players as p on tb.playerId=p.id ";
+                            crq += " where myCount=" + myCount + " and lId=" + lId;
+                            crq += " ORDER by " + olvQO + "limit 1000 ";
+
+                            console.log(crq);
+                            con.query(crq, function (errRq, resultRq, fieldsRq) {
+                                if (errRq) console.log("erro 12: " + errRq);
+                                resultRq.forEach((rowRq) => {
+                                    var qIns = "insert into " + tbName + "_res" + " (";
+                                    var qValues = "(";
+                                    i = 0;
+                                    for (var prop in rowRq) {
+
+                                        if (i == 0) {
+                                            qIns += prop;
+                                            if (typs[prop] == "int") {
+                                                qValues += obj[prop];
+                                            }
+                                            else {
+                                                qValues += "'" + obj[prop] + "'";
+                                            }
+
+                                        }
+                                        else {
+                                            qIns += "," + prop;
+                                            if (typs[prop] == "int") {
+                                                qValues += "," + obj[prop];
+                                            }
+                                            else {
+                                                qValues += ",'" + obj[prop] + "'";
+                                            }
+                                        }
+                                    }
+                                    qins += " ) values " + qValues + ")";
+                                    con.query(qins, function (errins, resultins, fieldsins) {
+                                        if (errins) console.log("erro 13: " + errins);
+                                    });
+                                });
                             });
                         });
                     });

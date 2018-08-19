@@ -906,7 +906,7 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
     try {
         var cnt = parseInt(myCount) + 1;
         var q = "update league set lastCreteDate=" + curDate + ",lastCreateTime='" + curtime + "',myCount=" + cnt + ",isEnd=1 where id=" + lId;
-       // console.log(q);
+        // console.log(q);
         con.query(q, function (errq, resultq, fieldsq) {
             if (errq) console.log("erro 8: " + errq);
         });
@@ -980,24 +980,28 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                                     i = 0;
                                     for (var prop in rowRq) {
 
-                                        if (i == 0) {
-                                            i++;
-                                            qIns += prop;
-                                            if (typs[prop] == "int") {
-                                                qValues += rowRq[prop];
-                                            }
-                                            else {
-                                                qValues += "'" + rowRq[prop] + "'";
-                                            }
-
-                                        }
+                                        if (prop == "nickname")
+                                        { }
                                         else {
-                                            qIns += "," + prop;
-                                            if (typs[prop] == "int") {
-                                                qValues += "," + rowRq[prop];
+                                            if (i == 0) {
+                                                i++;
+                                                qIns += prop;
+                                                if (typs[prop] == "int") {
+                                                    qValues += rowRq[prop];
+                                                }
+                                                else {
+                                                    qValues += "'" + rowRq[prop] + "'";
+                                                }
+
                                             }
                                             else {
-                                                qValues += ",'" + rowRq[prop] + "'";
+                                                qIns += "," + prop;
+                                                if (typs[prop] == "int") {
+                                                    qValues += "," + rowRq[prop];
+                                                }
+                                                else {
+                                                    qValues += ",'" + rowRq[prop] + "'";
+                                                }
                                             }
                                         }
                                     }

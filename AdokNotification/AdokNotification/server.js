@@ -894,7 +894,7 @@ function GetCurrentTime() {
                     });
                 }
             });
-        }, 600000);
+        }, 10000);
     }
     catch (e) {
         console.log("11: " + e.message);

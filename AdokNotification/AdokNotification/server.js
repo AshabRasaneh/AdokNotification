@@ -1000,9 +1000,9 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                                             }
                                         }
                                     }
-                                    qins += " ) values " + qValues + ")";
-                                    console.log(qins);
-                                    con.query(qins, function (errins, resultins, fieldsins) {
+                                    qIns += " ) values " + qValues + ")";
+                                    console.log(qIns);
+                                    con.query(qIns, function (errins, resultins, fieldsins) {
                                         if (errins) console.log("erro 13: " + errins);
                                     });
                                 });

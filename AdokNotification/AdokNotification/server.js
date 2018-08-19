@@ -981,6 +981,7 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                                     for (var prop in rowRq) {
 
                                         if (i == 0) {
+                                            i++;
                                             qIns += prop;
                                             if (typs[prop] == "int") {
                                                 qValues += rowRq[prop];

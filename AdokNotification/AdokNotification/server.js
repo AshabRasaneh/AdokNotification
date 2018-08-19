@@ -771,7 +771,7 @@ function GetCurrentTime() {
         var timeout = setInterval(function () {
             var curDate = GetCurrentDate();
             var curtime = GetCurrentTime();
-
+            console.log(curDate + " " + curtime);
             var query = "SELECT id,startDate,startTime,endDate,endTime,isAutomated,isDaily,isWeekly,isMounthly,myCount,lastCreteDate,lastCreateTime,startDay,endDay,startMounth,endMounth,isActive,appId,isEnd from league where isActive=1 and isAutomated=1;";
             con.query(query, function (err, result, fields) {
 

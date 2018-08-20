@@ -772,12 +772,12 @@ function GetCurrentTime() {
     if (Min > 59)
     {
         Min -= 59;
-        hour++;
+        h++;
     }
 
-    if (hour > 24)
+    if (h > 24)
     {
-        hour = 1;
+        h = 1;
     }
 
     if (h < 10) {

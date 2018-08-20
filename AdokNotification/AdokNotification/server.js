@@ -768,7 +768,7 @@ function GetCurrentTime() {
     var minute = "";
     var tm = "";
 
-    Min += 42;
+    Min += 41;
     if (Min > 59)
     {
         Min -= 59;

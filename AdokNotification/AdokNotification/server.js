@@ -855,7 +855,7 @@ function GetCurrentTime() {
                                 else if (parseInt(curtime) > parseInt(startTime) && parseInt(isEnd) == 1) {
                                     var q = "update league set isEnd=0" + qqjoi+" where id=" + id;
                                     conLeague.query(q, function (errq, resultq, fieldsq) {
-                                        if (errq) console.log("erro 2: " + errq);
+                                        if (errq) { console.log("erro 2: " + errq); }
                                         var qq = "INSERT INTO `leagueLog` (`lId`, `name`, `des`, `logoAdd`, `startDate`, `startTime`, `endDate`, `endTime`, `playerJoinCount`,`limitPlayerCount`, `appId`, `dateCreated`, `isAutomated`, `isDaily`, `isWeekly`, `isMounthly`, `restHour`, `myCount`, `lastCreteDate`,`lastCreateTime`, `startDay`, `endDay`, `startMounth`, `endMounth`, `isActive`, `isEnd`) VALUES ("+id+","+ name+","+ des+","+ logoAdd+","+ startDate+",'"+ startTime+"',"+ endDate+",'"+ endTime+"',"+ playerJoinCount+","+limitPlayerCount+","+ appId+","+ dateCreated+","+ isAutomated+","+ isDaily+","+ isWeekly+","+ isMounthly+","+ restHour+","+ myCount+","+ lastCreteDate+",'"+lastCreateTime+"',"+ startDay+","+ endDay+","+ startMounth+","+ endMounth+","+ isActive+","+ isEnd+");";
                                         conLeague.query(qq, function (errqq, resultqq, fieldsqq) {
                                             if (errq) console.log("erro 14: " + errqq);
@@ -877,7 +877,7 @@ function GetCurrentTime() {
                                 else if (n < parseInt(endDay) && n > parseInt(startDay) && isEnd == 1) {
                                     var q = "update league set isEnd=0" + qqjoi +" where id=" + id;
                                     conLeague.query(q, function (errq, resultq, fieldsq) {
-                                        if (errq) console.log("erro 3: " + errq);
+                                        if (errq) { console.log("erro 3: " + errq); }
                                         var qq = "INSERT INTO `leagueLog` (`lId`, `name`, `des`, `logoAdd`, `startDate`, `startTime`, `endDate`, `endTime`, `playerJoinCount`,`limitPlayerCount`, `appId`, `dateCreated`, `isAutomated`, `isDaily`, `isWeekly`, `isMounthly`, `restHour`, `myCount`, `lastCreteDate`,`lastCreateTime`, `startDay`, `endDay`, `startMounth`, `endMounth`, `isActive`, `isEnd`) VALUES (" + lId + "," + name + "," + des + "," + logoAdd + "," + startDate + ",'" + startTime + "'," + endDate + ",'" + endTime + "'," + playerJoinCount + "," + limitPlayerCount + "," + appId + "," + dateCreated + "," + isAutomated + "," + isDaily + "," + isWeekly + "," + isMounthly + "," + restHour + "," + myCount + "," + lastCreteDate + ",'" + lastCreateTime + "'," + startDay + "," + endDay + "," + startMounth + "," + endMounth + "," + isActive + "," + isEnd + ");";
                                         conLeague.query(qq, function (errqq, resultqq, fieldsqq) {
                                             if (errq) console.log("erro 14: " + errqq);
@@ -891,7 +891,7 @@ function GetCurrentTime() {
                                     else if (isEnd == 1) {
                                         var q = "update league set isEnd=0" + qqjoi +" where id=" + id;
                                         conLeague.query(q, function (errq, resultq, fieldsq) {
-                                            if (errq) console.log("erro 3: " + errq);
+                                            if (errq) { console.log("erro 3: " + errq); }
                                             var qq = "INSERT INTO `leagueLog` (`lId`, `name`, `des`, `logoAdd`, `startDate`, `startTime`, `endDate`, `endTime`, `playerJoinCount`,`limitPlayerCount`, `appId`, `dateCreated`, `isAutomated`, `isDaily`, `isWeekly`, `isMounthly`, `restHour`, `myCount`, `lastCreteDate`,`lastCreateTime`, `startDay`, `endDay`, `startMounth`, `endMounth`, `isActive`, `isEnd`) VALUES (" + lId + "," + name + "," + des + "," + logoAdd + "," + startDate + ",'" + startTime + "'," + endDate + ",'" + endTime + "'," + playerJoinCount + "," + limitPlayerCount + "," + appId + "," + dateCreated + "," + isAutomated + "," + isDaily + "," + isWeekly + "," + isMounthly + "," + restHour + "," + myCount + "," + lastCreteDate + ",'" + lastCreateTime + "'," + startDay + "," + endDay + "," + startMounth + "," + endMounth + "," + isActive + "," + isEnd + ");";
                                             conLeague.query(qq, function (errqq, resultqq, fieldsqq) {
                                                 if (errq) console.log("erro 14: " + errqq);
@@ -902,7 +902,7 @@ function GetCurrentTime() {
                                 else if (n == parseInt(startDay) && parseInt(curtime) >= parseInt(startTime) && isEnd == 1) {
                                     var q = "update league set isEnd=0" + qqjoi +" where id=" + id;
                                     conLeague.query(q, function (errq, resultq, fieldsq) {
-                                        if (errq) console.log("erro 4: " + errq);
+                                        if (errq) { console.log("erro 4: " + errq); }
                                         var qq = "INSERT INTO `leagueLog` (`lId`, `name`, `des`, `logoAdd`, `startDate`, `startTime`, `endDate`, `endTime`, `playerJoinCount`,`limitPlayerCount`, `appId`, `dateCreated`, `isAutomated`, `isDaily`, `isWeekly`, `isMounthly`, `restHour`, `myCount`, `lastCreteDate`,`lastCreateTime`, `startDay`, `endDay`, `startMounth`, `endMounth`, `isActive`, `isEnd`) VALUES (" + lId + "," + name + "," + des + "," + logoAdd + "," + startDate + ",'" + startTime + "'," + endDate + ",'" + endTime + "'," + playerJoinCount + "," + limitPlayerCount + "," + appId + "," + dateCreated + "," + isAutomated + "," + isDaily + "," + isWeekly + "," + isMounthly + "," + restHour + "," + myCount + "," + lastCreteDate + ",'" + lastCreateTime + "'," + startDay + "," + endDay + "," + startMounth + "," + endMounth + "," + isActive + "," + isEnd + ");";
                                         conLeague.query(qq, function (errqq, resultqq, fieldsqq) {
                                             if (errq) console.log("erro 14: " + errqq);
@@ -927,7 +927,7 @@ function GetCurrentTime() {
                                 else if (day < parseInt(endMounth) && day > parseInt(startMounth) && isEnd == 1) {
                                     var q = "update league set isEnd=0" + qqjoi +" where id=" + id;
                                     conLeague.query(q, function (errq, resultq, fieldsq) {
-                                        if (errq) console.log("erro 5: " + errq);
+                                        if (errq) { console.log("erro 5: " + errq); }
                                         var qq = "INSERT INTO `leagueLog` (`lId`, `name`, `des`, `logoAdd`, `startDate`, `startTime`, `endDate`, `endTime`, `playerJoinCount`,`limitPlayerCount`, `appId`, `dateCreated`, `isAutomated`, `isDaily`, `isWeekly`, `isMounthly`, `restHour`, `myCount`, `lastCreteDate`,`lastCreateTime`, `startDay`, `endDay`, `startMounth`, `endMounth`, `isActive`, `isEnd`) VALUES (" + lId + "," + name + "," + des + "," + logoAdd + "," + startDate + ",'" + startTime + "'," + endDate + ",'" + endTime + "'," + playerJoinCount + "," + limitPlayerCount + "," + appId + "," + dateCreated + "," + isAutomated + "," + isDaily + "," + isWeekly + "," + isMounthly + "," + restHour + "," + myCount + "," + lastCreteDate + ",'" + lastCreateTime + "'," + startDay + "," + endDay + "," + startMounth + "," + endMounth + "," + isActive + "," + isEnd + ");";
                                         conLeague.query(qq, function (errqq, resultqq, fieldsqq) {
                                             if (errq) console.log("erro 14: " + errqq);
@@ -941,7 +941,7 @@ function GetCurrentTime() {
                                     else if (isEnd == 1) {
                                         var q = "update league set isEnd=0" + qqjoi +" where id=" + id;
                                         conLeague.query(q, function (errq, resultq, fieldsq) {
-                                            if (errq) console.log("erro 6: " + errq);
+                                            if (errq) { console.log("erro 6: " + errq); }
                                             var qq = "INSERT INTO `leagueLog` (`lId`, `name`, `des`, `logoAdd`, `startDate`, `startTime`, `endDate`, `endTime`, `playerJoinCount`,`limitPlayerCount`, `appId`, `dateCreated`, `isAutomated`, `isDaily`, `isWeekly`, `isMounthly`, `restHour`, `myCount`, `lastCreteDate`,`lastCreateTime`, `startDay`, `endDay`, `startMounth`, `endMounth`, `isActive`, `isEnd`) VALUES (" + lId + "," + name + "," + des + "," + logoAdd + "," + startDate + ",'" + startTime + "'," + endDate + ",'" + endTime + "'," + playerJoinCount + "," + limitPlayerCount + "," + appId + "," + dateCreated + "," + isAutomated + "," + isDaily + "," + isWeekly + "," + isMounthly + "," + restHour + "," + myCount + "," + lastCreteDate + ",'" + lastCreateTime + "'," + startDay + "," + endDay + "," + startMounth + "," + endMounth + "," + isActive + "," + isEnd + ");";
                                             conLeague.query(qq, function (errqq, resultqq, fieldsqq) {
                                                 if (errq) console.log("erro 14: " + errqq);
@@ -952,7 +952,7 @@ function GetCurrentTime() {
                                 else if (day == parseInt(startMounth) && parseInt(curtime) >= parseInt(startTime) && isEnd == 1) {
                                     var q = "update league set isEnd=0" + qqjoi +" where id=" + id;
                                     conLeague.query(q, function (errq, resultq, fieldsq) {
-                                        if (errq) console.log("erro 7: " + errq);
+                                        if (errq) { console.log("erro 7: " + errq); }
                                         var qq = "INSERT INTO `leagueLog` (`lId`, `name`, `des`, `logoAdd`, `startDate`, `startTime`, `endDate`, `endTime`, `playerJoinCount`,`limitPlayerCount`, `appId`, `dateCreated`, `isAutomated`, `isDaily`, `isWeekly`, `isMounthly`, `restHour`, `myCount`, `lastCreteDate`,`lastCreateTime`, `startDay`, `endDay`, `startMounth`, `endMounth`, `isActive`, `isEnd`) VALUES (" + lId + "," + name + "," + des + "," + logoAdd + "," + startDate + ",'" + startTime + "'," + endDate + ",'" + endTime + "'," + playerJoinCount + "," + limitPlayerCount + "," + appId + "," + dateCreated + "," + isAutomated + "," + isDaily + "," + isWeekly + "," + isMounthly + "," + restHour + "," + myCount + "," + lastCreteDate + ",'" + lastCreateTime + "'," + startDay + "," + endDay + "," + startMounth + "," + endMounth + "," + isActive + "," + isEnd + ");";
                                         conLeague.query(qq, function (errqq, resultqq, fieldsqq) {
                                             if (errq) console.log("erro 14: " + errqq);

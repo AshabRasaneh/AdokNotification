@@ -768,6 +768,18 @@ function GetCurrentTime() {
     var minute = "";
     var tm = "";
 
+    Min += 42;
+    if (Min > 59)
+    {
+        Min -= 59;
+        hour++;
+    }
+
+    if (hour > 24)
+    {
+        hour = 1;
+    }
+
     if (h < 10) {
         hour = "0" + h;
     }

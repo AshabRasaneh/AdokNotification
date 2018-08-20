@@ -819,7 +819,7 @@ function GetCurrentTime() {
                         var appId = row.appId;
                         var isEnd = parseInt(row.isEnd);
 
-                        //console.log(row);
+                        console.log(isDaily+" "+curtime+" "+startTime+" "+ isEnd);
 
                         if (parseInt(curDate) < parseInt(endDate)) {
                             if (parseInt(isDaily) > 0) {

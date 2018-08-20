@@ -803,7 +803,7 @@ function GetCurrentTime() {
         try {
             var curDate = GetCurrentDate();
             var curtime = GetCurrentTime();
-            var query = "SELECT id,startDate,startTime,endDate,endTime,isAutomated,isDaily,isWeekly,isMounthly,myCount,lastCreteDate,lastCreateTime,startDay,endDay,startMounth,endMounth,isActive,appId,isEnd from league where isActive=1 and isAutomated=1;";
+            var query = "SELECT id,limitPlayerCount,startDate,startTime,endDate,endTime,isAutomated,isDaily,isWeekly,isMounthly,myCount,lastCreteDate,lastCreateTime,startDay,endDay,startMounth,endMounth,isActive,appId,isEnd from league where isActive=1 and isAutomated=1;";
             conLeague.query(query, function (err, result, fields) {
 
                 if (err) { console.log("erro 1: " + err); }
@@ -830,8 +830,13 @@ function GetCurrentTime() {
                         var isActive = row.isActive;
                         var appId = row.appId;
                         var isEnd = parseInt(row.isEnd);
+                        var limitPlayerCount = parseInt(row.limitPlayerCount);
 
-                        console.log(isDaily+" "+curtime+" "+startTime+" "+ isEnd);
+                        var qqjoi = ",playerJoinCount=0";
+                        //if (limitPlayerCount > 0)
+                        //{
+                        //    qqjoi = ",playerJoinCount=0 ";
+                        //}
 
                         if (parseInt(curDate) < parseInt(endDate)) {
                             if (parseInt(isDaily) > 0) {
@@ -841,7 +846,7 @@ function GetCurrentTime() {
                                     }
                                 }
                                 else if (parseInt(curtime) > parseInt(startTime) && parseInt(isEnd) == 1) {
-                                    var q = "update league set isEnd=0 where id=" + id;
+                                    var q = "update league set isEnd=0" + qqjoi+" where id=" + id;
                                     conLeague.query(q, function (errq, resultq, fieldsq) {
                                         if (errq) console.log("erro 2: " + errq);
                                     });
@@ -859,7 +864,7 @@ function GetCurrentTime() {
                                     setLeagueBest(id, myCount, appId, curDate, curtime);
                                 }
                                 else if (n < parseInt(endDay) && n > parseInt(startDay) && isEnd == 1) {
-                                    var q = "update league set isEnd=0 where id=" + id;
+                                    var q = "update league set isEnd=0" + qqjoi +" where id=" + id;
                                     conLeague.query(q, function (errq, resultq, fieldsq) {
                                         if (errq) console.log("erro 3: " + errq);
                                     });
@@ -869,14 +874,14 @@ function GetCurrentTime() {
                                         setLeagueBest(id, myCount, appId, curDate, curtime);
                                     }
                                     else if (isEnd == 1) {
-                                        var q = "update league set isEnd=0 where id=" + id;
+                                        var q = "update league set isEnd=0" + qqjoi +" where id=" + id;
                                         conLeague.query(q, function (errq, resultq, fieldsq) {
                                             if (errq) console.log("erro 3: " + errq);
                                         });
                                     }
                                 }
                                 else if (n == parseInt(startDay) && parseInt(curtime) >= parseInt(startTime) && isEnd == 1) {
-                                    var q = "update league set isEnd=0 where id=" + id;
+                                    var q = "update league set isEnd=0" + qqjoi +" where id=" + id;
                                     conLeague.query(q, function (errq, resultq, fieldsq) {
                                         if (errq) console.log("erro 4: " + errq);
                                     });
@@ -897,7 +902,7 @@ function GetCurrentTime() {
                                     setLeagueBest(id, myCount, appId, curDate, curtime);
                                 }
                                 else if (day < parseInt(endMounth) && day > parseInt(startMounth) && isEnd == 1) {
-                                    var q = "update league set isEnd=0 where id=" + id;
+                                    var q = "update league set isEnd=0" + qqjoi +" where id=" + id;
                                     conLeague.query(q, function (errq, resultq, fieldsq) {
                                         if (errq) console.log("erro 5: " + errq);
                                     });
@@ -907,14 +912,14 @@ function GetCurrentTime() {
                                         setLeagueBest(id, myCount, appId, curDate, curtime);
                                     }
                                     else if (isEnd == 1) {
-                                        var q = "update league set isEnd=0 where id=" + id;
+                                        var q = "update league set isEnd=0" + qqjoi +" where id=" + id;
                                         conLeague.query(q, function (errq, resultq, fieldsq) {
                                             if (errq) console.log("erro 6: " + errq);
                                         });
                                     }
                                 }
                                 else if (day == parseInt(startMounth) && parseInt(curtime) >= parseInt(startTime) && isEnd == 1) {
-                                    var q = "update league set isEnd=0 where id=" + id;
+                                    var q = "update league set isEnd=0" + qqjoi +" where id=" + id;
                                     conLeague.query(q, function (errq, resultq, fieldsq) {
                                         if (errq) console.log("erro 7: " + errq);
                                     });

@@ -10,51 +10,6 @@ var con = new mysql({
     database: "kingofmeta_ADok"
 });
 
-//var con = mysql.createConnection({
-//    host: "localhost",
-//    user: "kingofmeta_adok",
-//    password: "NTGePf_Pnn%N",
-//    database: "kingofmeta_ADok"
-//});
-
-//con.connect((err) => {
-//    if (err) {
-//        console.log('Error connecting to Db');
-//        return;
-//    }
-//    console.log('Connection established');
-//});
-
-//var conLeagueBest = mysql.createConnection({
-//    host: "localhost",
-//    user: "kingofmeta_adok",
-//    password: "NTGePf_Pnn%N",
-//    database: "kingofmeta_ADok"
-//});
-
-//conLeagueBest.connect((err) => {
-//    if (err) {
-//        console.log('Error connecting to Db');
-//        return;
-//    }
-//    console.log('Connection established');
-//});
-
-//var conLeague = mysql.createConnection({
-//    host: "localhost",
-//    user: "kingofmeta_adok",
-//    password: "NTGePf_Pnn%N",
-//    database: "kingofmeta_ADok"
-//});
-
-//conLeague.connect((err) => {
-//    if (err) {
-//        console.log('Error connecting to Db');
-//        return;
-//    }
-//    console.log('Connection established');
-//});
-
 var server = net.createServer();
 var StringDecoder = require('string_decoder').StringDecoder;
 
@@ -818,7 +773,7 @@ function GetCurrentTime() {
             var curDate = GetCurrentDate();
             var curtime = GetCurrentTime();
             var query = "SELECT id,name,des,logoAdd,limitPlayerCount,playerJoinCount,dateCreated,restHour,startDate,startTime,endDate,endTime,isAutomated,isDaily,isWeekly,isMounthly,myCount,lastCreteDate,lastCreateTime,startDay,endDay,startMounth,endMounth,isActive,appId,isEnd from league where isActive=1 and isAutomated=1;";
-            const result = conLeague.query(query);
+            const result = con.query(query);
             if (result.length > 0) {
                 result.forEach((row) => {
                     var id = row.id;
@@ -860,13 +815,13 @@ function GetCurrentTime() {
                             if (parseInt(curtime) > parseInt(endTime)) {
                                 if (parseInt(isEnd) == 0) {
                                     var qq = "INSERT INTO `leagueLog` (`lId`, `name`, `des`, `logoAdd`, `startDate`, `startTime`, `endDate`, `endTime`, `playerJoinCount`,`limitPlayerCount`, `appId`, `dateCreated`, `isAutomated`, `isDaily`, `isWeekly`, `isMounthly`, `restHour`, `myCount`, `lastCreteDate`,`lastCreateTime`, `startDay`, `endDay`, `startMounth`, `endMounth`, `isActive`, `isEnd`) VALUES (" + id + ",'" + name + "','" + des + "','" + logoAdd + "'," + startDate + ",'" + startTime + "'," + endDate + ",'" + endTime + "'," + playerJoinCount + "," + limitPlayerCount + "," + appId + "," + dateCreated + "," + isAutomated + "," + isDaily + "," + isWeekly + "," + isMounthly + "," + restHour + "," + myCount + "," + lastCreteDate + ",'" + lastCreateTime + "'," + startDay + "," + endDay + "," + startMounth + "," + endMounth + "," + isActive + "," + isEnd + ");";
-                                    conLeague.query(qq);
+                                    con.query(qq);
                                     setLeagueBest(id, myCount, appId, curDate, curtime);
                                 }
                             }
                             else if (parseInt(curtime) > parseInt(startTime) && parseInt(isEnd) == 1) {
                                 var q = "update league set isEnd=0" + qqjoi + " where id=" + id;
-                                conLeague.query(q);
+                                con.query(q);
                             }
                         }
                         else if (parseInt(isWeekly) > 0) {
@@ -879,27 +834,27 @@ function GetCurrentTime() {
 
                             if ((n > parseInt(endDay) || n < parseInt(startDay)) && isEnd == 0) {
                                 var qq = "INSERT INTO `leagueLog` (`lId`, `name`, `des`, `logoAdd`, `startDate`, `startTime`, `endDate`, `endTime`, `playerJoinCount`,`limitPlayerCount`, `appId`, `dateCreated`, `isAutomated`, `isDaily`, `isWeekly`, `isMounthly`, `restHour`, `myCount`, `lastCreteDate`,`lastCreateTime`, `startDay`, `endDay`, `startMounth`, `endMounth`, `isActive`, `isEnd`) VALUES (" + lId + ",'" + name + "','" + des + "','" + logoAdd + "'," + startDate + ",'" + startTime + "'," + endDate + ",'" + endTime + "'," + playerJoinCount + "," + limitPlayerCount + "," + appId + "," + dateCreated + "," + isAutomated + "," + isDaily + "," + isWeekly + "," + isMounthly + "," + restHour + "," + myCount + "," + lastCreteDate + ",'" + lastCreateTime + "'," + startDay + "," + endDay + "," + startMounth + "," + endMounth + "," + isActive + "," + isEnd + ");";
-                                conLeague.query(qq);
+                                con.query(qq);
                                 setLeagueBest(id, myCount, appId, curDate, curtime);
                             }
                             else if (n < parseInt(endDay) && n > parseInt(startDay) && isEnd == 1) {
                                 var q = "update league set isEnd=0" + qqjoi + " where id=" + id;
-                                conLeague.query(q);
+                                con.query(q);
                             }
                             else if (n == parseInt(endDay)) {
                                 if (parseInt(curtime) >= parseInt(endTime) && isEnd == 0) {
                                     var qq = "INSERT INTO `leagueLog` (`lId`, `name`, `des`, `logoAdd`, `startDate`, `startTime`, `endDate`, `endTime`, `playerJoinCount`,`limitPlayerCount`, `appId`, `dateCreated`, `isAutomated`, `isDaily`, `isWeekly`, `isMounthly`, `restHour`, `myCount`, `lastCreteDate`,`lastCreateTime`, `startDay`, `endDay`, `startMounth`, `endMounth`, `isActive`, `isEnd`) VALUES (" + lId + ",'" + name + "','" + des + "','" + logoAdd + "'," + startDate + ",'" + startTime + "'," + endDate + ",'" + endTime + "'," + playerJoinCount + "," + limitPlayerCount + "," + appId + "," + dateCreated + "," + isAutomated + "," + isDaily + "," + isWeekly + "," + isMounthly + "," + restHour + "," + myCount + "," + lastCreteDate + ",'" + lastCreateTime + "'," + startDay + "," + endDay + "," + startMounth + "," + endMounth + "," + isActive + "," + isEnd + ");";
-                                    conLeague.query(qq);
+                                    con.query(qq);
                                     setLeagueBest(id, myCount, appId, curDate, curtime);
                                 }
                                 else if (isEnd == 1) {
                                     var q = "update league set isEnd=0" + qqjoi + " where id=" + id;
-                                    conLeague.query(q);
+                                    con.query(q);
                                 }
                             }
                             else if (n == parseInt(startDay) && parseInt(curtime) >= parseInt(startTime) && isEnd == 1) {
                                 var q = "update league set isEnd=0" + qqjoi + " where id=" + id;
-                                conLeague.query(q);
+                                con.query(q);
                             }
                         }
                         else if (parseInt(isMounthly) > 0) {
@@ -915,27 +870,27 @@ function GetCurrentTime() {
 
                             if ((day > parseInt(endMounth) || day < parseInt(startMounth)) && isEnd == 0) {
                                 var qq = "INSERT INTO `leagueLog` (`lId`, `name`, `des`, `logoAdd`, `startDate`, `startTime`, `endDate`, `endTime`, `playerJoinCount`,`limitPlayerCount`, `appId`, `dateCreated`, `isAutomated`, `isDaily`, `isWeekly`, `isMounthly`, `restHour`, `myCount`, `lastCreteDate`,`lastCreateTime`, `startDay`, `endDay`, `startMounth`, `endMounth`, `isActive`, `isEnd`) VALUES (" + lId + ",'" + name + "','" + des + "','" + logoAdd + "'," + startDate + ",'" + startTime + "'," + endDate + ",'" + endTime + "'," + playerJoinCount + "," + limitPlayerCount + "," + appId + "," + dateCreated + "," + isAutomated + "," + isDaily + "," + isWeekly + "," + isMounthly + "," + restHour + "," + myCount + "," + lastCreteDate + ",'" + lastCreateTime + "'," + startDay + "," + endDay + "," + startMounth + "," + endMounth + "," + isActive + "," + isEnd + ");";
-                                conLeague.query(qq);
+                                con.query(qq);
                                 setLeagueBest(id, myCount, appId, curDate, curtime);
                             }
                             else if (day < parseInt(endMounth) && day > parseInt(startMounth) && isEnd == 1) {
                                 var q = "update league set isEnd=0" + qqjoi + " where id=" + id;
-                                conLeague.query(q);
+                                con.query(q);
                             }
                             else if (day == parseInt(endMounth)) {
                                 if (parseInt(curtime) >= parseInt(endTime) && isEnd == 0) {
                                     var qq = "INSERT INTO `leagueLog` (`lId`, `name`, `des`, `logoAdd`, `startDate`, `startTime`, `endDate`, `endTime`, `playerJoinCount`,`limitPlayerCount`, `appId`, `dateCreated`, `isAutomated`, `isDaily`, `isWeekly`, `isMounthly`, `restHour`, `myCount`, `lastCreteDate`,`lastCreateTime`, `startDay`, `endDay`, `startMounth`, `endMounth`, `isActive`, `isEnd`) VALUES (" + lId + ",'" + name + "','" + des + "','" + logoAdd + "'," + startDate + ",'" + startTime + "'," + endDate + ",'" + endTime + "'," + playerJoinCount + "," + limitPlayerCount + "," + appId + "," + dateCreated + "," + isAutomated + "," + isDaily + "," + isWeekly + "," + isMounthly + "," + restHour + "," + myCount + "," + lastCreteDate + ",'" + lastCreateTime + "'," + startDay + "," + endDay + "," + startMounth + "," + endMounth + "," + isActive + "," + isEnd + ");";
-                                    conLeague.query(qq);
+                                    con.query(qq);
                                     setLeagueBest(id, myCount, appId, curDate, curtime);
                                 }
                                 else if (isEnd == 1) {
                                     var q = "update league set isEnd=0" + qqjoi + " where id=" + id;
-                                    conLeague.query(q);
+                                    con.query(q);
                                 }
                             }
                             else if (day == parseInt(startMounth) && parseInt(curtime) >= parseInt(startTime) && isEnd == 1) {
                                 var q = "update league set isEnd=0" + qqjoi + " where id=" + id;
-                                conLeague.query(q);
+                                con.query(q);
                             }
                         }
                     }
@@ -954,10 +909,10 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
     try {
         var cnt = parseInt(myCount) + 1;
         var q = "update league set lastCreteDate=" + curDate + ",lastCreateTime='" + curtime + "',myCount=" + cnt + ",isEnd=1 where id=" + lId;
-        conLeagueBest.query(q);
+        con.query(q);
 
         var query = "select id,uid from apps where id=" + appId + ";";
-        conLeagueBest.query(query);
+        con.query(query);
 
         if (result.length > 0) {
             result.forEach((row) => {
@@ -970,7 +925,7 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                 var olaviat = [];
                 var qCol = "SELECT `COLUMN_NAME`,`DATA_TYPE`  FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA`='kingofmeta_ADok' AND `TABLE_NAME`='" + tbName + "';";
                 var i = 0;
-                conLeagueBest.query(qCol);
+                con.query(qCol);
                 resultCol.forEach((rowCol) => {
                     var clName = rowCol.COLUMN_NAME;
                     var clType = rowCol.DATA_TYPE;
@@ -989,7 +944,7 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                 var qOlaviat = "select name,olaviat from leagueData where appId=" + appId + " and leagueId=" + lId + " and olaviat>0 order by olaviat DESC";
                 var olvQO = "";
                 i = 0;
-                conLeagueBest.query(qOlaviat);
+                con.query(qOlaviat);
                 resultOlaviat.forEach((rowOlaviat) => {
                     var olvN = rowOlaviat.name;
                     var olaviatA = rowOlaviat.olaviat;
@@ -1009,7 +964,7 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                 crq += " ORDER by " + olvQO + "limit 10000";
 
                 console.log(crq);
-                conLeagueBest.query(crq);
+                con.query(crq);
                 resultRq.forEach((rowRq) => {
                     var qIns = "insert into " + tbName + "_res" + " (";
                     var qValues = "(";
@@ -1043,7 +998,7 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                     }
                     qIns += " ) values " + qValues + ")";
                     console.log(qIns);
-                    conLeagueBest.query(qIns);
+                    con.query(qIns);
                 });
             });
         }

@@ -331,62 +331,9 @@ function PlayerDisonnected(pid) {
 
 function GetNotifications() {
     try {
-        var d = new Date();
-        var y = d.getFullYear();
-        var m = d.getMonth();
-        m++;
-        var day = d.getDate();
-        var dateHijri = gregorian_to_jalali(y, m, day);
-        y = dateHijri[0];
-        m = dateHijri[1];
-        day = dateHijri[2];
-        day -= 3;
-        if (day < 1) {
-            m--;
-            if (m < 1) {
-                m = 12;
-                if (y % 4 == 3) {
-                    day = 30 + day + 1;
-                    y--;
-                }
-                else {
-                    day = 29 + day + 1;
-                }
-            }
-            else if (m <= 6) {
-                day = 31 + day + 1;
-            }
-            else {
-                day = 30 + day + 1;
-            }
-        }
+        var curDate = GetCurrentDate();
+        var curtime = GetCurrentTime();
 
-
-        var d = new Date();
-        var localTime = d.getTime();
-        var localOffset = d.getTimezoneOffset() * 60000;
-        var utc = localTime + localOffset;
-        var offset = 3.8;
-        var teh = utc + (3600000 * offset);
-        nd = new Date(teh);
-
-        var mounth = "";
-        var dayOfMounth = "";
-        if (m < 10) {
-            mounth = "0" + m;
-        }
-        else {
-            mounth = "" + m;
-        }
-
-        if (day < 10) {
-            dayOfMounth = "0" + day;
-        }
-        else {
-            dayOfMounth = "" + day;
-        }
-
-        var curDatev = y + "" + mounth + "" + dayOfMounth;
         for (var eachItem in Players) {
             for (var eachPlayer in Players[eachItem].players) {
                 var player = Players[eachItem].players[eachPlayer];
@@ -403,7 +350,7 @@ function GetNotifications() {
         query += ", apps.pkgNameAndroid, apps.pkgNameIos, notification.kind, notification.IsStop, notification.lastUpdateTime, notification.bigText, notification.summary, notification.budget ";
         query += ", notification.isTest, notification.playerId, notification.actionType, notification.hiddenNoti, notification.showTime, appTags.tagName, notification.chanelId ";
         query += " FROM notification inner join apps on notification.appId = apps.id inner join appTags on notification.tagId = appTags.id ";
-        query += " where dateStartSend>= " + curDatev + " and notification.isSend = 0; ";
+        query += " where dateStartSend>= " + curDate + " and notification.isSend = 0; ";
 
         console.log(query);
         const result = con.query(query);
@@ -548,15 +495,7 @@ function GetNotifications() {
 
             var curDateEnd = year + "" + mounth + "" + dayOfMounth;
 
-            var d = new Date();
-            var localTime = d.getTime();
-            var localOffset = d.getTimezoneOffset() * 60000;
-            var utc = localTime + localOffset;
-            var offset = 3.8;
-            var teh = utc + (3600000 * offset);
-            nd = new Date(teh);
-
-            var hcur = nd.getHours();
+            var hcur = GetCurrentTime().substr(0,2);
 
             var noti = {
                 id: row.id, appId: row.appId, title: row.title, message: row.message, url: row.url, timeToLive: row.timeToLive

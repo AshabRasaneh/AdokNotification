@@ -61,8 +61,6 @@ var Players = [];
             }
 
             if (i > 0) {
-                //con.query(query, function (errcn, rescn, fieldscn) { });
-                //con.query(query2, function (errdcn, resdcn, fieldsdcn) { });
                 con.query(query);
                 con.query(query2);
             }
@@ -73,9 +71,6 @@ var Players = [];
         console.log("2: " + e.message);
     }
 })();
-
-
-
 
 try {
     var decoder = new StringDecoder('utf8');
@@ -158,29 +153,6 @@ try {
                         var query2 = "insert into nodeDelivery (nid,playerId,count) values (" + nid + "," + playerId + ",1);";
                         con.query(query2);
                     }
-                    /*
-                    con.query(query, function (err, resultDelivery, fields) {
-                        if (err) throw err;
-
-                        if (resultDelivery.length > 0) {
-                            resultDelivery.forEach((row) => {
-                                var did = row.id;
-                                var dcount = row.count;
-                                dcount++;
-                                var query2 = "update nodeDelivery set  count=" + dcount + " where id=" + did + ";";
-                                con.query(query2, function (err, resultUpdate, fields) {
-                                    if (err) throw err;
-                                });
-                            });
-                        }
-                        else {
-                            var query2 = "insert into nodeDelivery (nid,playerId,count) values (" + nid + "," + playerId + ",1);";
-                            con.query(query2, function (err, resultUpdate, fields) {
-                                if (err) throw err;
-                            });
-                        }
-                    });
-                    */
                 }
             }
             catch (e) {
@@ -420,7 +392,6 @@ function GetNotifications() {
             else {
                 var queryChanelIns = "insert into notificationChanels (appId,name,des) values (" + appId + ",'defAdok','default chanel for adok notifications');";
                 con.query(queryChanelIns);
-                if (errChanelIns) throw errChanelIns;
                 chanelName = "defAdok";
                 chanelDes = "default chanel for adok notifications";
 
@@ -495,7 +466,7 @@ function GetNotifications() {
 
             var curDateEnd = year + "" + mounth + "" + dayOfMounth;
 
-            var hcur = GetCurrentTime().substr(0,2);
+            var hcur = GetCurrentTime().substr(0, 2);
 
             var noti = {
                 id: row.id, appId: row.appId, title: row.title, message: row.message, url: row.url, timeToLive: row.timeToLive
@@ -542,18 +513,15 @@ function GetNotifications() {
                                 }
                                 else {
                                     var query3 = "SELECT id,count from nodeDelivery where nid=" + noti.id + " and playerId=" + itemp.playerId + ";";
-                                    con.query(query3, function (err, resultDelivery, fields) {
-                                        if (err) throw err;
-                                        console.log("resultDelivery.length " + resultDelivery.length);
-                                        if (resultDelivery.length > 0) {
-                                        }
-                                        else {
-                                            var query3 = "insert into nodeDelivery (nid,playerId,count) values (" + noti.id + "," + itemp.playerId + ",0);";
-                                            con.query(query3, function (err, resultDelivery, fields) {
-                                            });
-                                            itemp.socket.write(JSON.stringify(noti) + "\n");
-                                        }
-                                    });
+                                    const resultDelivery = con.query(query3);
+                                    console.log("resultDelivery.length " + resultDelivery.length);
+                                    if (resultDelivery.length > 0) {
+                                    }
+                                    else {
+                                        var query3 = "insert into nodeDelivery (nid,playerId,count) values (" + noti.id + "," + itemp.playerId + ",0);";
+                                        con.query(query3);
+                                        itemp.socket.write(JSON.stringify(noti) + "\n");
+                                    }
                                 }
                             });
                         }

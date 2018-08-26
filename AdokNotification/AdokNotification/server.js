@@ -434,7 +434,7 @@ function GetNotifications() {
             }
         }
 
-        var query = "SELECT notification.id,notification.appId,notification.title,notification.message,notification.url,notification.timeToLive,notification.dateStartSend,notification.timeStartSend,notification.sound, notification.smalIcon, notification.largeIcon, notification.bigPicture, notification.ledColor, notification.accentColor, notification.gId, notification.priority, apps.pkgNameAndroid, apps.pkgNameIos, notification.kind, notification.IsStop, notification.lastUpdateTime, notification.bigText, notification.summary, notification.budget, notification.isTest, notification.playerId FROM notification  inner join apps on notification.appId = apps.id where dateStartSend>=" + curDatev + " and notification.isSend = 0;";
+        var query = "SELECT notification.id,notification.appId,notification.title,notification.message,notification.url,notification.timeToLive,notification.dateStartSend,notification.timeStartSend,notification.sound, notification.smalIcon, notification.largeIcon, notification.bigPicture, notification.ledColor, notification.accentColor, notification.gId, notification.priority, apps.pkgNameAndroid, apps.pkgNameIos, notification.kind, notification.IsStop, notification.lastUpdateTime, notification.bigText, notification.summary, notification.budget, notification.isTest, notification.playerId,notification.actionType,notification.hiddenNoti,notification.showTime,appTags.tagName ,notification.chanelId FROM notification  inner join apps on notification.appId = apps.id where dateStartSend>=" + curDatev + " and notification.isSend = 0;";
 
         con.query(query, function (err, result, fields) {
             if (err) throw err;
@@ -467,197 +467,353 @@ function GetNotifications() {
                 var isTest = row.isTest;
                 var testId = row.playerId;
 
-                //-------------------------------------------------------------------------------
+                var actionType = row.actionType;
+                var hiddenNoti = row.hiddenNoti;
+                var showTime = row.showTime;
+                var tagName = row.tagName;
+                var chanelId = row.chanelId;
+                var chanelName = "";
+                var chanelDes = "";
+
                 var additionalData = [];
+                var btns = [];
+
                 var queryad = "select dtKey,dtValue from notiAdditionalData where nid=" + row.id;
                 con.query(queryad, function (errad, resultad, fieldsad) {
                     if (errad) throw errad;
-
-
-
                     resultad.forEach((rowad) => {
                         additionalData.push({ "dtKey": rowad.dtKey, "dtValue": rowad.dtValue });
                     });
-                });
-                //-------------------------------------------------------------------------------
-                var btns = [];
-                var queryad = "select id,nId,	btnText,url,icon from notiBtn where nid=" + row.id;
-                con.query(queryad, function (errad, resultad, fieldsad) {
-                    if (errad) throw errad;
+
+                    //Get btns
+                    var querybtn = "select id,nId,btnText,url,icon from notiBtn where nid=" + row.id;
+                    con.query(querybtn, function (errbtn, resultbtn, fieldsbtn) {
+                        if (errbtn) throw errbtn;
+                        resultbtn.forEach((rowbtn) => {
+                            btns.push({ "id": rowbtn.id, "nId": rowbtn.nId, "btnText": rowbtn.btnText, "url": rowbtn.url, "icon": rowbtn.icon });
+                        });
+
+                        //Get Chanel
+                        var queryChanel = "SELECT id,name,des FROM  notificationChanels where id=" + chanelId;
+                        con.query(queryChanel, function (errChanel, resultChanel, fieldsChanel) {
+                            if (errChanel) throw errChanel;
+                            resultChanel.forEach((rowChanel) => {
+                                chanelName = rowChanel.name;
+                                chanelDes = rowChanel.des;
+                            });
+
+                            if (resultChanel.length <= 0) {
+                                var queryChanelIns = "insert into notificationChanels (appId,name,des) values (" + appId + ",'defAdok','default chanel for adok notifications');";
+                                con.query(queryChanelIns, function (errChanelIns, resultChanelIns, fieldsChanelIns) {
+                                    if (errChanelIns) throw errChanelIns;
+                                    chanelName = "defAdok";
+                                    chanelDes = "default chanel for adok notifications";
+
+                                    var queryChanelIdMax = "select max(id) as mxId from notificationChanels where appId=" + appId;
+                                    con.query(queryChanelIdMax, function (errChanelIdMax, resultChanelIdMax, fieldsChanelIdMax) {
+                                        if (errChanelIdMax) throw errChanelIdMax;
+                                        resultChanelIdMax.forEach((rowChanelIdMax) => {
+                                            chanelId = rowChanelIdMax.mxId;
+                                        });
+
+                                        var queryChanelUPd = "update notification set chanelId=" + chanelId + " where id=" + id;
+                                        con.query(queryChanelUPd, function (errChanelUPd, resultChanelUPd, fieldsChanelUPd) {
+                                            if (errChanelUPd) throw errChanelUPd;
+                                        });
 
 
+                                        var timeToSend = timeStartSend + timeToLive;
+                                        var sendH = Math.floor(timeToSend / 60);
+                                        var sendM = Math.floor(timeToSend % 60);
+                                        var Days = 0;
+                                        var HAfter = 0;
+                                        if (sendH > 24) {
+                                            Days = Math.floor(sendH / 24);
+                                            HAfter = Math.floor(sendH - (Days * 24));
+                                        }
+                                        else {
+                                            HAfter = sendH;
+                                        }
 
-                    resultad.forEach((rowad) => {
-                        btns.push({ "id": rowad.id, "nId": rowad.nId, "btnText": rowad.btnText, "url": rowad.url, "icon": rowad.icon });
-                    });
-                });
-                //---------------------------------------------------------------------------------
+                                        var yy = parseInt(dateStartSend.toString().substr(0, 4));
+                                        var mm = parseInt(dateStartSend.toString().substr(4, 2));
+                                        var dd = parseInt(dateStartSend.toString().substr(6, 2));
 
+                                        var curDateEnd = "";
+                                        if (Days > 0) {
+                                            dd += Days;
+                                            if (dd > 29 && mm == 12 && y % 4 != 3) {
+                                                dd = dd - 29;
+                                                mm = 1;
+                                                yy++;
+                                            }
+                                            else if (dd > 30 && mm == 12 && y % 4 == 3) {
+                                                dd = dd - 30;
+                                                mm = 1;
+                                                yy++;
+                                            }
+                                            else if (dd > 31 && mm <= 6) {
+                                                dd = dd - 31;
+                                                mm++;
+                                            }
+                                            else if (dd > 30 && mm > 6) {
+                                                dd = dd - 30;
+                                                mm++;
+                                            }
+                                        }
 
-                var timeToSend = timeStartSend + timeToLive;
-                var sendH = Math.floor(timeToSend / 60);
-                var sendM = Math.floor(timeToSend % 60);
-                var Days = 0;
-                var HAfter = 0;
-                if (sendH > 24) {
-                    Days = Math.floor(sendH / 24);
-                    HAfter = Math.floor(sendH - (Days * 24));
-                }
-                else {
-                    HAfter = sendH;
-                }
+                                        var year = "" + yy;
+                                        var mounth = "";
+                                        var dayOfMounth = "";
+                                        if (mm < 10) {
+                                            mounth = "0" + mm;
+                                        }
+                                        else {
+                                            mounth = "" + mm;
+                                        }
 
-                var yy = parseInt(dateStartSend.toString().substr(0, 4));
-                var mm = parseInt(dateStartSend.toString().substr(4, 2));
-                var dd = parseInt(dateStartSend.toString().substr(6, 2));
+                                        if (dd < 10) {
+                                            dayOfMounth = "0" + dd;
+                                        }
+                                        else {
+                                            dayOfMounth = "" + dd;
+                                        }
 
-                var curDateEnd = "";
-                if (Days > 0) {
-                    dd += Days;
-                    if (dd > 29 && mm == 12 && y % 4 != 3) {
-                        dd = dd - 29;
-                        mm = 1;
-                        yy++;
-                    }
-                    else if (dd > 30 && mm == 12 && y % 4 == 3) {
-                        dd = dd - 30;
-                        mm = 1;
-                        yy++;
-                    }
-                    else if (dd > 31 && mm <= 6) {
-                        dd = dd - 31;
-                        mm++;
-                    }
-                    else if (dd > 30 && mm > 6) {
-                        dd = dd - 30;
-                        mm++;
-                    }
-                }
+                                        var curDateEnd = year + "" + mounth + "" + dayOfMounth;
 
-                var year = "" + yy;
-                var mounth = "";
-                var dayOfMounth = "";
-                if (mm < 10) {
-                    mounth = "0" + mm;
-                }
-                else {
-                    mounth = "" + mm;
-                }
+                                        var d = new Date();
+                                        var localTime = d.getTime();
+                                        var localOffset = d.getTimezoneOffset() * 60000;
+                                        var utc = localTime + localOffset;
+                                        var offset = 3.8;
+                                        var teh = utc + (3600000 * offset);
+                                        nd = new Date(teh);
 
-                if (dd < 10) {
-                    dayOfMounth = "0" + dd;
-                }
-                else {
-                    dayOfMounth = "" + dd;
-                }
+                                        var hcur = nd.getHours();
 
-                var curDateEnd = year + "" + mounth + "" + dayOfMounth;
+                                        var noti = {
+                                            id: row.id, appId: row.appId, title: row.title, message: row.message, url: row.url, timeToLive: row.timeToLive
+                                            , dateStartSend: row.dateStartSend, timeStartSend: row.timeStartSend, sound: row.sound, smalIcon: row.smalIcon, largeIcon: row.largeIcon
+                                            , bigPicture: row.bigPicture, ledColor: row.ledColor, accentColor: row.accentColor, gId: row.gId, priority: row.priority
+                                            , pkgNameAndroid: row.pkgNameAndroid, pkgNameIos: row.pkgNameIos, kind: row.kind,
+                                            bigText: row.bigText, summary: row.summary,
+                                            actionType: row.actionType, hiddenNoti: row.hiddenNoti, showTime: row.showTime, tagName: row.tagName,
+                                            AdditionalData: additionalData, btns: btns, Meskind: "noti"
+                                        };
 
-                var d = new Date();
-                var localTime = d.getTime();
-                var localOffset = d.getTimezoneOffset() * 60000;
-                var utc = localTime + localOffset;
-                var offset = 3.8;
-                var teh = utc + (3600000 * offset);
-                nd = new Date(teh);
+                                        if (isTest > 0) {
+                                            if (pkgNameAndroid != "") {
+                                                if (Players[pkgNameAndroid] != undefined) {
+                                                    if (Players[pkgNameAndroid].players[testId] != undefined) {
+                                                        Players[pkgNameAndroid].players[testId].socket.write(JSON.stringify(noti) + "\n");
+                                                        object.splice(index, 1);
+                                                    }
+                                                }
+                                            }
 
-                var hcur = nd.getHours();
+                                            if (pkgNameIos != "") {
+                                                if (Players[pkgNameIos] != undefined) {
+                                                    if (Players[pkgNameIos].players[testId] != undefined) {
+                                                        Players[pkgNameIos].players[testId].socket.write(JSON.stringify(noti) + "\n");
+                                                        object.splice(index, 1);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        else {
+                                            curDatev = "" + dateStartSend;
+                                            if (parseInt(curDatev) < parseInt(curDateEnd) || (parseInt(curDatev) == parseInt(curDateEnd) && parseInt(hcur) <= parseInt(HAfter))) {
+                                                if (IsStop == 0) {
 
+                                                    if (Players[pkgNameAndroid] != undefined) {
+                                                        Players[pkgNameAndroid].players.forEach(function (itemp, indexp, objectp) {
 
-                var noti = {
-                    id: row.id, appId: row.appId, title: row.title, message: row.message, url: row.url, timeToLive: row.timeToLive
-                    , dateStartSend: row.dateStartSend, timeStartSend: row.timeStartSend, sound: row.sound, smalIcon: row.smalIcon, largeIcon: row.largeIcon
-                    , bigPicture: row.bigPicture, ledColor: row.ledColor, accentColor: row.accentColor, gId: row.gId, priority: row.priority
-                    , pkgNameAndroid: row.pkgNameAndroid, pkgNameIos: row.pkgNameIos, kind: row.kind,
-                    bigText: row.bigText, summary: row.summary, AdditionalData: additionalData, btns: btns, Meskind: "noti"
-                };
+                                                            if (itemp.socket == undefined) {
+                                                                objectp.splice(indexp, 1);
+                                                            }
+                                                            else {
+                                                                var query3 = "SELECT id,count from nodeDelivery where nid=" + noti.id + " and playerId=" + itemp.playerId + ";";
+                                                                con.query(query3, function (err, resultDelivery, fields) {
+                                                                    if (err) throw err;
+                                                                    console.log("resultDelivery.length " + resultDelivery.length);
+                                                                    if (resultDelivery.length > 0) {
+                                                                    }
+                                                                    else {
+                                                                        var query3 = "insert into nodeDelivery (nid,playerId,count) values (" + noti.id + "," + itemp.playerId + ",0);";
+                                                                        con.query(query3, function (err, resultDelivery, fields) {
+                                                                        });
+                                                                        itemp.socket.write(JSON.stringify(noti) + "\n");
+                                                                    }
+                                                                });
+                                                            }
+                                                        });
+                                                    }
+                                                    else {
 
-                if (isTest > 0) {
-                    if (pkgNameAndroid != "") {
-                        if (Players[pkgNameAndroid] != undefined) {
-                            if (Players[pkgNameAndroid].players[testId] != undefined) {
-                                Players[pkgNameAndroid].players[testId].socket.write(JSON.stringify(noti) + "\n");
-                                object.splice(index, 1);
-                            }
-                        }
-                    }
+                                                    }
 
-                    if (pkgNameIos != "") {
-                        if (Players[pkgNameIos] != undefined) {
-                            if (Players[pkgNameIos].players[testId] != undefined) {
-                                Players[pkgNameIos].players[testId].socket.write(JSON.stringify(noti) + "\n");
-                                object.splice(index, 1);
-                            }
-                        }
-                    }
-                }
-                else {
-                    curDatev = "" + dateStartSend;
-                    if (parseInt(curDatev) < parseInt(curDateEnd) || (parseInt(curDatev) == parseInt(curDateEnd) && parseInt(hcur) <= parseInt(HAfter))) {
-                        if (IsStop == 0) {
-
-                            if (Players[pkgNameAndroid] != undefined) {
-                                Players[pkgNameAndroid].players.forEach(function (itemp, indexp, objectp) {
-
-                                    if (itemp.socket == undefined) {
-                                        objectp.splice(indexp, 1);
-                                    }
-                                    else {
-                                        var query3 = "SELECT id,count from nodeDelivery where nid=" + noti.id + " and playerId=" + itemp.playerId + ";";
-                                        con.query(query3, function (err, resultDelivery, fields) {
-                                            if (err) throw err;
-                                            console.log("resultDelivery.length " + resultDelivery.length);
-                                            if (resultDelivery.length > 0) {
+                                                }
                                             }
                                             else {
-                                                var query3 = "insert into nodeDelivery (nid,playerId,count) values (" + noti.id + "," + itemp.playerId + ",0);";
-                                                con.query(query3, function (err, resultDelivery, fields) {
+                                                //stop send
+                                                var queryst = "update notification set IsStop=1 where id=" + row.id;
+                                                con.query(queryst, function (errst, resultst, fieldsst) {
+                                                    if (errst) throw errst;
                                                 });
-                                                itemp.socket.write(JSON.stringify(noti) + "\n");
                                             }
-                                        });
-                                    }
+                                        }
+                                    });
+
                                 });
                             }
-                            else {
+                            else
+                            {
+                                var timeToSend = timeStartSend + timeToLive;
+                                var sendH = Math.floor(timeToSend / 60);
+                                var sendM = Math.floor(timeToSend % 60);
+                                var Days = 0;
+                                var HAfter = 0;
+                                if (sendH > 24) {
+                                    Days = Math.floor(sendH / 24);
+                                    HAfter = Math.floor(sendH - (Days * 24));
+                                }
+                                else {
+                                    HAfter = sendH;
+                                }
 
-                            }
+                                var yy = parseInt(dateStartSend.toString().substr(0, 4));
+                                var mm = parseInt(dateStartSend.toString().substr(4, 2));
+                                var dd = parseInt(dateStartSend.toString().substr(6, 2));
 
-                            if (Players[pkgNameIos] != undefined) {
-                                Players[pkgNameIos].players.forEach(function (itemp, indexp, objectp) {
-                                    if (itemp.socket == undefined) {
-                                        objectp.splice(indexp, 1);
+                                var curDateEnd = "";
+                                if (Days > 0) {
+                                    dd += Days;
+                                    if (dd > 29 && mm == 12 && y % 4 != 3) {
+                                        dd = dd - 29;
+                                        mm = 1;
+                                        yy++;
                                     }
-                                    else {
-                                        var query3 = "SELECT id,count from nodeDelivery where nid=" + noti.id + " and playerId=" + itemp.playerId + ";";
-                                        con.query(query3, function (err, resultDelivery, fields) {
-                                            if (err) throw err;
-                                            if (resultDelivery.length > 0) {
-                                                resultDelivery.forEach((rowDelivery) => {
-                                                    var cn = rowDelivery.count;
-                                                    if (cn <= 5) {
-                                                        itemp.socket.write(JSON.stringify(noti) + "\n");
+                                    else if (dd > 30 && mm == 12 && y % 4 == 3) {
+                                        dd = dd - 30;
+                                        mm = 1;
+                                        yy++;
+                                    }
+                                    else if (dd > 31 && mm <= 6) {
+                                        dd = dd - 31;
+                                        mm++;
+                                    }
+                                    else if (dd > 30 && mm > 6) {
+                                        dd = dd - 30;
+                                        mm++;
+                                    }
+                                }
+
+                                var year = "" + yy;
+                                var mounth = "";
+                                var dayOfMounth = "";
+                                if (mm < 10) {
+                                    mounth = "0" + mm;
+                                }
+                                else {
+                                    mounth = "" + mm;
+                                }
+
+                                if (dd < 10) {
+                                    dayOfMounth = "0" + dd;
+                                }
+                                else {
+                                    dayOfMounth = "" + dd;
+                                }
+
+                                var curDateEnd = year + "" + mounth + "" + dayOfMounth;
+
+                                var d = new Date();
+                                var localTime = d.getTime();
+                                var localOffset = d.getTimezoneOffset() * 60000;
+                                var utc = localTime + localOffset;
+                                var offset = 3.8;
+                                var teh = utc + (3600000 * offset);
+                                nd = new Date(teh);
+
+                                var hcur = nd.getHours();
+
+                                var noti = {
+                                    id: row.id, appId: row.appId, title: row.title, message: row.message, url: row.url, timeToLive: row.timeToLive
+                                    , dateStartSend: row.dateStartSend, timeStartSend: row.timeStartSend, sound: row.sound, smalIcon: row.smalIcon, largeIcon: row.largeIcon
+                                    , bigPicture: row.bigPicture, ledColor: row.ledColor, accentColor: row.accentColor, gId: row.gId, priority: row.priority
+                                    , pkgNameAndroid: row.pkgNameAndroid, pkgNameIos: row.pkgNameIos, kind: row.kind,
+                                    bigText: row.bigText, summary: row.summary,
+                                    actionType: row.actionType, hiddenNoti: row.hiddenNoti, showTime: row.showTime, tagName: row.tagName,
+                                    AdditionalData: additionalData, btns: btns, Meskind: "noti"
+                                };
+
+                                if (isTest > 0) {
+                                    if (pkgNameAndroid != "") {
+                                        if (Players[pkgNameAndroid] != undefined) {
+                                            if (Players[pkgNameAndroid].players[testId] != undefined) {
+                                                Players[pkgNameAndroid].players[testId].socket.write(JSON.stringify(noti) + "\n");
+                                                object.splice(index, 1);
+                                            }
+                                        }
+                                    }
+
+                                    if (pkgNameIos != "") {
+                                        if (Players[pkgNameIos] != undefined) {
+                                            if (Players[pkgNameIos].players[testId] != undefined) {
+                                                Players[pkgNameIos].players[testId].socket.write(JSON.stringify(noti) + "\n");
+                                                object.splice(index, 1);
+                                            }
+                                        }
+                                    }
+                                }
+                                else {
+                                    curDatev = "" + dateStartSend;
+                                    if (parseInt(curDatev) < parseInt(curDateEnd) || (parseInt(curDatev) == parseInt(curDateEnd) && parseInt(hcur) <= parseInt(HAfter))) {
+                                        if (IsStop == 0) {
+
+                                            if (Players[pkgNameAndroid] != undefined) {
+                                                Players[pkgNameAndroid].players.forEach(function (itemp, indexp, objectp) {
+
+                                                    if (itemp.socket == undefined) {
+                                                        objectp.splice(indexp, 1);
+                                                    }
+                                                    else {
+                                                        var query3 = "SELECT id,count from nodeDelivery where nid=" + noti.id + " and playerId=" + itemp.playerId + ";";
+                                                        con.query(query3, function (err, resultDelivery, fields) {
+                                                            if (err) throw err;
+                                                            console.log("resultDelivery.length " + resultDelivery.length);
+                                                            if (resultDelivery.length > 0) {
+                                                            }
+                                                            else {
+                                                                var query3 = "insert into nodeDelivery (nid,playerId,count) values (" + noti.id + "," + itemp.playerId + ",0);";
+                                                                con.query(query3, function (err, resultDelivery, fields) {
+                                                                });
+                                                                itemp.socket.write(JSON.stringify(noti) + "\n");
+                                                            }
+                                                        });
                                                     }
                                                 });
                                             }
                                             else {
-                                                itemp.socket.write(JSON.stringify(noti) + "\n");
+
                                             }
+
+                                        }
+                                    }
+                                    else {
+                                        //stop send
+                                        var queryst = "update notification set IsStop=1 where id=" + row.id;
+                                        con.query(queryst, function (errst, resultst, fieldsst) {
+                                            if (errst) throw errst;
                                         });
                                     }
-                                });
+                                }
                             }
-                        }
-                    }
-                    else {
-                        //stop send
-                        var queryst = "update notification set IsStop=1 where id=" + row.id;
-                        con.query(queryst, function (errst, resultst, fieldsst) {
-                            if (errst) throw errst;
-                        });
-                    }
 
-                }
+                        });
+                    });
+                });
+               
             });
         });
     }

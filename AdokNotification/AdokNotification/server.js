@@ -603,8 +603,11 @@ function GetNotifications() {
                                             , pkgNameAndroid: row.pkgNameAndroid, pkgNameIos: row.pkgNameIos, kind: row.kind,
                                             bigText: row.bigText, summary: row.summary,
                                             actionType: row.actionType, hiddenNoti: row.hiddenNoti, showTime: row.showTime, tagName: row.tagName,
+                                            chanelId: chanelId, chanelName: chanelName, chanelDes: chanelDes,
                                             AdditionalData: additionalData, btns: btns, Meskind: "noti"
                                         };
+
+                                        console.log(noti);
 
                                         if (isTest > 0) {
                                             if (pkgNameAndroid != "") {
@@ -749,8 +752,11 @@ function GetNotifications() {
                                     , pkgNameAndroid: row.pkgNameAndroid, pkgNameIos: row.pkgNameIos, kind: row.kind,
                                     bigText: row.bigText, summary: row.summary,
                                     actionType: row.actionType, hiddenNoti: row.hiddenNoti, showTime: row.showTime, tagName: row.tagName,
+                                    chanelId: chanelId, chanelName: chanelName, chanelDes: chanelDes,
                                     AdditionalData: additionalData, btns: btns, Meskind: "noti"
                                 };
+
+                                console.log(noti);
 
                                 if (isTest > 0) {
                                     if (pkgNameAndroid != "") {

@@ -6,7 +6,8 @@ var jalaali = require('jalaali-js')
 var con = new mysql({
     host: "localhost",
     user: "kingofmeta_adok",
-    password: "NTGePf_Pnn%N"
+    password: "NTGePf_Pnn%N",
+    database: "kingofmeta_ADok"
 });
 
 //var con = mysql.createConnection({

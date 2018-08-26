@@ -304,6 +304,31 @@ function PlayerDisonnected(pid) {
 function GetNotifications() {
     try {
         var curDate = GetCurrentDate();
+
+        var y = curDate.substr(0,4);
+        var m = curDate.substr(4, 2);
+        var day = curDate.substr(6, 2);
+        day -= 3;
+        if (day < 1) {
+            m--;
+            if (m < 1) {
+                m = 12;
+                if (y % 4 == 3) {
+                    day = 30 + day + 1;
+                    y--;
+                }
+                else {
+                    day = 29 + day + 1;
+                }
+            }
+            else if (m <= 6) {
+                day = 31 + day + 1;
+            }
+            else {
+                day = 30 + day + 1;
+            }
+        }
+
         var curtime = GetCurrentTime();
 
         for (var eachItem in Players) {
@@ -324,9 +349,9 @@ function GetNotifications() {
         query += " FROM notification inner join apps on notification.appId = apps.id inner join appTags on notification.tagId = appTags.id ";
         query += " where dateStartSend>= " + curDate + " and notification.isSend = 0; ";
 
-        console.log(query);
+        //console.log(query);
         const result = con.query(query);
-        console.log(result.length);
+        console.log("noti count: "+result.length);
         result.forEach((row) => {
             var id = row.id;
             var appId = row.appId;
@@ -478,8 +503,6 @@ function GetNotifications() {
                 chanelId: chanelId, chanelName: chanelName, chanelDes: chanelDes,
                 AdditionalData: additionalData, btns: btns, Meskind: "noti"
             };
-
-            console.log(noti);
 
             if (isTest > 0) {
                 if (pkgNameAndroid != "") {

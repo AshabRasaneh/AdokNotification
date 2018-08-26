@@ -407,7 +407,7 @@ function GetNotifications() {
 
         console.log(query);
         const result = con.query(query);
-
+        console.log(result.length);
         result.forEach((row) => {
             var id = row.id;
             var appId = row.appId;

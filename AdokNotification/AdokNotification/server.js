@@ -346,6 +346,7 @@ function GetNotifications() {
         query += ",notification.sound, notification.smalIcon, notification.largeIcon, notification.bigPicture, notification.ledColor, notification.accentColor, notification.gId, notification.priority ";
         query += ", apps.pkgNameAndroid, apps.pkgNameIos, notification.kind, notification.IsStop, notification.lastUpdateTime, notification.bigText, notification.summary, notification.budget ";
         query += ", notification.isTest, notification.playerId, notification.actionType, notification.hiddenNoti, notification.showTime, appTags.tagName, notification.chanelId ";
+        query += ", notification.dialogTitle, notification.btnYesText, notification.btnNoText, notification.dialogMessage, notification.dialogActionType, notification.dialogActionUrl ";
         query += " FROM notification inner join apps on notification.appId = apps.id inner join appTags on notification.tagId = appTags.id ";
         query += " where dateStartSend>= " + curDate + " and notification.isSend = 0; ";
 
@@ -386,6 +387,14 @@ function GetNotifications() {
             var showTime = row.showTime;
             var tagName = row.tagName;
             var chanelId = row.chanelId;
+
+            var dialogTitle = row.dialogTitle;
+            var btnYesText = row.btnYesText;
+            var btnNoText = row.btnNoText;
+            var dialogMessage = row.dialogMessage;
+            var dialogActionType = row.dialogActionType;
+            var dialogActionUrl = row.dialogActionUrl;
+
             var chanelName = "";
             var chanelDes = "";
 
@@ -501,6 +510,7 @@ function GetNotifications() {
                 bigText: row.bigText, summary: row.summary,
                 actionType: row.actionType, hiddenNoti: row.hiddenNoti, showTime: row.showTime, tagName: row.tagName,
                 chanelId: chanelId, chanelName: chanelName, chanelDes: chanelDes,
+                dialogTitle: dialogTitle, btnYesText: btnYesText, btnNoText: btnNoText, dialogMessage: dialogMessage, dialogActionType: dialogActionType, dialogActionUrl: dialogActionUrl,
                 AdditionalData: additionalData, btns: btns, Meskind: "noti"
             };
 

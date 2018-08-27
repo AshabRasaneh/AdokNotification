@@ -558,7 +558,7 @@ function GetNotifications() {
                                     objectp.splice(indexp, 1);
                                 }
                                 else {
-                                    if (delivery[noti.id])
+                                    if (delivery[noti.id] == undefined)
                                     {
                                         delivery[noti.id] = { players: [] };
                                     }

@@ -565,7 +565,7 @@ function GetNotifications() {
 
                                     if (delivery[noti.id].players[itemp.playerId] == undefined)
                                     {
-                                        console.log("noti.id: " + noti.id + "--- playerId: " + playerId);
+                                        console.log("noti.id: " + noti.id + "--- playerId: " + itemp.playerId);
                                         itemp.socket.write(JSON.stringify(noti) + "\n");
                                     }
                                     //var query3 = "SELECT id,count from nodeDelivery where nid=" + noti.id + " and playerId=" + itemp.playerId + ";";

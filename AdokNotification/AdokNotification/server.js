@@ -19,14 +19,17 @@ var _ip = "188.253.2.147";
 var _port = 3010;
 
 var Players = [];
+var canCheckNotify = 1;
 
 (function () {
 
     try {
         //var c = 0;
         var timeout = setInterval(function () {
-
-            GetNotifications();
+            if (canCheckNotify > 0) {
+                canCheckNotify = 0;
+                GetNotifications();
+            }
 
         }, 10000);
     }
@@ -572,8 +575,10 @@ function GetNotifications() {
                 }
             }
         });
+        canCheckNotify = 1;
     }
     catch (e) {
+        canCheckNotify = 1;
         console.log("10: " + e.message);
     }
 }

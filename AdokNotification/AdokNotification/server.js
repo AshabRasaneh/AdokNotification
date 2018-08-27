@@ -29,7 +29,7 @@ var delivery = [];
             console.log(canCheckNotify);
             if (canCheckNotify > 0) {
                 canCheckNotify = 0;
-                GetNotifications();
+                GetNotificationsWeb();
             }
 
         }, 10000);
@@ -316,7 +316,7 @@ function GetNotifications() {
     try {
         var curDate = GetCurrentDate();
 
-        var y = curDate.substr(0,4);
+        var y = curDate.substr(0, 4);
         var m = curDate.substr(4, 2);
         var day = curDate.substr(6, 2);
         day -= 3;
@@ -406,7 +406,7 @@ function GetNotifications() {
             var btnNoText = row.btnNoText;
             var dialogMessage = row.dialogMessage;
             var dialogActionType = row.dialogActionType;
-            var dialogActionUrl = row.dialogActionUrl; 
+            var dialogActionUrl = row.dialogActionUrl;
             var isVibrate = row.isVibrate;
 
             var chanelName = "";
@@ -559,27 +559,14 @@ function GetNotifications() {
                                     objectp.splice(indexp, 1);
                                 }
                                 else {
-                                    if (delivery[noti.id] == undefined)
-                                    {
+                                    if (delivery[noti.id] == undefined) {
                                         delivery[noti.id] = { players: [] };
                                     }
 
-                                    if (delivery[noti.id].players[itemp.playerId] == undefined)
-                                    {
+                                    if (delivery[noti.id].players[itemp.playerId] == undefined) {
                                         console.log("noti.id: " + noti.id + "--- playerId: " + itemp.playerId);
                                         itemp.socket.write(JSON.stringify(noti) + "\n");
                                     }
-                                    //var query3 = "SELECT id,count from nodeDelivery where nid=" + noti.id + " and playerId=" + itemp.playerId + ";";
-                                    //const resultDelivery = con.query(query3);
-                                    //console.log("resultDelivery.length " + resultDelivery.length);
-                                    //if (resultDelivery.length > 0) {
-                                    //}
-                                    //else {
-                                    //    var query3 = "insert into nodeDelivery (nid,playerId,count) values (" + noti.id + "," + itemp.playerId + ",0);";
-                                    //    con.query(query3);
-                                    //    console.log("noti.id: " + noti.id);
-                                    //    itemp.socket.write(JSON.stringify(noti) + "\n");
-                                    //}
                                 }
                             });
                         }
@@ -970,5 +957,269 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
     }
     catch (e) {
         console.log("11: " + e.message);
+    }
+}
+
+
+function GetNotificationsWeb() {
+    try {
+        var dataQS = {
+            var1: "something",
+            var2: "something else"
+        };
+
+        var querystring = require("querystring");
+        var qs = querystring.stringify(dataQS);
+        var qslength = qs.length;
+        var options = {
+            hostname: "adok.ir",
+            port: 80,
+            path: "/GamesData/ADok/GetNotifications.php",
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': qslength
+            }
+        };
+
+        var buffer = "";
+        var req = http.request(options, function (res) {
+            res.on('data', function (chunk) {
+                buffer += chunk;
+            });
+            res.on('end', function () {
+
+                var curDate = GetCurrentDate();
+
+                var y = curDate.substr(0, 4);
+                var m = curDate.substr(4, 2);
+                var day = curDate.substr(6, 2);
+                day -= 3;
+                if (day < 1) {
+                    m--;
+                    if (m < 1) {
+                        m = 12;
+                        if (y % 4 == 3) {
+                            day = 30 + day + 1;
+                            y--;
+                        }
+                        else {
+                            day = 29 + day + 1;
+                        }
+                    }
+                    else if (m <= 6) {
+                        day = 31 + day + 1;
+                    }
+                    else {
+                        day = 30 + day + 1;
+                    }
+                }
+
+                var curtime = GetCurrentTime();
+
+                for (var eachItem in Players) {
+                    for (var eachPlayer in Players[eachItem].players) {
+                        var player = Players[eachItem].players[eachPlayer];
+                        var dif = Date.now() - player.alive;
+                        if (dif > 150000) {
+                            PlayerDisonnected(player.playerId);
+                            delete Players[eachItem].players[eachPlayer];
+                        }
+                    }
+                }
+
+
+                var row = JSON.parse(buffer);
+
+                for (var i = 0; i < row.length; i++) {
+                    console.log("row.id: " + row[i].id);
+                    var id = row[i].id;
+                    var appId = row[i].appId;
+                    var title = row[i].title;
+                    var message = row[i].message;
+                    var url = row[i].url;
+                    var timeToLive = row[i].timeToLive;
+                    var dateStartSend = row[i].dateStartSend;
+                    var timeStartSend = row[i].timeStartSend;
+                    var sound = row[i].sound;
+                    var smalIcon = row[i].smalIcon;
+                    var largeIcon = row[i].largeIcon;
+                    var bigPicture = row[i].bigPicture;
+                    var ledColor = row[i].ledColor;
+                    var accentColor = row[i].accentColor;
+                    var gId = row[i].gId;
+                    var priority = row[i].priority;
+                    var pkgNameAndroid = row[i].pkgNameAndroid;
+                    var pkgNameIos = row[i].pkgNameIos;
+                    var kind = row[i].kind;
+                    var AdditionalData = row[i].AdditionalData;
+                    var btns = row[i].btns;
+                    var lastUpdateTime = row[i].lastUpdateTime;
+                    var IsStop = row[i].IsStop;
+                    var bigText = row[i].bigText;
+                    var summary = row[i].summary;
+                    var isTest = row[i].isTest;
+                    var testId = row[i].playerId;
+
+                    var actionType = row[i].actionType;
+                    var hiddenNoti = row[i].hiddenNoti;
+                    var showTime = row[i].showTime;
+                    var tagName = row[i].tagName;
+                    var chanelId = row[i].chanelId;
+
+                    var dialogTitle = row[i].dialogTitle;
+                    var btnYesText = row[i].btnYesText;
+                    var btnNoText = row[i].btnNoText;
+                    var dialogMessage = row[i].dialogMessage;
+                    var dialogActionType = row[i].dialogActionType;
+                    var dialogActionUrl = row[i].dialogActionUrl;
+                    var isVibrate = row[i].isVibrate;
+
+                    var chanelName = row[i].chanelName;;
+                    var chanelDes = row[i].chanelDes;;
+
+                    var additionalData = [];
+                    var btns = [];
+
+                    for (var j = 0; j < row[i].additionalData.length; j++) {
+                        additionalData.push({ "dtKey": row[i].additionalData[j].dtKey, "dtValue": row[i].additionalData[j].dtValue });
+                    }
+
+                    //Get btns
+                    for (var j = 0; j < row[i].btns.length; j++) {
+                        btns.push({ "id": row[i].btns[j].id, "nId": row[i].btns[j].nId, "btnText": row[i].btns[j].btnText, "url": row[i].btns[j].url, "icon": row[i].btns[j].icon, "actionType": row[i].btns[j].actionType });
+                    }
+
+                    var timeToSend = timeStartSend + timeToLive;
+                    var sendH = Math.floor(timeToSend / 60);
+                    var sendM = Math.floor(timeToSend % 60);
+                    var Days = 0;
+                    var HAfter = 0;
+                    if (sendH > 24) {
+                        Days = Math.floor(sendH / 24);
+                        HAfter = Math.floor(sendH - (Days * 24));
+                    }
+                    else {
+                        HAfter = sendH;
+                    }
+
+                    var yy = parseInt(dateStartSend.toString().substr(0, 4));
+                    var mm = parseInt(dateStartSend.toString().substr(4, 2));
+                    var dd = parseInt(dateStartSend.toString().substr(6, 2));
+
+                    var curDateEnd = "";
+                    if (Days > 0) {
+                        dd += Days;
+                        if (dd > 29 && mm == 12 && y % 4 != 3) {
+                            dd = dd - 29;
+                            mm = 1;
+                            yy++;
+                        }
+                        else if (dd > 30 && mm == 12 && y % 4 == 3) {
+                            dd = dd - 30;
+                            mm = 1;
+                            yy++;
+                        }
+                        else if (dd > 31 && mm <= 6) {
+                            dd = dd - 31;
+                            mm++;
+                        }
+                        else if (dd > 30 && mm > 6) {
+                            dd = dd - 30;
+                            mm++;
+                        }
+                    }
+
+                    var year = "" + yy;
+                    var mounth = "";
+                    var dayOfMounth = "";
+                    if (mm < 10) {
+                        mounth = "0" + mm;
+                    }
+                    else {
+                        mounth = "" + mm;
+                    }
+
+                    if (dd < 10) {
+                        dayOfMounth = "0" + dd;
+                    }
+                    else {
+                        dayOfMounth = "" + dd;
+                    }
+
+                    var curDateEnd = year + "" + mounth + "" + dayOfMounth;
+
+                    var hcur = GetCurrentTime().substr(0, 2);
+
+                    var noti = {
+                        id: row.id, appId: row.appId, title: row.title, message: row.message, url: row.url, timeToLive: row.timeToLive
+                        , dateStartSend: row.dateStartSend, timeStartSend: row.timeStartSend, sound: row.sound, smalIcon: row.smalIcon, largeIcon: row.largeIcon
+                        , bigPicture: row.bigPicture, ledColor: row.ledColor, accentColor: row.accentColor, gId: row.gId, priority: row.priority
+                        , pkgNameAndroid: row.pkgNameAndroid, pkgNameIos: row.pkgNameIos, kind: row.kind,
+                        bigText: row.bigText, summary: row.summary,
+                        actionType: row.actionType, hiddenNoti: row.hiddenNoti, showTime: row.showTime, tagName: row.tagName,
+                        chanelId: chanelId, chanelName: chanelName, chanelDes: chanelDes,
+                        dialogTitle: dialogTitle, btnYesText: btnYesText, btnNoText: btnNoText, dialogMessage: dialogMessage, dialogActionType: dialogActionType, dialogActionUrl: dialogActionUrl, isVibrate: isVibrate,
+                        AdditionalData: additionalData, btns: btns, Meskind: "noti"
+                    };
+
+                    if (isTest > 0) {
+                        if (pkgNameAndroid != "") {
+                            if (Players[pkgNameAndroid] != undefined) {
+                                if (Players[pkgNameAndroid].players[testId] != undefined) {
+                                    Players[pkgNameAndroid].players[testId].socket.write(JSON.stringify(noti) + "\n");
+                                    object.splice(index, 1);
+                                }
+                            }
+                        }
+
+                        if (pkgNameIos != "") {
+                            if (Players[pkgNameIos] != undefined) {
+                                if (Players[pkgNameIos].players[testId] != undefined) {
+                                    Players[pkgNameIos].players[testId].socket.write(JSON.stringify(noti) + "\n");
+                                    object.splice(index, 1);
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        curDatev = "" + dateStartSend;
+                        if (parseInt(curDatev) < parseInt(curDateEnd) || (parseInt(curDatev) == parseInt(curDateEnd) && parseInt(hcur) <= parseInt(HAfter))) {
+                            if (IsStop == 0) {
+
+                                if (Players[pkgNameAndroid] != undefined) {
+                                    Players[pkgNameAndroid].players.forEach(function (itemp, indexp, objectp) {
+
+                                        if (itemp.socket == undefined) {
+                                            objectp.splice(indexp, 1);
+                                        }
+                                        else {
+                                            if (delivery[noti.id] == undefined) {
+                                                delivery[noti.id] = { players: [] };
+                                            }
+
+                                            if (delivery[noti.id].players[itemp.playerId] == undefined) {
+                                                console.log("noti.id: " + noti.id + "--- playerId: " + itemp.playerId);
+                                                itemp.socket.write(JSON.stringify(noti) + "\n");
+                                            }
+                                        }
+                                    });
+                                }
+                                else {
+                                }
+                            }
+                        }
+                    }
+                }
+                
+            });
+        });
+        canCheckNotify = 1;
+        req.write(qs);
+        req.end();
+    }
+    catch (e) {
+        canCheckNotify = 1;
+        console.log("120: " + e.message);
     }
 }

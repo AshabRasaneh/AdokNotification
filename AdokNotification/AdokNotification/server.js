@@ -422,10 +422,10 @@ function GetNotifications() {
             });
 
             //Get btns
-            var querybtn = "select id,nId,btnText,url,icon from notiBtn where nid=" + row.id;
+            var querybtn = "select id,nId,btnText,url,icon,actionType from notiBtn where nid=" + row.id;
             const resultbtn = con.query(querybtn);
             resultbtn.forEach((rowbtn) => {
-                btns.push({ "id": rowbtn.id, "nId": rowbtn.nId, "btnText": rowbtn.btnText, "url": rowbtn.url, "icon": rowbtn.icon });
+                btns.push({ "id": rowbtn.id, "nId": rowbtn.nId, "btnText": rowbtn.btnText, "url": rowbtn.url, "icon": rowbtn.icon, "actionType": rowbtn.actionType });
             });
 
             //Get Chanel

@@ -26,6 +26,7 @@ var canCheckNotify = 1;
     try {
         //var c = 0;
         var timeout = setInterval(function () {
+            console.log(canCheckNotify);
             if (canCheckNotify > 0) {
                 canCheckNotify = 0;
                 GetNotifications();

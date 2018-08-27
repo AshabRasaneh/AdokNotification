@@ -122,7 +122,7 @@ try {
                             }
                         }
 
-                        PlayerConnected(playerId, pkgs);
+                        PlayerConnectedWeb(playerId, pkgs);
                     }
                 }
 
@@ -173,7 +173,7 @@ try {
 
         socket.on('close', function (data) {
             try {
-                PlayerDisonnected(myId);
+                PlayerDisonnectedWeb(myId);
                 for (var j = 0; j < pkgs.length; j++) {
                     if (Players[pkgs[j]] != undefined) {
                         if (Players[pkgs[j]].players[myId] != undefined) {
@@ -188,7 +188,7 @@ try {
         });
 
         socket.on('disconnect', function (data) {
-            PlayerDisonnected(myId);
+            PlayerDisonnectedWeb(myId);
         });
 
 
@@ -1022,7 +1022,7 @@ function GetNotificationsWeb() {
                         var player = Players[eachItem].players[eachPlayer];
                         var dif = Date.now() - player.alive;
                         if (dif > 150000) {
-                            PlayerDisonnected(player.playerId);
+                            PlayerDisonnectedWeb(player.playerId);
                             delete Players[eachItem].players[eachPlayer];
                         }
                     }
@@ -1211,7 +1211,7 @@ function GetNotificationsWeb() {
                         }
                     }
                 }
-                
+
             });
         });
         canCheckNotify = 1;
@@ -1221,5 +1221,83 @@ function GetNotificationsWeb() {
     catch (e) {
         canCheckNotify = 1;
         console.log("120: " + e.message);
+    }
+}
+
+function PlayerConnectedWeb(pid, pkgs) {
+    try {
+        var dataQS = {
+            var1: pid,
+            var2: pkgs
+        };
+
+        var querystring = require("querystring");
+        var qs = querystring.stringify(dataQS);
+        var qslength = qs.length;
+        var options = {
+            hostname: "adok.ir",
+            port: 80,
+            path: "/GamesData/ADok/PlayerConnectedND.php",
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': qslength
+            }
+        };
+
+        var buffer = "";
+        var req = http.request(options, function (res) {
+            res.on('data', function (chunk) {
+                buffer += chunk;
+            });
+            res.on('end', function () {
+                console.log(buffer);
+            });
+        });
+
+        req.write(qs);
+        req.end();
+    }
+    catch (e) {
+        console.log("130: " + e.message);
+    }
+}
+
+function PlayerDisonnectedWeb(pid) {
+    try {
+        var dataQS = {
+            var1: pid,
+            var2: "sth"
+        };
+
+        var querystring = require("querystring");
+        var qs = querystring.stringify(dataQS);
+        var qslength = qs.length;
+        var options = {
+            hostname: "adok.ir",
+            port: 80,
+            path: "/GamesData/ADok/PlayerDisonnectedND.php",
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': qslength
+            }
+        };
+
+        var buffer = "";
+        var req = http.request(options, function (res) {
+            res.on('data', function (chunk) {
+                buffer += chunk;
+            });
+            res.on('end', function () {
+                console.log(buffer);
+            });
+        });
+
+        req.write(qs);
+        req.end();
+    }
+    catch (e) {
+        console.log("140: " + e.message);
     }
 }

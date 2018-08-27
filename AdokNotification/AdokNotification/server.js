@@ -20,7 +20,7 @@ var _port = 3010;
 
 var Players = [];
 var canCheckNotify = 1;
-
+var delivery = [];
 (function () {
 
     try {
@@ -141,22 +141,29 @@ try {
                 }
                 else if (knd == "Deliver") {
                     var nid = dt.nid;
-                    var query = "SELECT id,count from nodeDelivery where nid=" + nid + " and playerId=" + playerId + ";";
-                    const resultDelivery = con.query(query);
-
-                    if (resultDelivery.length > 0) {
-                        resultDelivery.forEach((row) => {
-                            var did = row.id;
-                            var dcount = row.count;
-                            dcount++;
-                            var query2 = "update nodeDelivery set  count=" + dcount + " where id=" + did + ";";
-                            con.query(query2);
-                        });
+                    if (delivery[nid] == undefined) {
+                        delivery[nid] = { players: [] };
+                        delivery[nid].players[playerId] = 1;
                     }
                     else {
-                        var query2 = "insert into nodeDelivery (nid,playerId,count) values (" + nid + "," + playerId + ",1);";
-                        con.query(query2);
+                        delivery[nid].players[playerId] = 1;
                     }
+                    //var query = "SELECT id,count from nodeDelivery where nid=" + nid + " and playerId=" + playerId + ";";
+                    //const resultDelivery = con.query(query);
+
+                    //if (resultDelivery.length > 0) {
+                    //    resultDelivery.forEach((row) => {
+                    //        var did = row.id;
+                    //        var dcount = row.count;
+                    //        dcount++;
+                    //        var query2 = "update nodeDelivery set  count=" + dcount + " where id=" + did + ";";
+                    //        con.query(query2);
+                    //    });
+                    //}
+                    //else {
+                    //    var query2 = "insert into nodeDelivery (nid,playerId,count) values (" + nid + "," + playerId + ",1);";
+                    //    con.query(query2);
+                    //}
                 }
             }
             catch (e) {
@@ -551,17 +558,27 @@ function GetNotifications() {
                                     objectp.splice(indexp, 1);
                                 }
                                 else {
-                                    var query3 = "SELECT id,count from nodeDelivery where nid=" + noti.id + " and playerId=" + itemp.playerId + ";";
-                                    const resultDelivery = con.query(query3);
-                                    console.log("resultDelivery.length " + resultDelivery.length);
-                                    if (resultDelivery.length > 0) {
+                                    if (delivery[noti.id])
+                                    {
+                                        delivery[noti.id] = { players: [] };
                                     }
-                                    else {
-                                        var query3 = "insert into nodeDelivery (nid,playerId,count) values (" + noti.id + "," + itemp.playerId + ",0);";
-                                        con.query(query3);
-                                        console.log("noti.id: " + noti.id);
+
+                                    if (delivery[noti.id].players[itemp.playerId] == undefined)
+                                    {
+                                        console.log("noti.id: " + noti.id + "--- playerId: " + playerId);
                                         itemp.socket.write(JSON.stringify(noti) + "\n");
                                     }
+                                    //var query3 = "SELECT id,count from nodeDelivery where nid=" + noti.id + " and playerId=" + itemp.playerId + ";";
+                                    //const resultDelivery = con.query(query3);
+                                    //console.log("resultDelivery.length " + resultDelivery.length);
+                                    //if (resultDelivery.length > 0) {
+                                    //}
+                                    //else {
+                                    //    var query3 = "insert into nodeDelivery (nid,playerId,count) values (" + noti.id + "," + itemp.playerId + ",0);";
+                                    //    con.query(query3);
+                                    //    console.log("noti.id: " + noti.id);
+                                    //    itemp.socket.write(JSON.stringify(noti) + "\n");
+                                    //}
                                 }
                             });
                         }

@@ -88,7 +88,7 @@ try {
                 if (data && data.byteLength != undefined) {
                     data = new Buffer(data).toString('utf8');
                 }
-                console.log(data);
+                console.log(data+" --- end\n");
                 var dt = JSON.parse(data);
                 var playerId = dt.playerId;
                 var pkgName = dt.pkgName;

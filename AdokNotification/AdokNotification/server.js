@@ -93,9 +93,10 @@ try {
                 var dtSplit = data.split("}");
 
                 for (var dataCount = 0; dataCount < dtSplit.length; dataCount++) {
+                    dtSplit[dataCount] += "}";
                     console.log(dtSplit[dataCount] + " --- end\n");
                     if (dtSplit[dataCount] != "") {
-                        var dt = JSON.parse(dtSplit[dataCount] + "}");
+                        var dt = JSON.parse(dtSplit[dataCount]);
                         var playerId = dt.playerId;
                         var pkgName = dt.pkgName;
                         var phoneNo = dt.phoneNo;

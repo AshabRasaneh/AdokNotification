@@ -65,8 +65,7 @@ var delivery = [];
             }
 
             if (i > 0) {
-                con.query(query);
-                con.query(query2);
+                PlayersConnection(query, query2);
             }
 
         }, 120000);
@@ -148,22 +147,8 @@ try {
                     else {
                         delivery[nid].players[playerId] = 1;
                     }
-                    //var query = "SELECT id,count from nodeDelivery where nid=" + nid + " and playerId=" + playerId + ";";
-                    //const resultDelivery = con.query(query);
 
-                    //if (resultDelivery.length > 0) {
-                    //    resultDelivery.forEach((row) => {
-                    //        var did = row.id;
-                    //        var dcount = row.count;
-                    //        dcount++;
-                    //        var query2 = "update nodeDelivery set  count=" + dcount + " where id=" + did + ";";
-                    //        con.query(query2);
-                    //    });
-                    //}
-                    //else {
-                    //    var query2 = "insert into nodeDelivery (nid,playerId,count) values (" + nid + "," + playerId + ",1);";
-                    //    con.query(query2);
-                    //}
+                    SetDelivery(nid, playerId);
                 }
             }
             catch (e) {
@@ -213,380 +198,6 @@ try {
 }
 catch (e) {
     console.log("6: " + e.message);
-}
-
-function PlayerConnected(pid, pkgs) {
-
-    var curDate = GetCurrentDate();
-    var tm = GetCurrentTime();
-
-
-    var sql = "update players set 	isConnected=1,lastTime='" + tm + "',lastDate=" + curDate + " where id=" + pid;
-    con.query(sql);
-
-    var pkgEx = pkgs;
-    for (var i = 0; i < pkgEx.length; i++) {
-        if (pkgEx[i] != "") {
-            var pkName = pkgEx[i];
-            var sql2 = "select id from playerNotifConnect where  playerId=" + pid + " and pkgName='" + pkName + "'";
-            const result2 = con.query(sql2);
-            if (result2.length > 0) {
-                result2.forEach((row) => {
-                    var id = row.id;
-                    sql3 = "update playerNotifConnect set time='" + tm + "',date=" + curDate + "  where id=" + id;
-                    con.query(sql3);
-                });
-            }
-            else {
-                sql3 = "insert into playerNotifConnect (playerId,pkgName,date,time) values (" + pid + ",'" + pkName + "'," + curDate + ",'" + tm + "')";
-                con.query(sql3);
-            }
-        }
-    }
-}
-
-function PlayerDisonnected(pid) {
-
-    var d = new Date();
-    var y = d.getFullYear();
-    var m = d.getMonth();
-    m++;
-    var day = d.getDate();
-    var dateHijri = gregorian_to_jalali(y, m, day);
-    y = dateHijri[0];
-    m = dateHijri[1];
-    day = dateHijri[2];
-
-
-
-    var mounth = "";
-    var dayOfMounth = "";
-    if (m < 10) {
-        mounth = "0" + m;
-    }
-    else {
-        mounth = "" + m;
-    }
-
-    if (day < 10) {
-        dayOfMounth = "0" + day;
-    }
-    else {
-        dayOfMounth = "" + day;
-    }
-
-    var curDate = y + "" + mounth + "" + dayOfMounth;
-
-    var d = new Date();
-    var localTime = d.getTime();
-    var localOffset = d.getTimezoneOffset() * 60000;
-    var utc = localTime + localOffset;
-    var offset = 3.8;
-    var teh = utc + (3600000 * offset);
-    nd = new Date(teh);
-
-    var h = nd.getHours();
-    var Min = nd.getMinutes();
-
-    var hour = "";
-    var minute = "";
-    var tm = "";
-
-    if (h < 10) {
-        hour = "0" + h;
-    }
-    else {
-        hour = "" + h;
-    }
-
-    if (Min < 10) {
-        minute = "0" + Min;
-    }
-    else {
-        minute = "" + Min;
-    }
-    tm = hour + minute;
-
-    var sql = "update players set 	isConnected=0,disTime='" + tm + "',disDate=" + curDate + " where id=" + pid;
-    con.query(sql);
-    console.log("player: " + pid + " diconnected");
-}
-
-function GetNotifications() {
-    try {
-        var curDate = GetCurrentDate();
-
-        var y = curDate.substr(0, 4);
-        var m = curDate.substr(4, 2);
-        var day = curDate.substr(6, 2);
-        day -= 3;
-        if (day < 1) {
-            m--;
-            if (m < 1) {
-                m = 12;
-                if (y % 4 == 3) {
-                    day = 30 + day + 1;
-                    y--;
-                }
-                else {
-                    day = 29 + day + 1;
-                }
-            }
-            else if (m <= 6) {
-                day = 31 + day + 1;
-            }
-            else {
-                day = 30 + day + 1;
-            }
-        }
-
-        var curtime = GetCurrentTime();
-
-        for (var eachItem in Players) {
-            for (var eachPlayer in Players[eachItem].players) {
-                var player = Players[eachItem].players[eachPlayer];
-                var dif = Date.now() - player.alive;
-                if (dif > 150000) {
-                    PlayerDisonnected(player.playerId);
-                    delete Players[eachItem].players[eachPlayer];
-                }
-            }
-        }
-
-        var query = "SELECT notification.id,notification.appId,notification.title,notification.message,notification.url,notification.timeToLive,notification.dateStartSend,notification.timeStartSend ";
-        query += ",notification.sound, notification.smalIcon, notification.largeIcon, notification.bigPicture, notification.ledColor, notification.accentColor, notification.gId, notification.priority ";
-        query += ", apps.pkgNameAndroid, apps.pkgNameIos, notification.kind, notification.IsStop, notification.lastUpdateTime, notification.bigText, notification.summary, notification.budget ";
-        query += ", notification.isTest, notification.playerId, notification.actionType, notification.hiddenNoti, notification.showTime, appTags.tagName, notification.chanelId ";
-        query += ", notification.dialogTitle, notification.btnYesText, notification.btnNoText, notification.dialogMessage, notification.dialogActionType, notification.dialogActionUrl , notification.isVibrate";
-        query += " FROM notification inner join apps on notification.appId = apps.id inner join appTags on notification.tagId = appTags.id ";
-        query += " where dateStartSend>= " + curDate + " and notification.isSend = 0; ";
-
-        //console.log(query);
-        const result = con.query(query);
-        console.log("noti count: " + result.length);
-
-        result.forEach(row => {
-            console.log("row.id: " + row.id);
-            var id = row.id;
-            var appId = row.appId;
-            var title = row.title;
-            var message = row.message;
-            var url = row.url;
-            var timeToLive = row.timeToLive;
-            var dateStartSend = row.dateStartSend;
-            var timeStartSend = row.timeStartSend;
-            var sound = row.sound;
-            var smalIcon = row.smalIcon;
-            var largeIcon = row.largeIcon;
-            var bigPicture = row.bigPicture;
-            var ledColor = row.ledColor;
-            var accentColor = row.accentColor;
-            var gId = row.gId;
-            var priority = row.priority;
-            var pkgNameAndroid = row.pkgNameAndroid;
-            var pkgNameIos = row.pkgNameIos;
-            var kind = row.kind;
-            var AdditionalData = row.AdditionalData;
-            var btns = row.btns;
-            var lastUpdateTime = row.lastUpdateTime;
-            var IsStop = row.IsStop;
-            var bigText = row.bigText;
-            var summary = row.summary;
-            var isTest = row.isTest;
-            var testId = row.playerId;
-
-            var actionType = row.actionType;
-            var hiddenNoti = row.hiddenNoti;
-            var showTime = row.showTime;
-            var tagName = row.tagName;
-            var chanelId = row.chanelId;
-
-            var dialogTitle = row.dialogTitle;
-            var btnYesText = row.btnYesText;
-            var btnNoText = row.btnNoText;
-            var dialogMessage = row.dialogMessage;
-            var dialogActionType = row.dialogActionType;
-            var dialogActionUrl = row.dialogActionUrl;
-            var isVibrate = row.isVibrate;
-
-            var chanelName = "";
-            var chanelDes = "";
-
-            var additionalData = [];
-            var btns = [];
-
-            var queryad = "select dtKey,dtValue from notiAdditionalData where nid=" + row.id;
-            const resultad = con.query(queryad);
-            resultad.forEach((rowad) => {
-                additionalData.push({ "dtKey": rowad.dtKey, "dtValue": rowad.dtValue });
-            });
-
-            //Get btns
-            var querybtn = "select id,nId,btnText,url,icon,actionType from notiBtn where nid=" + row.id;
-            const resultbtn = con.query(querybtn);
-            resultbtn.forEach((rowbtn) => {
-                btns.push({ "id": rowbtn.id, "nId": rowbtn.nId, "btnText": rowbtn.btnText, "url": rowbtn.url, "icon": rowbtn.icon, "actionType": rowbtn.actionType });
-            });
-
-            //Get Chanel
-            var queryChanel = "SELECT id,name,des FROM  notificationChanels where id=" + chanelId;
-            const resultChanel = con.query(queryChanel);
-            if (resultChanel.length > 0) {
-                resultChanel.forEach((rowChanel) => {
-                    chanelName = rowChanel.name;
-                    chanelDes = rowChanel.des;
-                });
-            }
-            else {
-                var queryChanelIns = "insert into notificationChanels (appId,name,des) values (" + appId + ",'defAdok','default chanel for adok notifications');";
-                con.query(queryChanelIns);
-                chanelName = "defAdok";
-                chanelDes = "default chanel for adok notifications";
-
-                var queryChanelIdMax = "select max(id) as mxId from notificationChanels where appId=" + appId;
-                const resultChanelIdMax = con.query(queryChanelIdMax);
-                resultChanelIdMax.forEach((rowChanelIdMax) => {
-                    chanelId = rowChanelIdMax.mxId;
-                });
-
-                var queryChanelUPd = "update notification set chanelId=" + chanelId + " where id=" + id;
-                con.query(queryChanelUPd);
-            }
-
-
-
-            var timeToSend = timeStartSend + timeToLive;
-            var sendH = Math.floor(timeToSend / 60);
-            var sendM = Math.floor(timeToSend % 60);
-            var Days = 0;
-            var HAfter = 0;
-            if (sendH > 24) {
-                Days = Math.floor(sendH / 24);
-                HAfter = Math.floor(sendH - (Days * 24));
-            }
-            else {
-                HAfter = sendH;
-            }
-
-            var yy = parseInt(dateStartSend.toString().substr(0, 4));
-            var mm = parseInt(dateStartSend.toString().substr(4, 2));
-            var dd = parseInt(dateStartSend.toString().substr(6, 2));
-
-            var curDateEnd = "";
-            if (Days > 0) {
-                dd += Days;
-                if (dd > 29 && mm == 12 && y % 4 != 3) {
-                    dd = dd - 29;
-                    mm = 1;
-                    yy++;
-                }
-                else if (dd > 30 && mm == 12 && y % 4 == 3) {
-                    dd = dd - 30;
-                    mm = 1;
-                    yy++;
-                }
-                else if (dd > 31 && mm <= 6) {
-                    dd = dd - 31;
-                    mm++;
-                }
-                else if (dd > 30 && mm > 6) {
-                    dd = dd - 30;
-                    mm++;
-                }
-            }
-
-            var year = "" + yy;
-            var mounth = "";
-            var dayOfMounth = "";
-            if (mm < 10) {
-                mounth = "0" + mm;
-            }
-            else {
-                mounth = "" + mm;
-            }
-
-            if (dd < 10) {
-                dayOfMounth = "0" + dd;
-            }
-            else {
-                dayOfMounth = "" + dd;
-            }
-
-            var curDateEnd = year + "" + mounth + "" + dayOfMounth;
-
-            var hcur = GetCurrentTime().substr(0, 2);
-
-            var noti = {
-                id: row.id, appId: row.appId, title: row.title, message: row.message, url: row.url, timeToLive: row.timeToLive
-                , dateStartSend: row.dateStartSend, timeStartSend: row.timeStartSend, sound: row.sound, smalIcon: row.smalIcon, largeIcon: row.largeIcon
-                , bigPicture: row.bigPicture, ledColor: row.ledColor, accentColor: row.accentColor, gId: row.gId, priority: row.priority
-                , pkgNameAndroid: row.pkgNameAndroid, pkgNameIos: row.pkgNameIos, kind: row.kind,
-                bigText: row.bigText, summary: row.summary,
-                actionType: row.actionType, hiddenNoti: row.hiddenNoti, showTime: row.showTime, tagName: row.tagName,
-                chanelId: chanelId, chanelName: chanelName, chanelDes: chanelDes,
-                dialogTitle: dialogTitle, btnYesText: btnYesText, btnNoText: btnNoText, dialogMessage: dialogMessage, dialogActionType: dialogActionType, dialogActionUrl: dialogActionUrl, isVibrate: isVibrate,
-                AdditionalData: additionalData, btns: btns, Meskind: "noti"
-            };
-
-            if (isTest > 0) {
-                if (pkgNameAndroid != "") {
-                    if (Players[pkgNameAndroid] != undefined) {
-                        if (Players[pkgNameAndroid].players[testId] != undefined) {
-                            Players[pkgNameAndroid].players[testId].socket.write(JSON.stringify(noti) + "\n");
-                            object.splice(index, 1);
-                        }
-                    }
-                }
-
-                if (pkgNameIos != "") {
-                    if (Players[pkgNameIos] != undefined) {
-                        if (Players[pkgNameIos].players[testId] != undefined) {
-                            Players[pkgNameIos].players[testId].socket.write(JSON.stringify(noti) + "\n");
-                            object.splice(index, 1);
-                        }
-                    }
-                }
-            }
-            else {
-                curDatev = "" + dateStartSend;
-                if (parseInt(curDatev) < parseInt(curDateEnd) || (parseInt(curDatev) == parseInt(curDateEnd) && parseInt(hcur) <= parseInt(HAfter))) {
-                    if (IsStop == 0) {
-
-                        if (Players[pkgNameAndroid] != undefined) {
-                            Players[pkgNameAndroid].players.forEach(function (itemp, indexp, objectp) {
-
-                                if (itemp.socket == undefined) {
-                                    objectp.splice(indexp, 1);
-                                }
-                                else {
-                                    if (delivery[noti.id] == undefined) {
-                                        delivery[noti.id] = { players: [] };
-                                    }
-
-                                    if (delivery[noti.id].players[itemp.playerId] == undefined) {
-                                        console.log("noti.id: " + noti.id + "--- playerId: " + itemp.playerId);
-                                        itemp.socket.write(JSON.stringify(noti) + "\n");
-                                    }
-                                }
-                            });
-                        }
-                        else {
-                        }
-                    }
-                }
-                else {
-                    //stop send
-                    var queryst = "update notification set IsStop=1 where id=" + row.id;
-                    con.query(queryst);
-                }
-            }
-        });
-        canCheckNotify = 1;
-    }
-    catch (e) {
-        canCheckNotify = 1;
-        console.log("10: " + e.message);
-    }
 }
 
 function gregorian_to_jalali(gy, gm, gd) {
@@ -722,133 +333,7 @@ function GetCurrentTime() {
 
     var timeout = setInterval(function () {
         try {
-            var curDate = GetCurrentDate();
-            var curtime = GetCurrentTime();
-            var query = "SELECT id,name,des,logoAdd,limitPlayerCount,playerJoinCount,dateCreated,restHour,startDate,startTime,endDate,endTime,isAutomated,isDaily,isWeekly,isMounthly,myCount,lastCreteDate,lastCreateTime,startDay,endDay,startMounth,endMounth,isActive,appId,isEnd from league where isActive=1 and isAutomated=1;";
-            const result = con.query(query);
-            if (result.length > 0) {
-                result.forEach((row) => {
-                    var id = row.id;
-                    var startDate = row.startDate;
-                    var startTime = row.startTime;
-                    var endDate = row.endDate;
-                    var endTime = row.endTime;
-                    var isAutomated = row.isAutomated;
-                    var isDaily = row.isDaily;
-                    var isWeekly = row.isWeekly;
-                    var isMounthly = row.isMounthly;
-                    var myCount = row.myCount;
-                    var lastCreteDate = row.lastCreteDate;
-                    var lastCreateTime = row.lastCreateTime;
-                    var startDay = row.startDay;
-                    var endDay = row.endDay;
-                    var startMounth = row.startMounth;
-                    var endMounth = row.endMounth;
-                    var isActive = row.isActive;
-                    var appId = row.appId;
-                    var isEnd = parseInt(row.isEnd);
-                    var limitPlayerCount = parseInt(row.limitPlayerCount);
-
-                    var name = row.name;
-                    var des = row.des;
-                    var logoAdd = row.logoAdd;
-                    var playerJoinCount = row.playerJoinCount;
-                    var dateCreated = row.dateCreated;
-                    var restHour = row.restHour;
-
-                    var qqjoi = ",playerJoinCount=0";
-                    //if (limitPlayerCount > 0)
-                    //{
-                    //    qqjoi = ",playerJoinCount=0 ";
-                    //}
-
-                    if (parseInt(curDate) < parseInt(endDate)) {
-                        if (parseInt(isDaily) > 0) {
-                            if (parseInt(curtime) > parseInt(endTime)) {
-                                if (parseInt(isEnd) == 0) {
-                                    var qq = "INSERT INTO `leagueLog` (`lId`, `name`, `des`, `logoAdd`, `startDate`, `startTime`, `endDate`, `endTime`, `playerJoinCount`,`limitPlayerCount`, `appId`, `dateCreated`, `isAutomated`, `isDaily`, `isWeekly`, `isMounthly`, `restHour`, `myCount`, `lastCreteDate`,`lastCreateTime`, `startDay`, `endDay`, `startMounth`, `endMounth`, `isActive`, `isEnd`) VALUES (" + id + ",'" + name + "','" + des + "','" + logoAdd + "'," + startDate + ",'" + startTime + "'," + endDate + ",'" + endTime + "'," + playerJoinCount + "," + limitPlayerCount + "," + appId + "," + dateCreated + "," + isAutomated + "," + isDaily + "," + isWeekly + "," + isMounthly + "," + restHour + "," + myCount + "," + lastCreteDate + ",'" + lastCreateTime + "'," + startDay + "," + endDay + "," + startMounth + "," + endMounth + "," + isActive + "," + isEnd + ");";
-                                    con.query(qq);
-                                    setLeagueBest(id, myCount, appId, curDate, curtime);
-                                }
-                            }
-                            else if (parseInt(curtime) > parseInt(startTime) && parseInt(isEnd) == 1) {
-                                var q = "update league set isEnd=0" + qqjoi + " where id=" + id;
-                                con.query(q);
-                            }
-                        }
-                        else if (parseInt(isWeekly) > 0) {
-                            var d = new Date();
-                            var n = d.getDay();
-                            n += 2;
-                            if (n > 7) {
-                                n = 1;
-                            }
-
-                            if ((n > parseInt(endDay) || n < parseInt(startDay)) && isEnd == 0) {
-                                var qq = "INSERT INTO `leagueLog` (`lId`, `name`, `des`, `logoAdd`, `startDate`, `startTime`, `endDate`, `endTime`, `playerJoinCount`,`limitPlayerCount`, `appId`, `dateCreated`, `isAutomated`, `isDaily`, `isWeekly`, `isMounthly`, `restHour`, `myCount`, `lastCreteDate`,`lastCreateTime`, `startDay`, `endDay`, `startMounth`, `endMounth`, `isActive`, `isEnd`) VALUES (" + lId + ",'" + name + "','" + des + "','" + logoAdd + "'," + startDate + ",'" + startTime + "'," + endDate + ",'" + endTime + "'," + playerJoinCount + "," + limitPlayerCount + "," + appId + "," + dateCreated + "," + isAutomated + "," + isDaily + "," + isWeekly + "," + isMounthly + "," + restHour + "," + myCount + "," + lastCreteDate + ",'" + lastCreateTime + "'," + startDay + "," + endDay + "," + startMounth + "," + endMounth + "," + isActive + "," + isEnd + ");";
-                                con.query(qq);
-                                setLeagueBest(id, myCount, appId, curDate, curtime);
-                            }
-                            else if (n < parseInt(endDay) && n > parseInt(startDay) && isEnd == 1) {
-                                var q = "update league set isEnd=0" + qqjoi + " where id=" + id;
-                                con.query(q);
-                            }
-                            else if (n == parseInt(endDay)) {
-                                if (parseInt(curtime) >= parseInt(endTime) && isEnd == 0) {
-                                    var qq = "INSERT INTO `leagueLog` (`lId`, `name`, `des`, `logoAdd`, `startDate`, `startTime`, `endDate`, `endTime`, `playerJoinCount`,`limitPlayerCount`, `appId`, `dateCreated`, `isAutomated`, `isDaily`, `isWeekly`, `isMounthly`, `restHour`, `myCount`, `lastCreteDate`,`lastCreateTime`, `startDay`, `endDay`, `startMounth`, `endMounth`, `isActive`, `isEnd`) VALUES (" + lId + ",'" + name + "','" + des + "','" + logoAdd + "'," + startDate + ",'" + startTime + "'," + endDate + ",'" + endTime + "'," + playerJoinCount + "," + limitPlayerCount + "," + appId + "," + dateCreated + "," + isAutomated + "," + isDaily + "," + isWeekly + "," + isMounthly + "," + restHour + "," + myCount + "," + lastCreteDate + ",'" + lastCreateTime + "'," + startDay + "," + endDay + "," + startMounth + "," + endMounth + "," + isActive + "," + isEnd + ");";
-                                    con.query(qq);
-                                    setLeagueBest(id, myCount, appId, curDate, curtime);
-                                }
-                                else if (isEnd == 1) {
-                                    var q = "update league set isEnd=0" + qqjoi + " where id=" + id;
-                                    con.query(q);
-                                }
-                            }
-                            else if (n == parseInt(startDay) && parseInt(curtime) >= parseInt(startTime) && isEnd == 1) {
-                                var q = "update league set isEnd=0" + qqjoi + " where id=" + id;
-                                con.query(q);
-                            }
-                        }
-                        else if (parseInt(isMounthly) > 0) {
-                            var d = new Date();
-                            var y = d.getFullYear();
-                            var m = d.getMonth();
-                            var day = d.getDate();
-
-                            var dateHijri = gregorian_to_jalali(y, m, day);
-                            y = dateHijri[0];
-                            m = dateHijri[1];
-                            day = dateHijri[2];
-
-                            if ((day > parseInt(endMounth) || day < parseInt(startMounth)) && isEnd == 0) {
-                                var qq = "INSERT INTO `leagueLog` (`lId`, `name`, `des`, `logoAdd`, `startDate`, `startTime`, `endDate`, `endTime`, `playerJoinCount`,`limitPlayerCount`, `appId`, `dateCreated`, `isAutomated`, `isDaily`, `isWeekly`, `isMounthly`, `restHour`, `myCount`, `lastCreteDate`,`lastCreateTime`, `startDay`, `endDay`, `startMounth`, `endMounth`, `isActive`, `isEnd`) VALUES (" + lId + ",'" + name + "','" + des + "','" + logoAdd + "'," + startDate + ",'" + startTime + "'," + endDate + ",'" + endTime + "'," + playerJoinCount + "," + limitPlayerCount + "," + appId + "," + dateCreated + "," + isAutomated + "," + isDaily + "," + isWeekly + "," + isMounthly + "," + restHour + "," + myCount + "," + lastCreteDate + ",'" + lastCreateTime + "'," + startDay + "," + endDay + "," + startMounth + "," + endMounth + "," + isActive + "," + isEnd + ");";
-                                con.query(qq);
-                                setLeagueBest(id, myCount, appId, curDate, curtime);
-                            }
-                            else if (day < parseInt(endMounth) && day > parseInt(startMounth) && isEnd == 1) {
-                                var q = "update league set isEnd=0" + qqjoi + " where id=" + id;
-                                con.query(q);
-                            }
-                            else if (day == parseInt(endMounth)) {
-                                if (parseInt(curtime) >= parseInt(endTime) && isEnd == 0) {
-                                    var qq = "INSERT INTO `leagueLog` (`lId`, `name`, `des`, `logoAdd`, `startDate`, `startTime`, `endDate`, `endTime`, `playerJoinCount`,`limitPlayerCount`, `appId`, `dateCreated`, `isAutomated`, `isDaily`, `isWeekly`, `isMounthly`, `restHour`, `myCount`, `lastCreteDate`,`lastCreateTime`, `startDay`, `endDay`, `startMounth`, `endMounth`, `isActive`, `isEnd`) VALUES (" + lId + ",'" + name + "','" + des + "','" + logoAdd + "'," + startDate + ",'" + startTime + "'," + endDate + ",'" + endTime + "'," + playerJoinCount + "," + limitPlayerCount + "," + appId + "," + dateCreated + "," + isAutomated + "," + isDaily + "," + isWeekly + "," + isMounthly + "," + restHour + "," + myCount + "," + lastCreteDate + ",'" + lastCreateTime + "'," + startDay + "," + endDay + "," + startMounth + "," + endMounth + "," + isActive + "," + isEnd + ");";
-                                    con.query(qq);
-                                    setLeagueBest(id, myCount, appId, curDate, curtime);
-                                }
-                                else if (isEnd == 1) {
-                                    var q = "update league set isEnd=0" + qqjoi + " where id=" + id;
-                                    con.query(q);
-                                }
-                            }
-                            else if (day == parseInt(startMounth) && parseInt(curtime) >= parseInt(startTime) && isEnd == 1) {
-                                var q = "update league set isEnd=0" + qqjoi + " where id=" + id;
-                                con.query(q);
-                            }
-                        }
-                    }
-                });
-            }
-
+            SetLeagueState();
         }
         catch (e) {
             console.log("11: " + e.message);
@@ -856,110 +341,6 @@ function GetCurrentTime() {
     }, 60000);
 
 })();
-
-function setLeagueBest(lId, myCount, appId, curDate, curtime) {
-    try {
-        var cnt = parseInt(myCount) + 1;
-        var q = "update league set lastCreteDate=" + curDate + ",lastCreateTime='" + curtime + "',myCount=" + cnt + ",isEnd=1 where id=" + lId;
-        con.query(q);
-
-        var query = "select id,uid from apps where id=" + appId + ";";
-        con.query(query);
-
-        if (result.length > 0) {
-            result.forEach((row) => {
-                var id = row.id;
-                var uid = row.uid;
-                var tbName = "zz_" + appId + "_" + uid + "_lud";
-                var crq = "select ";
-                var Cols = [];
-                var typs = [];
-                var olaviat = [];
-                var qCol = "SELECT `COLUMN_NAME`,`DATA_TYPE`  FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA`='kingofmeta_ADok' AND `TABLE_NAME`='" + tbName + "';";
-                var i = 0;
-                con.query(qCol);
-                resultCol.forEach((rowCol) => {
-                    var clName = rowCol.COLUMN_NAME;
-                    var clType = rowCol.DATA_TYPE;
-                    Cols.push(clName);
-                    typs[clName] = clType;
-
-                    if (i == 0) {
-                        i++;
-                        crq += "tb." + clName;
-                    }
-                    else {
-                        crq += ",tb." + clName;
-                    }
-                });
-
-                var qOlaviat = "select name,olaviat from leagueData where appId=" + appId + " and leagueId=" + lId + " and olaviat>0 order by olaviat DESC";
-                var olvQO = "";
-                i = 0;
-                con.query(qOlaviat);
-                resultOlaviat.forEach((rowOlaviat) => {
-                    var olvN = rowOlaviat.name;
-                    var olaviatA = rowOlaviat.olaviat;
-
-                    olaviat.push(olvN);
-                    if (i == 0) {
-                        i++;
-                        olvQO += olvN + " DESC ";
-                    }
-                    else {
-                        olvQO += "," + olvN + " DESC ";
-                    }
-                });
-
-                crq += ",p.nickname from " + tbName + " as tb inner join players as p on tb.playerId=p.id ";
-                crq += " where myCount=" + myCount + " and lId=" + lId + " and isShow=1 ";
-                crq += " ORDER by " + olvQO + "limit 10000";
-
-                console.log(crq);
-                con.query(crq);
-                resultRq.forEach((rowRq) => {
-                    var qIns = "insert into " + tbName + "_res" + " (";
-                    var qValues = "(";
-                    i = 0;
-                    for (var prop in rowRq) {
-
-                        if (prop == "nickname" || prop == "id")
-                        { }
-                        else {
-                            if (i == 0) {
-                                i++;
-                                qIns += prop;
-                                if (typs[prop] == "int") {
-                                    qValues += rowRq[prop];
-                                }
-                                else {
-                                    qValues += "'" + rowRq[prop] + "'";
-                                }
-
-                            }
-                            else {
-                                qIns += "," + prop;
-                                if (typs[prop] == "int") {
-                                    qValues += "," + rowRq[prop];
-                                }
-                                else {
-                                    qValues += ",'" + rowRq[prop] + "'";
-                                }
-                            }
-                        }
-                    }
-                    qIns += " ) values " + qValues + ")";
-                    console.log(qIns);
-                    con.query(qIns);
-                });
-            });
-        }
-    }
-    catch (e) {
-        console.log("11: " + e.message);
-    }
-}
-
 
 function GetNotificationsWeb() {
     try {
@@ -1028,7 +409,6 @@ function GetNotificationsWeb() {
                     }
                 }
 
-                console.log(buffer);
                 var row = JSON.parse(buffer);
 
                 for (var i = 0; i < row.length; i++) {
@@ -1299,5 +679,123 @@ function PlayerDisonnectedWeb(pid) {
     }
     catch (e) {
         console.log("140: " + e.message);
+    }
+}
+
+function PlayersConnection(q1,q2) {
+    try {
+        var dataQS = {
+            var1: q1,
+            var2: q2
+        };
+
+        var querystring = require("querystring");
+        var qs = querystring.stringify(dataQS);
+        var qslength = qs.length;
+        var options = {
+            hostname: "adok.ir",
+            port: 80,
+            path: "/GamesData/ADok/PlayersConnection.php",
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': qslength
+            }
+        };
+
+        var buffer = "";
+        var req = http.request(options, function (res) {
+            res.on('data', function (chunk) {
+                buffer += chunk;
+            });
+            res.on('end', function () {
+                console.log(buffer);
+            });
+        });
+
+        req.write(qs);
+        req.end();
+    }
+    catch (e) {
+        console.log("150: " + e.message);
+    }
+}
+
+function SetDelivery(nid, playerId) {
+    try {
+        var dataQS = {
+            var1: nid,
+            var2: playerId
+        };
+
+        var querystring = require("querystring");
+        var qs = querystring.stringify(dataQS);
+        var qslength = qs.length;
+        var options = {
+            hostname: "adok.ir",
+            port: 80,
+            path: "/GamesData/ADok/SetDelivery.php",
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': qslength
+            }
+        };
+
+        var buffer = "";
+        var req = http.request(options, function (res) {
+            res.on('data', function (chunk) {
+                buffer += chunk;
+            });
+            res.on('end', function () {
+                console.log(buffer);
+            });
+        });
+
+        req.write(qs);
+        req.end();
+    }
+    catch (e) {
+        console.log("150: " + e.message);
+    }
+}
+
+function SetLeagueState()
+{
+    try {
+        var dataQS = {
+            var1: "sth1",
+            var2: "sth2"
+        };
+
+        var querystring = require("querystring");
+        var qs = querystring.stringify(dataQS);
+        var qslength = qs.length;
+        var options = {
+            hostname: "adok.ir",
+            port: 80,
+            path: "/GamesData/ADok/SetLeagueState.php",
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': qslength
+            }
+        };
+
+        var buffer = "";
+        var req = http.request(options, function (res) {
+            res.on('data', function (chunk) {
+                buffer += chunk;
+            });
+            res.on('end', function () {
+                console.log(buffer);
+            });
+        });
+
+        req.write(qs);
+        req.end();
+    }
+    catch (e) {
+        console.log("160: " + e.message);
     }
 }

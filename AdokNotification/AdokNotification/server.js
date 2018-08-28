@@ -96,7 +96,6 @@ try {
                     if (dtSplit[dataCount].trim()!= "") {
                         dtSplit[dataCount] += "}";
                         var xval = dtSplit[dataCount];
-                        console.log(xval+ " --- end\n");
                         var dt = JSON.parse(xval);
                         var playerId = dt.playerId;
                         var pkgName = dt.pkgName;

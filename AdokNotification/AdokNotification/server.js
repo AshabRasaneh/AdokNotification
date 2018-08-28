@@ -88,69 +88,79 @@ try {
                 if (data && data.byteLength != undefined) {
                     data = new Buffer(data).toString('utf8');
                 }
-                console.log(data+" --- end\n");
-                var dt = JSON.parse(data);
-                var playerId = dt.playerId;
-                var pkgName = dt.pkgName;
-                var phoneNo = dt.phoneNo;
+                
 
-                if (dt.hasOwnProperty('pkgs')) {
-                    pkgs = dt.pkgs;
-                }
+                var dtSplit = data.split("}");
 
-                var knd = dt.kind;
-                var added = 0;
-                myId = playerId;
+                for (var dataCount = 0; dataCount < dtSplit.length; dataCount++) {
+                    console.log(dtSplit[dataCount] + " --- end\n");
+                    if (dtSplit[dataCount] != "") {
+                        var dt = JSON.parse(dtSplit[dataCount] + "}");
+                        var playerId = dt.playerId;
+                        var pkgName = dt.pkgName;
+                        var phoneNo = dt.phoneNo;
 
-                var myData = {
-                    playerId: playerId, phoneNo: phoneNo, socket: socket, pkgs: pkgs, alive: 0
-                };
-                var d = new Date();
-                var n = d.getTime();
-                myData.alive = n;
+                        if (dt.hasOwnProperty('pkgs')) {
+                            pkgs = dt.pkgs;
+                        }
 
-                if (knd == "add") {
+                        var knd = dt.kind;
+                        var added = 0;
+                        myId = playerId;
 
-                    if (pkgs != undefined) {
-                        for (var j = 0; j < pkgs.length; j++) {
-                            if (Players[pkgs[j]] == undefined) {
-                                Players[pkgs[j]] = { players: [] };
-                                Players[pkgs[j]].players[playerId] = myData;
+                        var myData = {
+                            playerId: playerId, phoneNo: phoneNo, socket: socket, pkgs: pkgs, alive: 0
+                        };
+                        var d = new Date();
+                        var n = d.getTime();
+                        myData.alive = n;
+
+                        if (knd == "add") {
+
+                            if (pkgs != undefined) {
+                                for (var j = 0; j < pkgs.length; j++) {
+                                    if (Players[pkgs[j]] == undefined) {
+                                        Players[pkgs[j]] = { players: [] };
+                                        Players[pkgs[j]].players[playerId] = myData;
+                                    }
+                                    else {
+                                        Players[pkgs[j]].players[playerId] = myData;
+                                    }
+                                }
+
+                                PlayerConnectedWeb(playerId, pkgs);
+                            }
+                        }
+
+                        else if (knd == "Alive") {
+                            var data = {
+                                alive: true, Meskind: "Alive"
+                            };
+                            for (var j = 0; j < pkgs.length; j++) {
+                                if (Players[pkgs[j]] != undefined) {
+                                    if (Players[pkgs[j]].players[playerId] != undefined) {
+                                        Players[pkgs[j]].players[playerId].alive = Date.now();
+                                    }
+                                }
+                            }
+                            socket.write(JSON.stringify(data) + "\n");
+                        }
+                        else if (knd == "Deliver") {
+                            var nid = dt.nid;
+                            if (delivery[nid] == undefined) {
+                                delivery[nid] = { players: [] };
+                                delivery[nid].players[playerId] = 1;
                             }
                             else {
-                                Players[pkgs[j]].players[playerId] = myData;
+                                delivery[nid].players[playerId] = 1;
                             }
-                        }
 
-                        PlayerConnectedWeb(playerId, pkgs);
-                    }
-                }
-
-                else if (knd == "Alive") {
-                    var data = {
-                        alive: true, Meskind: "Alive"
-                    };
-                    for (var j = 0; j < pkgs.length; j++) {
-                        if (Players[pkgs[j]] != undefined) {
-                            if (Players[pkgs[j]].players[playerId] != undefined) {
-                                Players[pkgs[j]].players[playerId].alive = Date.now();
-                            }
+                            SetDelivery(nid, playerId);
                         }
                     }
-                    socket.write(JSON.stringify(data) + "\n");
                 }
-                else if (knd == "Deliver") {
-                    var nid = dt.nid;
-                    if (delivery[nid] == undefined) {
-                        delivery[nid] = { players: [] };
-                        delivery[nid].players[playerId] = 1;
-                    }
-                    else {
-                        delivery[nid].players[playerId] = 1;
-                    }
 
-                    SetDelivery(nid, playerId);
-                }
+                
             }
             catch (e) {
                 console.log("3: " + e.message);

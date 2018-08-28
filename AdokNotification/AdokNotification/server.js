@@ -26,7 +26,7 @@ var delivery = [];
     try {
         //var c = 0;
         var timeout = setInterval(function () {
-            console.log(canCheckNotify);
+            //console.log(canCheckNotify);
             if (canCheckNotify > 0) {
                 canCheckNotify = 0;
                 GetNotificationsWeb();
@@ -88,6 +88,7 @@ try {
                 if (data && data.byteLength != undefined) {
                     data = new Buffer(data).toString('utf8');
                 }
+                console.log(data);
                 var dt = JSON.parse(data);
                 var playerId = dt.playerId;
                 var pkgName = dt.pkgName;
@@ -412,7 +413,7 @@ function GetNotificationsWeb() {
                 var row = JSON.parse(buffer);
 
                 for (var i = 0; i < row.length; i++) {
-                    console.log("row.id: " + row[i].id);
+                    //console.log("row.id: " + row[i].id);
                     var id = row[i].id;
                     var appId = row[i].appId;
                     var title = row[i].title;
@@ -579,7 +580,7 @@ function GetNotificationsWeb() {
                                             }
 
                                             if (delivery[noti.id].players[itemp.playerId] == undefined) {
-                                                console.log("noti.id: " + noti.id + "--- playerId: " + itemp.playerId);
+                                                //console.log("noti.id: " + noti.id + "--- playerId: " + itemp.playerId);
                                                 itemp.socket.write(JSON.stringify(noti) + "\n");
                                             }
                                         }

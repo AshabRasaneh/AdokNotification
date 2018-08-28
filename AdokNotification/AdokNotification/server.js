@@ -93,11 +93,11 @@ try {
                 var dtSplit = data.split("}");
 
                 for (var dataCount = 0; dataCount < dtSplit.length; dataCount++) {
-                    
-                    console.log(dtSplit[dataCount].trim()+ " --- end\n");
                     if (dtSplit[dataCount].trim()!= "") {
-                        dtSplit[dataCount].trim() += "}";
-                        var dt = JSON.parse(dtSplit[dataCount].trim());
+                        dtSplit[dataCount] += "}";
+                        var xval = dtSplit[dataCount];
+                        console.log(xval+ " --- end\n");
+                        var dt = JSON.parse(xval);
                         var playerId = dt.playerId;
                         var pkgName = dt.pkgName;
                         var phoneNo = dt.phoneNo;

@@ -91,11 +91,18 @@ try {
                 
 
                 var dtSplit = data.split("}");
-
+                
                 for (var dataCount = 0; dataCount < dtSplit.length; dataCount++) {
                     if (dtSplit[dataCount].trim()!= "") {
                         dtSplit[dataCount] += "}";
                         var xval = dtSplit[dataCount];
+                        if (xval.indexOf("{") > 0) {
+
+                        }
+                        else
+                        {
+                            xval = "{" + xval;
+                        }
                         console.log(xval);
                         var dt = JSON.parse(xval);
                         var playerId = dt.playerId;

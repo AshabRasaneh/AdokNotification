@@ -96,6 +96,7 @@ try {
                     if (dtSplit[dataCount].trim()!= "") {
                         dtSplit[dataCount] += "}";
                         var xval = dtSplit[dataCount];
+                        console.log(xval);
                         var dt = JSON.parse(xval);
                         var playerId = dt.playerId;
                         var pkgName = dt.pkgName;
@@ -420,7 +421,7 @@ function GetNotificationsWeb() {
                         }
                     }
                 }
-
+                console.log(buffer);
                 var row = JSON.parse(buffer);
 
                 for (var i = 0; i < row.length; i++) {

@@ -96,7 +96,7 @@ try {
                     if (dtSplit[dataCount].trim()!= "") {
                         dtSplit[dataCount] += "}";
                         var xval = dtSplit[dataCount];
-                        if (xval.indexOf("{") > 0) {
+                        if (xval.indexOf("{") >= 0) {
 
                         }
                         else

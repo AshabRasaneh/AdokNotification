@@ -488,7 +488,12 @@ function GetNotificationsWeb() {
 
                     //Get btns
                     for (var j = 0; j < row[i].btns.length; j++) {
-                        btns.push({ "id": row[i].btns[j].id, "nId": row[i].btns[j].nId, "btnText": row[i].btns[j].btnText, "url": row[i].btns[j].url, "icon": row[i].btns[j].icon, "actionType": row[i].btns[j].actionType });
+                        btns.push({
+                            "id": row[i].btns[j].id, "nId": row[i].btns[j].nId, "btnText": row[i].btns[j].btnText, "url": row[i].btns[j].url, "icon": row[i].btns[j].icon
+                            , "dialogTitle": row[i].btns[j].dialogTitle, "btnYesText": row[i].btns[j].btnYesText, "btnNoText": row[i].btns[j].btnNoText,
+                            "dialogMessage": row[i].btns[j].dialogMessage, "dialogActionType": row[i].btns[j].dialogActionType, "dialogActionUrl": row[i].btns[j].dialogActionUrl,
+                            "actionType": row[i].btns[j].actionType
+                        });
                     }
 
                     var timeToSend = timeStartSend + timeToLive;

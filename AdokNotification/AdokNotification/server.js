@@ -421,7 +421,7 @@ function GetNotificationsWeb() {
                         }
                     }
                 }
-                console.log(buffer);
+                //console.log(buffer);
                 var row = JSON.parse(buffer);
 
                 for (var i = 0; i < row.length; i++) {

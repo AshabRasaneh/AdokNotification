@@ -466,9 +466,10 @@ function GetNotificationsWeb() {
                     var dialogActionType = row[i].dialogActionType;
                     var dialogActionUrl = row[i].dialogActionUrl;
                     var isVibrate = row[i].isVibrate;
+                    var devEnvId = row[i].devEnvId;
 
-                    var chanelName = row[i].chanelName;;
-                    var chanelDes = row[i].chanelDes;;
+                    var chanelName = row[i].chanelName;
+                    var chanelDes = row[i].chanelDes;
 
                     var additionalData = [];
                     var btns = [];
@@ -552,6 +553,7 @@ function GetNotificationsWeb() {
                         actionType: row[i].actionType, hiddenNoti: row[i].hiddenNoti, showTime: row[i].showTime, tagName: row[i].tagName,
                         chanelId: chanelId, chanelName: chanelName, chanelDes: chanelDes,
                         dialogTitle: dialogTitle, btnYesText: btnYesText, btnNoText: btnNoText, dialogMessage: dialogMessage, dialogActionType: dialogActionType, dialogActionUrl: dialogActionUrl, isVibrate: isVibrate,
+                        devEnvId: devEnvId,
                         AdditionalData: additionalData, btns: btns, Meskind: "noti"
                     };
 

@@ -40,40 +40,40 @@ var delivery = [];
 })();
 
 
-(function () {
+//(function () {
 
-    try {
-        //var c = 0;
-        var timeout = setInterval(function () {
-            var query = "update players set isConnected=1 where ";
-            var query2 = "update players set isConnected=0 where ";
-            var i = 0;
-            for (var eachItem in Players) {
-                for (var eachPlayer in Players[eachItem].players) {
-                    var player = Players[eachItem].players[eachPlayer];
-                    if (i == 0) {
-                        i++;
-                        query += " id=" + player.playerId;
-                        query2 += " id<>" + player.playerId;
-                    }
-                    else {
-                        query += " or id=" + player.playerId;
-                        query2 += " and id<>" + player.playerId;
-                    }
+//    try {
+//        //var c = 0;
+//        var timeout = setInterval(function () {
+//            var query = "update players set isConnected=1 where ";
+//            var query2 = "update players set isConnected=0 where ";
+//            var i = 0;
+//            for (var eachItem in Players) {
+//                for (var eachPlayer in Players[eachItem].players) {
+//                    var player = Players[eachItem].players[eachPlayer];
+//                    if (i == 0) {
+//                        i++;
+//                        query += " id=" + player.playerId;
+//                        query2 += " id<>" + player.playerId;
+//                    }
+//                    else {
+//                        query += " or id=" + player.playerId;
+//                        query2 += " and id<>" + player.playerId;
+//                    }
 
-                }
-            }
+//                }
+//            }
 
-            if (i > 0) {
-                PlayersConnection(query, query2);
-            }
+//            if (i > 0) {
+//                PlayersConnection(query, query2);
+//            }
 
-        }, 120000);
-    }
-    catch (e) {
-        console.log("2: " + e.message);
-    }
-})();
+//        }, 120000);
+//    }
+//    catch (e) {
+//        console.log("2: " + e.message);
+//    }
+//})();
 
 try {
     var decoder = new StringDecoder('utf8');

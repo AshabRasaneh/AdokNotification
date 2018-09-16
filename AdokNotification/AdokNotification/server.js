@@ -164,6 +164,7 @@ try {
                             else {
                                 delivery[nid].players[playerId] = 1;
                             }
+                            console.log("Set delivery --- " + nid + " --- " + playerId);
 
                             SetDelivery(nid, playerId);
                         }
@@ -768,7 +769,7 @@ function SetDelivery(nid, playerId) {
                 buffer += chunk;
             });
             res.on('end', function () {
-                console.log(buffer);
+                console.log("SetDelivery.php result: "+buffer);
             });
         });
 

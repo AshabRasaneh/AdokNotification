@@ -129,7 +129,7 @@ try {
                             if (pkgs != undefined) {
                                 for (var j = 0; j < pkgs.length; j++) {
                                     console.log(pkgs[j]);
-                                    if (Players[pkgs[j]] == undefined && pkgs[j]!="Null") {
+                                    if (Players[pkgs[j]] == undefined && pkgs[j]!="null") {
                                         Players[pkgs[j]] = { players: [] };
                                         Players[pkgs[j]].players[playerId] = myData;
                                     }
@@ -578,7 +578,6 @@ function GetNotificationsWeb() {
                             if (Players[pkgNameAndroid] != undefined) {
                                 if (Players[pkgNameAndroid].players[testId] != undefined) {
                                     Players[pkgNameAndroid].players[testId].socket.write(JSON.stringify(noti) + "\n");
-                                    object.splice(index, 1);
                                 }
                             }
                         }

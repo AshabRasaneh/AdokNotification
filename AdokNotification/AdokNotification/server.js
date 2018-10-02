@@ -1,6 +1,6 @@
 ﻿var net = require("net");
 var http = require('http');
-var mysql = require('sync-mysql');
+var mysql = require('mysql');
 var jalaali = require('jalaali-js')
 
 var con = new mysql({

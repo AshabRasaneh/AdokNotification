@@ -884,7 +884,7 @@ function SendNoti(noti) {
         }
     }
     else {
-        curDatev = "" + dateStartSend;
+        curDatev = "" + noti.dateStartSend;
         if (parseInt(curDatev) < parseInt(curDateEnd) || (parseInt(curDatev) == parseInt(curDateEnd) && parseInt(hcur) <= parseInt(HAfter))) {
             if (noti.IsStop == 0) {
 

@@ -44,7 +44,7 @@ try {
     var decoder = new StringDecoder('utf8');
     server.on('connection', function (socket) {
 
-       // console.log('CONNECTED: ' + socket.remoteAddress + ':' + socket.remotePort);
+        // console.log('CONNECTED: ' + socket.remoteAddress + ':' + socket.remotePort);
         var myId = -1;
         var pkgs = [];
         socket.on('data', function (data) {
@@ -55,91 +55,76 @@ try {
                     data = new Buffer(data).toString('utf8');
                 }
 
+                xval = data;
+                //console.log(xval);
+                var dt = JSON.parse(xval);
+                var playerId = dt.playerId;
+                var pkgName = dt.pkgName;
+                var phoneNo = dt.phoneNo;
 
-                var dtSplit = data.split("}");
+                if (dt.hasOwnProperty('pkgs')) {
+                    pkgs = dt.pkgs;
+                }
 
-                for (var dataCount = 0; dataCount < dtSplit.length; dataCount++) {
-                    if (dtSplit[dataCount].trim() != "") {
-                        dtSplit[dataCount] += "}";
-                        xval = dtSplit[dataCount];
-                        if (xval.indexOf("{") >= 0) {
+                var knd = dt.kind;
+                var added = 0;
+                myId = playerId;
 
-                        }
-                        else {
-                            xval = "{" + xval;
-                        }
-                        //console.log(xval);
-                        var dt = JSON.parse(xval);
-                        var playerId = dt.playerId;
-                        var pkgName = dt.pkgName;
-                        var phoneNo = dt.phoneNo;
+                var myData = {
+                    playerId: playerId, phoneNo: phoneNo, socket: socket, pkgs: pkgs, alive: 0
+                };
+                var d = new Date();
+                var n = d.getTime();
+                myData.alive = n;
 
-                        if (dt.hasOwnProperty('pkgs')) {
-                            pkgs = dt.pkgs;
-                        }
+                if (knd == "add") {
 
-                        var knd = dt.kind;
-                        var added = 0;
-                        myId = playerId;
-
-                        var myData = {
-                            playerId: playerId, phoneNo: phoneNo, socket: socket, pkgs: pkgs, alive: 0
-                        };
-                        var d = new Date();
-                        var n = d.getTime();
-                        myData.alive = n;
-
-                        if (knd == "add") {
-
-                            if (pkgs != undefined) {
-                                for (var j = 0; j < pkgs.length; j++) {
-                                    //console.log(pkgs[j]);
-                                    if (Players[pkgs[j]] == undefined && pkgs[j] != "null") {
-                                        Players[pkgs[j]] = { players: [] };
-                                        Players[pkgs[j]].players[playerId] = myData;
-                                    }
-                                    else {
-                                        Players[pkgs[j]].players[playerId] = myData;
-                                    }
-                                }
-
-                                PlayerConnectedSql(playerId, pkgs);
-                            }
-                        }
-
-                        else if (knd == "Alive") {
-                            var data = {
-                                alive: true, Meskind: "Alive"
-                            };
-                            for (var j = 0; j < pkgs.length; j++) {
-                                if (Players[pkgs[j]] != undefined) {
-                                    if (Players[pkgs[j]].players[playerId] != undefined) {
-                                        Players[pkgs[j]].players[playerId].alive = Date.now();
-                                    }
-                                }
-                            }
-                            socket.write(JSON.stringify(data) + "\n");
-                        }
-                        else if (knd == "Deliver") {
-                            var nid = dt.nid;
-                            if (delivery[nid] == undefined) {
-                                delivery[nid] = { players: [] };
-                                delivery[nid].players[playerId] = 1;
+                    if (pkgs != undefined) {
+                        for (var j = 0; j < pkgs.length; j++) {
+                            if (Players[pkgs[j]] == undefined && pkgs[j] != "null") {
+                                Players[pkgs[j]] = { players: [] };
+                                Players[pkgs[j]].players[playerId] = myData;
                             }
                             else {
-                                delivery[nid].players[playerId] = 1;
+                                Players[pkgs[j]].players[playerId] = myData;
                             }
-                             console.log("Set delivery --- " + nid + " --- " + playerId);
+                        }
 
-                            SetDeliverySql(nid, playerId);
+                        PlayerConnectedSql(playerId, pkgs);
+                    }
+                }
+
+                else if (knd == "Alive") {
+                    var data = {
+                        alive: true, Meskind: "Alive"
+                    };
+                    for (var j = 0; j < pkgs.length; j++) {
+                        if (Players[pkgs[j]] != undefined) {
+                            if (Players[pkgs[j]].players[playerId] != undefined) {
+                                Players[pkgs[j]].players[playerId].alive = Date.now();
+                            }
                         }
                     }
+                    socket.write(JSON.stringify(data) + "\n");
+                }
+                else if (knd == "Deliver") {
+                    var nid = dt.nid;
+                    if (delivery[nid] == undefined) {
+                        delivery[nid] = { players: [] };
+                        delivery[nid].players[playerId] = 1;
+                    }
+                    else {
+                        delivery[nid].players[playerId] = 1;
+                    }
+                    console.log("Set delivery --- " + nid + " --- " + playerId);
+
+                    SetDeliverySql(nid, playerId);
                 }
 
 
             }
             catch (e) {
-                
+
                 console.log("3: " + e.message);
                 console.log("3: " + xval);
             }
@@ -641,7 +626,7 @@ function SetDeliverySql(nid, playerId) {
         con.query("update notification set isSend=1 where id=" + nid, function (err, result, fields) {
         });
 
-        con.query("SELECT id,count from nodeDelivery where nid=" + nid+" and playerId=" + playerId, function (errsel, resultsel, fieldssel) {
+        con.query("SELECT id,count from nodeDelivery where nid=" + nid + " and playerId=" + playerId, function (errsel, resultsel, fieldssel) {
             if (!errsel) {
                 if (resultsel.length > 0) {
                     for (var j = 0; j < resultsel.length; j++) {
@@ -651,11 +636,10 @@ function SetDeliverySql(nid, playerId) {
                         con.query("update nodeDelivery set  count=" + dcount + " where id=" + did, function (errupd, resultupd, fieldsupd) { });
                     }
                 }
-                else
-                {
-                    con.query("insert into nodeDelivery (nid,playerId,count) values ("+nid+","+playerId+",1);", function (errupd, resultupd, fieldsupd) { });
+                else {
+                    con.query("insert into nodeDelivery (nid,playerId,count) values (" + nid + "," + playerId + ",1);", function (errupd, resultupd, fieldsupd) { });
                 }
-                
+
             }
         });
 
@@ -669,11 +653,11 @@ function SetDeliverySql(nid, playerId) {
 function PlayerDisonnectedSql(pid) {
     curDate = GetCurrentDate();
     tm = GetCurrentTime();
-    con.query("update players set 	isConnected=0,disTime='"+tm+ "',disDate=" +curDate+ " where id=" +pid, function (errupd, resultupd, fieldsupd) { });
+    con.query("update players set 	isConnected=0,disTime='" + tm + "',disDate=" + curDate + " where id=" + pid, function (errupd, resultupd, fieldsupd) { });
 }
 
 function PlayerConnectedSql(pid, pkgs) {
     curDate = GetCurrentDate();
     tm = GetCurrentTime();
-    con.query("update players set 	isConnected=1,lastTime='"+tm+ "',lastDate=" +curDate+ " where id=" +pid, function (errupd, resultupd, fieldsupd) { });
+    con.query("update players set 	isConnected=1,lastTime='" + tm + "',lastDate=" + curDate + " where id=" + pid, function (errupd, resultupd, fieldsupd) { });
 }

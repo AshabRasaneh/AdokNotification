@@ -410,7 +410,7 @@ function GetNotificationMysql() {
                             actionType: row[i].actionType, hiddenNoti: row[i].hiddenNoti, showTime: row[i].showTime, tagName: row[i].tagName,
                             chanelId: chanelId, chanelName: chanelName, chanelDes: chanelDes,
                             dialogTitle: dialogTitle, btnYesText: btnYesText, btnNoText: btnNoText, dialogMessage: dialogMessage, dialogActionType: dialogActionType, dialogActionUrl: dialogActionUrl, isVibrate: isVibrate,
-                            devEnvId: devEnvId, iconId: iconId,
+                            devEnvId: devEnvId, iconId: iconId, isTest: row[i].isTest,
                             AdditionalData: additionalData, btns: btns, Meskind: "noti"
                         };
 
@@ -569,7 +569,7 @@ function SendNoti() {
         }
         else {
             curDatev = "" + noti.dateStartSend;
-            console.log(parseInt(curDatev) + " --- " + parseInt(curDateEnd) + " --- " + parseInt(curDatev) + " --- " + parseInt(curDateEnd) + " --- " + parseInt(hcur) + " --- " + parseInt(HAfter));
+            console.log(parseInt(curDatev) + " --- " + parseInt(curDateEnd) + " --- " + parseInt(curDatev) + " --- " + parseInt(curDateEnd) + " --- " + parseInt(hcur) + " --- " + parseInt(HAfter) + " --- " + noti.IsStop);
             if (parseInt(curDatev) < parseInt(curDateEnd) || (parseInt(curDatev) == parseInt(curDateEnd) && parseInt(hcur) <= parseInt(HAfter))) {
                 if (noti.IsStop == 0) {
 

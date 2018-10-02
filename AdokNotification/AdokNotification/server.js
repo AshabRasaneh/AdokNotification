@@ -794,7 +794,7 @@ function GetNotificationMysql() {
                         });
                     }
                     canCheckNotify = 1;
-                    console.log("Result: " + result);
+                    //console.log("Result: " + result);
                 }
                 else
                 {
@@ -811,7 +811,15 @@ function GetNotificationMysql() {
 
 function SendNoti(noti) {
 
-    console.log(noti.id + " -- " + noti.title + " -- " + noti.btns);
+    console.log(noti.id + " -- " + noti.title + " -- ");
+    if (noti.btns.length > 0)
+    {
+        console.log(noti.id + " -- " +noti.btns[0].id + " -- " + noti.btns[0].btnText + " -- ");
+    }
+
+    if (noti.AdditionalData.length > 0) {
+        console.log(noti.id + " -- " +noti.AdditionalData[0].dtKey + " -- " + noti.AdditionalData[0].dtValue + " -- ");
+    }
 
     var timeToSend = noti.timeStartSend + noti.timeToLive;
     var sendH = Math.floor(timeToSend / 60);

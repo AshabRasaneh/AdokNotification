@@ -572,10 +572,9 @@ function SendNoti() {
             console.log(parseInt(curDatev) + " --- " + parseInt(curDateEnd) + " --- " + parseInt(curDatev) + " --- " + parseInt(curDateEnd) + " --- " + parseInt(hcur) + " --- " + parseInt(HAfter) + " --- " + noti.IsStop);
             if (parseInt(curDatev) < parseInt(curDateEnd) || (parseInt(curDatev) == parseInt(curDateEnd) && parseInt(hcur) <= parseInt(HAfter))) {
                 if (noti.IsStop == 0) {
-
+                    console.log(noti.pkgNameAndroid + " " + Players[noti.pkgNameAndroid]);
                     if (Players[noti.pkgNameAndroid] != undefined) {
                         Players[noti.pkgNameAndroid].players.forEach(function (itemp, indexp, objectp) {
-
                             if (itemp.socket == undefined) {
                                 objectp.splice(indexp, 1);
                             }

@@ -33,7 +33,7 @@ var allNoties = [];
     try {
         var timeout = setInterval(function () {
             GetNotificationMysql();
-            SendNoti(noti);
+            SendNoti();
         }, 60000);
     }
     catch (e) {

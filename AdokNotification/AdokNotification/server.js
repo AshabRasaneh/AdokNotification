@@ -558,11 +558,11 @@ function SendNoti() {
 
         if (noti.isTest > 0) {
             if (noti.pkgNameAndroid != "") {
-                if (Players[pkgNameAndroid] != undefined) {
-                    console.log(pkgNameAndroid + " --- " + testId + " --- " + Players[pkgNameAndroid].players[testId]);
+                if (Players[noti.pkgNameAndroid] != undefined) {
+                    console.log(noti.pkgNameAndroid + " --- " + testId + " --- " + Players[noti.pkgNameAndroid].players[testId]);
 
-                    if (Players[pkgNameAndroid].players[testId] != undefined) {
-                        Players[pkgNameAndroid].players[testId].socket.write(JSON.stringify(noti) + "\n");
+                    if (Players[noti.pkgNameAndroid].players[noti.testId] != undefined) {
+                        Players[noti.pkgNameAndroid].players[noti.testId].socket.write(JSON.stringify(noti) + "\n");
                     }
                 }
             }
@@ -573,8 +573,8 @@ function SendNoti() {
             if (parseInt(curDatev) < parseInt(curDateEnd) || (parseInt(curDatev) == parseInt(curDateEnd) && parseInt(hcur) <= parseInt(HAfter))) {
                 if (noti.IsStop == 0) {
 
-                    if (Players[pkgNameAndroid] != undefined) {
-                        Players[pkgNameAndroid].players.forEach(function (itemp, indexp, objectp) {
+                    if (Players[noti.pkgNameAndroid] != undefined) {
+                        Players[noti.pkgNameAndroid].players.forEach(function (itemp, indexp, objectp) {
 
                             if (itemp.socket == undefined) {
                                 objectp.splice(indexp, 1);

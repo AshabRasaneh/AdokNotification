@@ -730,7 +730,7 @@ function GetNotificationMysql() {
                                     var dta = { "dtKey": resultadd[j].dtKey, "dtValue": resultadd[j].dtValue };
                                     var adid = resultadd[j].id;
                                     var adnid = resultadd[j].nId;
-                                    allNoties[adnid].AdditionalData[adid] = dta;
+                                    allNoties[adnid].AdditionalData[j] = dta;
                                 }
                             }
                         });
@@ -751,7 +751,7 @@ function GetNotificationMysql() {
                                     var bid = resultbtn[j].id;
                                     var bnid = resultbtn[j].nId;
 
-                                    allNoties[bnid].btns[bid] = dtb;
+                                    allNoties[bnid].btns[j] = dtb;
                                 }
                             }
                         });

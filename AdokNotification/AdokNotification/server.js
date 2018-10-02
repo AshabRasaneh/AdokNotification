@@ -811,14 +811,14 @@ function GetNotificationMysql() {
 
 function SendNoti(noti) {
 
-    console.log(noti.id + " -- " + noti.title + " -- ");
+    console.log(noti.id + " noti -- " + noti.title + " -- ");
     if (noti.btns.length > 0)
     {
-        console.log(noti.id + " -- " +noti.btns[0].id + " -- " + noti.btns[0].btnText + " -- ");
+        console.log(noti.id + " btn -- " +noti.btns[0].id + " -- " + noti.btns[0].btnText + " -- ");
     }
 
     if (noti.AdditionalData.length > 0) {
-        console.log(noti.id + " -- " +noti.AdditionalData[0].dtKey + " -- " + noti.AdditionalData[0].dtValue + " -- ");
+        console.log(noti.id + " dt -- " +noti.AdditionalData[0].dtKey + " -- " + noti.AdditionalData[0].dtValue + " -- ");
     }
 
     var timeToSend = noti.timeStartSend + noti.timeToLive;

@@ -3,14 +3,14 @@ var http = require('http');
 var mysql = require('mysql');
 var jalaali = require('jalaali-js')
 
-var conGetNoti = mysql.createConnection({
+var con = mysql.createConnection({
     host: "localhost",
     user: "kingofmeta_adok",
     password: "NTGePf_Pnn%N",
     database: "kingofmeta_ADok"
 });
 
-conGetNoti.connect(function (err) {
+con.connect(function (err) {
     if (err) throw err;
     console.log("Connected to mysql!");
 });
@@ -18,7 +18,6 @@ conGetNoti.connect(function (err) {
 var server = net.createServer();
 var StringDecoder = require('string_decoder').StringDecoder;
 
-//var _ip = "94.130.122.236";
 var _ip = "188.253.2.147";
 
 var _port = 3010;
@@ -41,47 +40,11 @@ var allNoties = [];
     }
 })();
 
-
-//(function () {
-
-//    try {
-//        //var c = 0;
-//        var timeout = setInterval(function () {
-//            var query = "update players set isConnected=1 where ";
-//            var query2 = "update players set isConnected=0 where ";
-//            var i = 0;
-//            for (var eachItem in Players) {
-//                for (var eachPlayer in Players[eachItem].players) {
-//                    var player = Players[eachItem].players[eachPlayer];
-//                    if (i == 0) {
-//                        i++;
-//                        query += " id=" + player.playerId;
-//                        query2 += " id<>" + player.playerId;
-//                    }
-//                    else {
-//                        query += " or id=" + player.playerId;
-//                        query2 += " and id<>" + player.playerId;
-//                    }
-
-//                }
-//            }
-
-//            if (i > 0) {
-//                PlayersConnection(query, query2);
-//            }
-
-//        }, 120000);
-//    }
-//    catch (e) {
-//        console.log("2: " + e.message);
-//    }
-//})();
-
 try {
     var decoder = new StringDecoder('utf8');
     server.on('connection', function (socket) {
 
-        //console.log('CONNECTED: ' + socket.remoteAddress + ':' + socket.remotePort);
+        console.log('CONNECTED: ' + socket.remoteAddress + ':' + socket.remotePort);
         var myId = -1;
         var pkgs = [];
         socket.on('data', function (data) {
@@ -140,7 +103,7 @@ try {
                                     }
                                 }
 
-                                //PlayerConnectedWeb(playerId, pkgs);
+                                PlayerConnectedSql(playerId, pkgs);
                             }
                         }
 
@@ -168,7 +131,7 @@ try {
                             }
                             // console.log("Set delivery --- " + nid + " --- " + playerId);
 
-                            //SetDelivery(nid, playerId);
+                            SetDeliverySql(nid, playerId);
                         }
                     }
                 }
@@ -176,13 +139,13 @@ try {
 
             }
             catch (e) {
-                //console.log("3: " + e.message);
+                console.log("3: " + e.message);
             }
         });
 
         socket.on('close', function (data) {
             try {
-                //PlayerDisonnectedWeb(myId);
+                PlayerDisonnectedSql(myId);
                 for (var j = 0; j < pkgs.length; j++) {
                     if (Players[pkgs[j]] != undefined) {
                         if (Players[pkgs[j]].players[myId] != undefined) {
@@ -192,12 +155,12 @@ try {
                 }
             }
             catch (e) {
-                //console.log("4: " + e.message);
+                console.log("4: " + e.message);
             }
         });
 
         socket.on('disconnect', function (data) {
-            //PlayerDisonnectedWeb(myId);
+            PlayerDisonnectedSql(myId);
         });
 
 
@@ -212,7 +175,7 @@ try {
                 }
             }
             catch (e) {
-                //console.log("5: " + e.message);
+                console.log("5: " + e.message);
             }
         });
 
@@ -221,7 +184,7 @@ try {
     server.listen(_port, _ip);
 }
 catch (e) {
-    //console.log("6: " + e.message);
+    console.log("6: " + e.message);
 }
 
 function gregorian_to_jalali(gy, gm, gd) {
@@ -357,280 +320,19 @@ function GetCurrentTime() {
 
     var timeout = setInterval(function () {
         try {
-            //SetLeagueState();
+            SetLeagueState();
         }
         catch (e) {
-            //console.log("11: " + e.message);
+            console.log("11: " + e.message);
         }
-    }, 60000);
+    }, 30000);
 
 })();
-
-//function GetNotificationsWeb() {
-//    try {
-//        var dataQS = {
-//            var1: "something",
-//            var2: "something else"
-//        };
-
-//        var querystring = require("querystring");
-//        var qs = querystring.stringify(dataQS);
-//        var qslength = qs.length;
-//        var options = {
-//            hostname: "adok.ir",
-//            port: 80,
-//            path: "/GamesData/ADok/GetNotifications.php",
-//            method: 'POST',
-//            headers: {
-//                'Content-Type': 'application/x-www-form-urlencoded',
-//                'Content-Length': qslength
-//            }
-//        };
-
-//        var buffer = "";
-//        var req = http.request(options, function (res) {
-//            res.on('data', function (chunk) {
-//                buffer += chunk;
-//            });
-//            res.on('end', function () {
-
-//                var curDate = GetCurrentDate();
-
-//                var y = curDate.substr(0, 4);
-//                var m = curDate.substr(4, 2);
-//                var day = curDate.substr(6, 2);
-//                day -= 3;
-//                if (day < 1) {
-//                    m--;
-//                    if (m < 1) {
-//                        m = 12;
-//                        if (y % 4 == 3) {
-//                            day = 30 + day + 1;
-//                            y--;
-//                        }
-//                        else {
-//                            day = 29 + day + 1;
-//                        }
-//                    }
-//                    else if (m <= 6) {
-//                        day = 31 + day + 1;
-//                    }
-//                    else {
-//                        day = 30 + day + 1;
-//                    }
-//                }
-
-//                var curtime = GetCurrentTime();
-
-//                for (var eachItem in Players) {
-//                    for (var eachPlayer in Players[eachItem].players) {
-//                        var player = Players[eachItem].players[eachPlayer];
-//                        var dif = Date.now() - player.alive;
-//                        if (dif > 150000) {
-//                            PlayerDisonnectedWeb(player.playerId);
-//                            delete Players[eachItem].players[eachPlayer];
-//                        }
-//                    }
-//                }
-//                //console.log(buffer);
-//                var row = JSON.parse(buffer);
-
-//                for (var i = 0; i < row.length; i++) {
-//                    //console.log("row.id: " + row[i].id);
-//                    var id = row[i].id;
-//                    var appId = row[i].appId;
-//                    var title = row[i].title;
-//                    var message = row[i].message;
-//                    var url = row[i].url;
-//                    var timeToLive = row[i].timeToLive;
-//                    var dateStartSend = row[i].dateStartSend;
-//                    var timeStartSend = row[i].timeStartSend;
-//                    var sound = row[i].sound;
-//                    var smalIcon = row[i].smalIcon;
-//                    var largeIcon = row[i].largeIcon;
-//                    var bigPicture = row[i].bigPicture;
-//                    var ledColor = row[i].ledColor;
-//                    var accentColor = row[i].accentColor;
-//                    var gId = row[i].gId;
-//                    var priority = row[i].priority;
-//                    var pkgNameAndroid = row[i].pkgNameAndroid;
-//                    var pkgNameIos = row[i].pkgNameIos;
-//                    var kind = row[i].kind;
-//                    var AdditionalData = row[i].AdditionalData;
-//                    var btns = row[i].btns;
-//                    var lastUpdateTime = row[i].lastUpdateTime;
-//                    var IsStop = row[i].IsStop;
-//                    var bigText = row[i].bigText;
-//                    var summary = row[i].summary;
-//                    var isTest = row[i].isTest;
-//                    var testId = row[i].playerId;
-
-//                    var actionType = row[i].actionType;
-//                    var hiddenNoti = row[i].hiddenNoti;
-//                    var showTime = row[i].showTime;
-//                    var tagName = row[i].tagName;
-//                    var chanelId = row[i].chanelId;
-
-//                    var dialogTitle = row[i].dialogTitle;
-//                    var btnYesText = row[i].btnYesText;
-//                    var btnNoText = row[i].btnNoText;
-//                    var dialogMessage = row[i].dialogMessage;
-//                    var dialogActionType = row[i].dialogActionType;
-//                    var dialogActionUrl = row[i].dialogActionUrl;
-//                    var isVibrate = row[i].isVibrate;
-//                    var devEnvId = row[i].devEnvId;
-
-//                    var iconId = row[i].iconId;
-
-//                    var chanelName = row[i].chanelName;
-//                    var chanelDes = row[i].chanelDes;
-
-//                    var additionalData = [];
-//                    var btns = [];
-
-//                    for (var j = 0; j < row[i].additionalData.length; j++) {
-//                        additionalData.push({ "dtKey": row[i].additionalData[j].dtKey, "dtValue": row[i].additionalData[j].dtValue });
-//                    }
-
-//                    //Get btns
-//                    for (var j = 0; j < row[i].btns.length; j++) {
-//                        btns.push({
-//                            "id": row[i].btns[j].id, "nId": row[i].btns[j].nId, "btnText": row[i].btns[j].btnText, "url": row[i].btns[j].url, "icon": row[i].btns[j].icon
-//                            , "dialogTitle": row[i].btns[j].dialogTitle, "btnYesText": row[i].btns[j].btnYesText, "btnNoText": row[i].btns[j].btnNoText,
-//                            "dialogMessage": row[i].btns[j].dialogMessage, "dialogActionType": row[i].btns[j].dialogActionType, "dialogActionUrl": row[i].btns[j].dialogActionUrl,
-//                            "actionType": row[i].btns[j].actionType
-//                        });
-//                    }
-
-//                    var timeToSend = timeStartSend + timeToLive;
-//                    var sendH = Math.floor(timeToSend / 60);
-//                    var sendM = Math.floor(timeToSend % 60);
-//                    var Days = 0;
-//                    var HAfter = 0;
-//                    if (sendH > 24) {
-//                        Days = Math.floor(sendH / 24);
-//                        HAfter = Math.floor(sendH - (Days * 24));
-//                    }
-//                    else {
-//                        HAfter = sendH;
-//                    }
-
-//                    var yy = parseInt(dateStartSend.toString().substr(0, 4));
-//                    var mm = parseInt(dateStartSend.toString().substr(4, 2));
-//                    var dd = parseInt(dateStartSend.toString().substr(6, 2));
-
-//                    var curDateEnd = "";
-//                    if (Days > 0) {
-//                        dd += Days;
-//                        if (dd > 29 && mm == 12 && y % 4 != 3) {
-//                            dd = dd - 29;
-//                            mm = 1;
-//                            yy++;
-//                        }
-//                        else if (dd > 30 && mm == 12 && y % 4 == 3) {
-//                            dd = dd - 30;
-//                            mm = 1;
-//                            yy++;
-//                        }
-//                        else if (dd > 31 && mm <= 6) {
-//                            dd = dd - 31;
-//                            mm++;
-//                        }
-//                        else if (dd > 30 && mm > 6) {
-//                            dd = dd - 30;
-//                            mm++;
-//                        }
-//                    }
-
-//                    var year = "" + yy;
-//                    var mounth = "";
-//                    var dayOfMounth = "";
-//                    if (mm < 10) {
-//                        mounth = "0" + mm;
-//                    }
-//                    else {
-//                        mounth = "" + mm;
-//                    }
-
-//                    if (dd < 10) {
-//                        dayOfMounth = "0" + dd;
-//                    }
-//                    else {
-//                        dayOfMounth = "" + dd;
-//                    }
-
-//                    var curDateEnd = year + "" + mounth + "" + dayOfMounth;
-
-//                    var hcur = GetCurrentTime().substr(0, 2);
-
-//                    var noti = {
-//                        id: row[i].id, appId: row[i].appId, title: row[i].title, message: row[i].message, url: row[i].url, timeToLive: row[i].timeToLive
-//                        , dateStartSend: row[i].dateStartSend, timeStartSend: row[i].timeStartSend, sound: row[i].sound, smalIcon: row[i].smalIcon, largeIcon: row[i].largeIcon
-//                        , bigPicture: row[i].bigPicture, ledColor: row[i].ledColor, accentColor: row[i].accentColor, gId: row[i].gId, priority: row[i].priority
-//                        , pkgNameAndroid: row[i].pkgNameAndroid, pkgNameIos: row[i].pkgNameIos, kind: row[i].kind,
-//                        bigText: row[i].bigText, summary: row[i].summary,
-//                        actionType: row[i].actionType, hiddenNoti: row[i].hiddenNoti, showTime: row[i].showTime, tagName: row[i].tagName,
-//                        chanelId: chanelId, chanelName: chanelName, chanelDes: chanelDes,
-//                        dialogTitle: dialogTitle, btnYesText: btnYesText, btnNoText: btnNoText, dialogMessage: dialogMessage, dialogActionType: dialogActionType, dialogActionUrl: dialogActionUrl, isVibrate: isVibrate,
-//                        devEnvId: devEnvId, iconId: iconId,
-//                        AdditionalData: additionalData, btns: btns, Meskind: "noti"
-//                    };
-
-//                    if (isTest > 0) {
-//                        if (pkgNameAndroid != "") {
-//                            if (Players[pkgNameAndroid] != undefined) {
-//                                if (Players[pkgNameAndroid].players[testId] != undefined) {
-//                                    Players[pkgNameAndroid].players[testId].socket.write(JSON.stringify(noti) + "\n");
-//                                }
-//                            }
-//                        }
-//                    }
-//                    else {
-//                        curDatev = "" + dateStartSend;
-//                        if (parseInt(curDatev) < parseInt(curDateEnd) || (parseInt(curDatev) == parseInt(curDateEnd) && parseInt(hcur) <= parseInt(HAfter))) {
-//                            if (IsStop == 0) {
-
-//                                if (Players[pkgNameAndroid] != undefined) {
-//                                    Players[pkgNameAndroid].players.forEach(function (itemp, indexp, objectp) {
-
-//                                        if (itemp.socket == undefined) {
-//                                            objectp.splice(indexp, 1);
-//                                        }
-//                                        else {
-//                                            if (delivery[noti.id] == undefined) {
-//                                                delivery[noti.id] = { players: [] };
-//                                            }
-
-//                                            if (delivery[noti.id].players[itemp.playerId] == undefined) {
-//                                                //console.log("noti.id: " + noti.id + "--- playerId: " + itemp.playerId);
-//                                                itemp.socket.write(JSON.stringify(noti) + "\n");
-//                                            }
-//                                        }
-//                                    });
-//                                }
-//                                else {
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-
-//            });
-//        });
-//        canCheckNotify = 1;
-//        req.write(qs);
-//        req.end();
-//    }
-//    catch (e) {
-//        canCheckNotify = 1;
-//        console.log("120: " + e.message);
-//    }
-//}
 
 function GetNotificationMysql() {
     try {
         var dateHejri = GetCurrentDate();
-        conGetNoti.query("SELECT notification.id,notification.appId,notification.title,notification.message,notification.url,notification.timeToLive,notification.dateStartSend,notification.timeStartSend," +
+        con.query("SELECT notification.id,notification.appId,notification.title,notification.message,notification.url,notification.timeToLive,notification.dateStartSend,notification.timeStartSend," +
             "notification.sound, notification.smalIcon, notification.largeIcon, notification.bigPicture, notification.ledColor, notification.accentColor, notification.gId, notification.priority" +
             ", apps.pkgNameAndroid, apps.pkgNameIos, notification.kind, notification.IsStop, notification.lastUpdateTime, notification.bigText, notification.summary, notification.budget" +
             ", notification.isTest, notification.playerId, notification.actionType, notification.hiddenNoti, notification.showTime, appTags.tagName, notification.chanelId" +
@@ -724,7 +426,7 @@ function GetNotificationMysql() {
                     }
 
                     allNoties.forEach(function (item, index, object) {
-                        conGetNoti.query("SELECT id,nId,dtKey,dtValue FROM notiAdditionalData where nId=" + item.id, function (erradd, resultadd, fieldsadd) {
+                        con.query("SELECT id,nId,dtKey,dtValue FROM notiAdditionalData where nId=" + item.id, function (erradd, resultadd, fieldsadd) {
                             if (!erradd) {
                                 for (j = 0; j < resultadd.length; j++) {
                                     var dta = { "dtKey": resultadd[j].dtKey, "dtValue": resultadd[j].dtValue };
@@ -737,7 +439,7 @@ function GetNotificationMysql() {
                     });
 
                     allNoties.forEach(function (item, index, object) {
-                        conGetNoti.query("SELECT id,nId,btnText,url,icon,actionType,dialogTitle,btnYesText,	btnNoText,dialogMessage,dialogActionType,dialogActionUrl FROM notiBtn where nId=" + item.id, function (errbtn, resultbtn, fieldsbtn) {
+                        con.query("SELECT id,nId,btnText,url,icon,actionType,dialogTitle,btnYesText,	btnNoText,dialogMessage,dialogActionType,dialogActionUrl FROM notiBtn where nId=" + item.id, function (errbtn, resultbtn, fieldsbtn) {
                             if (!errbtn) {
                                 for (var j = 0; j < resultbtn.length; j++) {
 
@@ -758,7 +460,7 @@ function GetNotificationMysql() {
                     });
 
                     allNoties.forEach(function (item, index, object) {
-                        conGetNoti.query("SELECT id, name, des FROM  notificationChanels where id=" + item.chanelId, function (errchanel, resultchanel, fieldschanel) {
+                        con.query("SELECT id, name, des FROM  notificationChanels where id=" + item.chanelId, function (errchanel, resultchanel, fieldschanel) {
                             if (!errchanel) {
                                 if (resultchanel.length > 0) {
                                     allNoties.forEach(function (item, index, object) {
@@ -874,7 +576,7 @@ function SendNoti() {
                                 }
 
                                 if (delivery[noti.id].players[itemp.playerId] == undefined) {
-                                    //console.log("noti.id: " + noti.id + "--- playerId: " + itemp.playerId);
+                                    console.log("noti.id: " + noti.id + "--- playerId: " + itemp.playerId);
                                     itemp.socket.write(JSON.stringify(noti) + "\n");
                                 }
                             }
@@ -889,162 +591,6 @@ function SendNoti() {
             }
         }
     });
-}
-
-function PlayerConnectedWeb(pid, pkgs) {
-    try {
-        var dataQS = {
-            var1: pid,
-            var2: pkgs
-        };
-
-        var querystring = require("querystring");
-        var qs = querystring.stringify(dataQS);
-        var qslength = qs.length;
-        var options = {
-            hostname: "adok.ir",
-            port: 80,
-            path: "/GamesData/ADok/PlayerConnectedND.php",
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Content-Length': qslength
-            }
-        };
-
-        var buffer = "";
-        var req = http.request(options, function (res) {
-            res.on('data', function (chunk) {
-                buffer += chunk;
-            });
-            res.on('end', function () {
-                //console.log(buffer);
-            });
-        });
-
-        req.write(qs);
-        req.end();
-    }
-    catch (e) {
-        //console.log("130: " + e.message);
-    }
-}
-
-function PlayerDisonnectedWeb(pid) {
-    try {
-        var dataQS = {
-            var1: pid,
-            var2: "sth"
-        };
-
-        var querystring = require("querystring");
-        var qs = querystring.stringify(dataQS);
-        var qslength = qs.length;
-        var options = {
-            hostname: "adok.ir",
-            port: 80,
-            path: "/GamesData/ADok/PlayerDisonnectedND.php",
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Content-Length': qslength
-            }
-        };
-
-        var buffer = "";
-        var req = http.request(options, function (res) {
-            res.on('data', function (chunk) {
-                buffer += chunk;
-            });
-            res.on('end', function () {
-                //console.log(buffer);
-            });
-        });
-
-        req.write(qs);
-        req.end();
-    }
-    catch (e) {
-        //console.log("140: " + e.message);
-    }
-}
-
-function PlayersConnection(q1, q2) {
-    try {
-        var dataQS = {
-            var1: q1,
-            var2: q2
-        };
-
-        var querystring = require("querystring");
-        var qs = querystring.stringify(dataQS);
-        var qslength = qs.length;
-        var options = {
-            hostname: "adok.ir",
-            port: 80,
-            path: "/GamesData/ADok/PlayersConnection.php",
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Content-Length': qslength
-            }
-        };
-
-        var buffer = "";
-        var req = http.request(options, function (res) {
-            res.on('data', function (chunk) {
-                buffer += chunk;
-            });
-            res.on('end', function () {
-                //console.log(buffer);
-            });
-        });
-
-        req.write(qs);
-        req.end();
-    }
-    catch (e) {
-        //console.log("150: " + e.message);
-    }
-}
-
-function SetDelivery(nid, playerId) {
-    try {
-        var dataQS = {
-            var1: nid,
-            var2: playerId
-        };
-
-        var querystring = require("querystring");
-        var qs = querystring.stringify(dataQS);
-        var qslength = qs.length;
-        var options = {
-            hostname: "adok.ir",
-            port: 80,
-            path: "/GamesData/ADok/SetDelivery.php",
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Content-Length': qslength
-            }
-        };
-
-        var buffer = "";
-        var req = http.request(options, function (res) {
-            res.on('data', function (chunk) {
-                buffer += chunk;
-            });
-            res.on('end', function () {
-                //console.log("SetDelivery.php result: " + buffer);
-            });
-        });
-
-        req.write(qs);
-        req.end();
-    }
-    catch (e) {
-        //console.log("150: " + e.message);
-    }
 }
 
 function SetLeagueState() {
@@ -1086,20 +632,44 @@ function SetLeagueState() {
     }
 }
 
-async function SetDeliverySql(pid, pkgs) {
+function SetDeliverySql(nid, playerId) {
     try {
-        const string1 = await con.query("SELECT notification.id,notification.appId,notification.title,notification.message,notification.url,notification.timeToLive,notification.dateStartSend,notification.timeStartSend," +
-            "notification.sound, notification.smalIcon, notification.largeIcon, notification.bigPicture, notification.ledColor, notification.accentColor, notification.gId, notification.priority" +
-            ", apps.pkgNameAndroid, apps.pkgNameIos, notification.kind, notification.IsStop, notification.lastUpdateTime, notification.bigText, notification.summary, notification.budget" +
-            ", notification.isTest, notification.playerId, notification.actionType, notification.hiddenNoti, notification.showTime, appTags.tagName, notification.chanelId" +
-            ", notification.dialogTitle, notification.btnYesText, notification.btnNoText, notification.dialogMessage, notification.dialogActionType, notification.dialogActionUrl, notification.isVibrate" +
-            ", apps.devEnvId, notification.iconId " +
-            " FROM notification  inner join apps on notification.appId = apps.id inner join appTags on notification.tagId = appTags.id " +
-            " where dateStartSend>= $dateHejri and notification.IsStop = 0 and  notification.isActive = 1 and notification.isSend = 0");
+        con.query("update notification set isSend=1 where id=" + nid, function (err, result, fields) {
+        });
+
+        con.query("SELECT id,count from nodeDelivery where nid=" + nid+" and playerId=" + playerId, function (errsel, resultsel, fieldssel) {
+            if (!errsel) {
+                if (resultsel.length > 0) {
+                    for (var j = 0; j < resultsel.length; j++) {
+                        did = resultsel[j].id;
+                        dcount = parseInt(resultsel[j].count);
+                        dcount++;
+                        con.query("update nodeDelivery set  count=" + dcount + " where id=" + did, function (errupd, resultupd, fieldsupd) { });
+                    }
+                }
+                else
+                {
+                    con.query("insert into nodeDelivery (nid,playerId,count) values ("+nid+","+playerId+",1);", function (errupd, resultupd, fieldsupd) { });
+                }
+                
+            }
+        });
 
         // console.log(string1);
     } catch (err) {
         // do something
     }
 
+}
+
+function PlayerDisonnectedSql(pid) {
+    curDate = GetCurrentDate();
+    tm = GetCurrentTime();
+    con.query("update players set 	isConnected=0,disTime='"+tm+ "',disDate=" +curDate+ " where id=" +pid, function (errupd, resultupd, fieldsupd) { });
+}
+
+function PlayerConnectedSql(pid, pkgs) {
+    curDate = GetCurrentDate();
+    tm = GetCurrentTime();
+    con.query("update players set 	isConnected=1,lastTime='"+tm+ "',lastDate=" +curDate+ " where id=" +pid, function (errupd, resultupd, fieldsupd) { });
 }

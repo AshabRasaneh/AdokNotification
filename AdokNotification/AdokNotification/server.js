@@ -144,7 +144,7 @@ try {
                                     }
                                 }
 
-                                PlayerConnectedWeb(playerId, pkgs);
+                                //PlayerConnectedWeb(playerId, pkgs);
                             }
                         }
 
@@ -172,7 +172,7 @@ try {
                             }
                            // console.log("Set delivery --- " + nid + " --- " + playerId);
 
-                            SetDelivery(nid, playerId);
+                            //SetDelivery(nid, playerId);
                         }
                     }
                 }
@@ -186,7 +186,7 @@ try {
 
         socket.on('close', function (data) {
             try {
-                PlayerDisonnectedWeb(myId);
+                //PlayerDisonnectedWeb(myId);
                 for (var j = 0; j < pkgs.length; j++) {
                     if (Players[pkgs[j]] != undefined) {
                         if (Players[pkgs[j]].players[myId] != undefined) {
@@ -201,7 +201,7 @@ try {
         });
 
         socket.on('disconnect', function (data) {
-            PlayerDisonnectedWeb(myId);
+            //PlayerDisonnectedWeb(myId);
         });
 
 
@@ -361,7 +361,7 @@ function GetCurrentTime() {
 
     var timeout = setInterval(function () {
         try {
-            SetLeagueState();
+            //SetLeagueState();
         }
         catch (e) {
             //console.log("11: " + e.message);
@@ -642,9 +642,12 @@ async function GetNotificationMysql() {
         ", notification.dialogTitle, notification.btnYesText, notification.btnNoText, notification.dialogMessage, notification.dialogActionType, notification.dialogActionUrl, notification.isVibrate" +
         ", apps.devEnvId, notification.iconId " +
         " FROM notification  inner join apps on notification.appId = apps.id inner join appTags on notification.tagId = appTags.id " +
-        " where dateStartSend>= "+dateHejri+" and notification.IsStop = 0 and  notification.isActive = 1 and notification.isSend = 0");
+        " where dateStartSend>= " + dateHejri + " and notification.IsStop = 0 and  notification.isActive = 1 and notification.isSend = 0", function (err, result) {
+            if (err) throw err;
+            console.log("Result: " + result);
+        });
 
-    console.log(string1);
+    console.log("done");
     canCheckNotify = 1;
     } catch (err) {
         // do something

@@ -68,7 +68,7 @@ try {
                         else {
                             xval = "{" + xval;
                         }
-                        //console.log(xval);
+                        console.log(xval);
                         var dt = JSON.parse(xval);
                         var playerId = dt.playerId;
                         var pkgName = dt.pkgName;

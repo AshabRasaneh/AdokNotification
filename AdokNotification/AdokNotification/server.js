@@ -721,56 +721,56 @@ function GetNotificationMysql() {
                         };
 
                         allNoties[id] = noti;
+                    }
 
-                        conGetNoti.query("SELECT id,nId,dtKey,dtValue FROM notiAdditionalData where nId=" + id, function (erradd, resultadd, fieldsadd) {
+                    allNoties.forEach(function (item, index, object) {
+                        conGetNoti.query("SELECT id,nId,dtKey,dtValue FROM notiAdditionalData where nId=" + item.id, function (erradd, resultadd, fieldsadd) {
                             if (!erradd) {
                                 for (j = 0; j < resultadd.length; j++) {
                                     var dta = { "dtKey": resultadd[j].dtKey, "dtValue": resultadd[j].dtValue };
                                     var adid = resultadd[j].id;
                                     var adnid = resultadd[j].nId;
-
                                     allNoties[adnid].AdditionalData[adid] = dta;
                                 }
-
-                                conGetNoti.query("SELECT id,nId,btnText,url,icon,actionType,dialogTitle,btnYesText,	btnNoText,dialogMessage,dialogActionType,dialogActionUrl FROM notiBtn where nId=" + id, function (errbtn, resultbtn, fieldsbtn) {
-                                    if (!errbtn) {
-                                        for (var j = 0; j < resultbtn.length; j++) {
-
-                                            var dtb = {
-                                                "id": resultbtn[j].id, "nId": resultbtn[j].nId, "btnText": resultbtn[j].btnText, "url": resultbtn[j].url, "icon": resultbtn[j].icon
-                                                , "dialogTitle": resultbtn[j].dialogTitle, "btnYesText": resultbtn[j].btnYesText, "btnNoText": resultbtn[j].btnNoText,
-                                                "dialogMessage": resultbtn[j].dialogMessage, "dialogActionType": resultbtn[j].dialogActionType, "dialogActionUrl": resultbtn[j].dialogActionUrl,
-                                                "actionType": resultbtn[j].actionType
-                                            };
-
-                                            var bid = resultbtn[j].id;
-                                            var bnid = resultbtn[j].nId;
-
-                                            allNoties[bnid].btns[bid] = dtb;
-                                        }
-
-                                        conGetNoti.query("SELECT id, name, des FROM  notificationChanels where id=" + chanelId, function (errchanel, resultchanel, fieldschanel) {
-                                            if (!errchanel) {
-                                                if (resultchanel.length > 0) {
-                                                    allNoties.forEach(function (item, index, object) {
-                                                        if (item.chanelId == chanelId) {
-                                                            item.chanelName = resultchanel[0].name;
-                                                            item.chanelDes = resultchanel[0].des;
-                                                        }
-                                                    });
-                                                }
-                                            }
-                                        });
-                                    }
-                                });
                             }
                         });
-                    }
-                    canCheckNotify = 1;
-                    //console.log("Result: " + result);
-                }
-                else {
-                    canCheckNotify = 1;
+                    });
+
+                    allNoties.forEach(function (item, index, object) {
+                        conGetNoti.query("SELECT id,nId,btnText,url,icon,actionType,dialogTitle,btnYesText,	btnNoText,dialogMessage,dialogActionType,dialogActionUrl FROM notiBtn where nId=" + item.id, function (errbtn, resultbtn, fieldsbtn) {
+                            if (!errbtn) {
+                                for (var j = 0; j < resultbtn.length; j++) {
+
+                                    var dtb = {
+                                        "id": resultbtn[j].id, "nId": resultbtn[j].nId, "btnText": resultbtn[j].btnText, "url": resultbtn[j].url, "icon": resultbtn[j].icon
+                                        , "dialogTitle": resultbtn[j].dialogTitle, "btnYesText": resultbtn[j].btnYesText, "btnNoText": resultbtn[j].btnNoText,
+                                        "dialogMessage": resultbtn[j].dialogMessage, "dialogActionType": resultbtn[j].dialogActionType, "dialogActionUrl": resultbtn[j].dialogActionUrl,
+                                        "actionType": resultbtn[j].actionType
+                                    };
+
+                                    var bid = resultbtn[j].id;
+                                    var bnid = resultbtn[j].nId;
+
+                                    allNoties[bnid].btns[bid] = dtb;
+                                }
+                            }
+                        });
+                    });
+
+                    allNoties.forEach(function (item, index, object) {
+                        conGetNoti.query("SELECT id, name, des FROM  notificationChanels where id=" + item.chanelId, function (errchanel, resultchanel, fieldschanel) {
+                            if (!errchanel) {
+                                if (resultchanel.length > 0) {
+                                    allNoties.forEach(function (item, index, object) {
+                                        if (item.chanelId == chanelId) {
+                                            item.chanelName = resultchanel[0].name;
+                                            item.chanelDes = resultchanel[0].des;
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    });
                 }
             });
 
@@ -883,8 +883,7 @@ function SendNoti() {
                     else {
                     }
                 }
-                else
-                {
+                else {
 
                 }
             }

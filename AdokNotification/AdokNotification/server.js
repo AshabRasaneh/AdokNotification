@@ -746,7 +746,7 @@ function GetNotificationMysql() {
                                             var bid = resultbtn[j].id;
                                             var bnid = resultbtn[j].nId;
 
-                                            allNoties[adnid].btns[bnid] = dtb;
+                                            allNoties[bid].btns[bnid] = dtb;
                                         }
 
                                         conGetNoti.query("SELECT id, name, des FROM  notificationChanels where id=" + chanelId, function (errchanel, resultchanel, fieldschanel) {

@@ -44,7 +44,7 @@ try {
     var decoder = new StringDecoder('utf8');
     server.on('connection', function (socket) {
 
-        console.log('CONNECTED: ' + socket.remoteAddress + ':' + socket.remotePort);
+       // console.log('CONNECTED: ' + socket.remoteAddress + ':' + socket.remotePort);
         var myId = -1;
         var pkgs = [];
         socket.on('data', function (data) {
@@ -129,7 +129,7 @@ try {
                             else {
                                 delivery[nid].players[playerId] = 1;
                             }
-                            // console.log("Set delivery --- " + nid + " --- " + playerId);
+                             console.log("Set delivery --- " + nid + " --- " + playerId);
 
                             SetDeliverySql(nid, playerId);
                         }
@@ -553,6 +553,8 @@ function SendNoti() {
         if (noti.isTest > 0) {
             if (noti.pkgNameAndroid != "") {
                 if (Players[pkgNameAndroid] != undefined) {
+                    console.log(pkgNameAndroid + " --- " + testId + " --- " + Players[pkgNameAndroid].players[testId]);
+
                     if (Players[pkgNameAndroid].players[testId] != undefined) {
                         Players[pkgNameAndroid].players[testId].socket.write(JSON.stringify(noti) + "\n");
                     }
@@ -561,6 +563,7 @@ function SendNoti() {
         }
         else {
             curDatev = "" + noti.dateStartSend;
+            console.log(parseInt(curDatev) < parseInt(curDateEnd) + " --- " + parseInt(curDatev) == parseInt(curDateEnd) + " --- " + parseInt(hcur) <= parseInt(HAfter));
             if (parseInt(curDatev) < parseInt(curDateEnd) || (parseInt(curDatev) == parseInt(curDateEnd) && parseInt(hcur) <= parseInt(HAfter))) {
                 if (noti.IsStop == 0) {
 
@@ -574,9 +577,8 @@ function SendNoti() {
                                 if (delivery[noti.id] == undefined) {
                                     delivery[noti.id] = { players: [] };
                                 }
-
+                                console.log(noti.id + " --- " + itemp.playerId + " --- " + delivery[noti.id].players[itemp.playerId]);
                                 if (delivery[noti.id].players[itemp.playerId] == undefined) {
-                                    console.log("noti.id: " + noti.id + "--- playerId: " + itemp.playerId);
                                     itemp.socket.write(JSON.stringify(noti) + "\n");
                                 }
                             }

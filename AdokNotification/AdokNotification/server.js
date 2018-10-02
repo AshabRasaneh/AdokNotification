@@ -48,7 +48,7 @@ try {
         var myId = -1;
         var pkgs = [];
         socket.on('data', function (data) {
-
+            xval = "";
             try {
 
                 if (data && data.byteLength != undefined) {
@@ -61,7 +61,7 @@ try {
                 for (var dataCount = 0; dataCount < dtSplit.length; dataCount++) {
                     if (dtSplit[dataCount].trim() != "") {
                         dtSplit[dataCount] += "}";
-                        var xval = dtSplit[dataCount];
+                        xval = dtSplit[dataCount];
                         if (xval.indexOf("{") >= 0) {
 
                         }
@@ -139,7 +139,9 @@ try {
 
             }
             catch (e) {
+                
                 console.log("3: " + e.message);
+                console.log("3: " + xval);
             }
         });
 

@@ -410,7 +410,7 @@ function GetNotificationMysql() {
                             actionType: row[i].actionType, hiddenNoti: row[i].hiddenNoti, showTime: row[i].showTime, tagName: row[i].tagName,
                             chanelId: chanelId, chanelName: chanelName, chanelDes: chanelDes,
                             dialogTitle: dialogTitle, btnYesText: btnYesText, btnNoText: btnNoText, dialogMessage: dialogMessage, dialogActionType: dialogActionType, dialogActionUrl: dialogActionUrl, isVibrate: isVibrate,
-                            devEnvId: devEnvId, iconId: iconId, isTest: row[i].isTest,
+                            devEnvId: devEnvId, iconId: iconId, isTest: row[i].isTest, IsStop:"0",
                             AdditionalData: additionalData, btns: btns, Meskind: "noti"
                         };
 

@@ -602,44 +602,44 @@ function SendNoti() {
     });
 }
 
-function SetLeagueState() {
-    try {
-        var dataQS = {
-            var1: "sth1",
-            var2: "sth2"
-        };
+//function SetLeagueState() {
+//    try {
+//        var dataQS = {
+//            var1: "sth1",
+//            var2: "sth2"
+//        };
 
-        var querystring = require("querystring");
-        var qs = querystring.stringify(dataQS);
-        var qslength = qs.length;
-        var options = {
-            hostname: "adok.ir",
-            port: 80,
-            path: "/GamesData/ADok/SetLeagueState.php",
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Content-Length': qslength
-            }
-        };
+//        var querystring = require("querystring");
+//        var qs = querystring.stringify(dataQS);
+//        var qslength = qs.length;
+//        var options = {
+//            hostname: "adok.ir",
+//            port: 80,
+//            path: "/GamesData/ADok/SetLeagueState.php",
+//            method: 'POST',
+//            headers: {
+//                'Content-Type': 'application/x-www-form-urlencoded',
+//                'Content-Length': qslength
+//            }
+//        };
 
-        var buffer = "";
-        var req = http.request(options, function (res) {
-            res.on('data', function (chunk) {
-                buffer += chunk;
-            });
-            res.on('end', function () {
-                //console.log(buffer);
-            });
-        });
+//        var buffer = "";
+//        var req = http.request(options, function (res) {
+//            res.on('data', function (chunk) {
+//                buffer += chunk;
+//            });
+//            res.on('end', function () {
+//                //console.log(buffer);
+//            });
+//        });
 
-        req.write(qs);
-        req.end();
-    }
-    catch (e) {
-        //console.log("160: " + e.message);
-    }
-}
+//        req.write(qs);
+//        req.end();
+//    }
+//    catch (e) {
+//        //console.log("160: " + e.message);
+//    }
+//}
 
 function SetDeliverySql(nid, playerId) {
     try {

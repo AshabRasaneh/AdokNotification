@@ -416,16 +416,16 @@ function GetNotificationMysql() {
 
                         var curtm = GetCurrentTime();
 
-                        if (noti.timeToLive > curtm) {
-                            if (budget < 10 && noti.isTest == 0) {
-                                noti.IsStop = 1;
-                            }
+                        //if (noti.timeToLive > curtm) {
+                        //    if (budget < 10 && noti.isTest == 0) {
+                        //        noti.IsStop = 1;
+                        //    }
 
-                        }
-                        else {
-                            if (noti.isTest == 0)
-                                noti.IsStop = 1;
-                        }
+                        //}
+                        //else {
+                        //    if (noti.isTest == 0)
+                        //        noti.IsStop = 1;
+                        //}
                         allNoties[id] = noti;
                     }
 

@@ -55,70 +55,81 @@ try {
                     data = new Buffer(data).toString('utf8');
                 }
 
-                xval = data;
-                //console.log(xval);
-                var dt = JSON.parse(xval);
-                var playerId = dt.playerId;
-                var pkgName = dt.pkgName;
-                var phoneNo = dt.phoneNo;
 
-                if (dt.hasOwnProperty('pkgs')) {
-                    pkgs = dt.pkgs;
-                }
+                var dtSplit = data.split("}");
 
-                var knd = dt.kind;
-                var added = 0;
-                myId = playerId;
+                for (var dataCount = 0; dataCount < dtSplit.length; dataCount++) {
+                    if (dtSplit[dataCount].trim() != "") {
+                        dtSplit[dataCount] += "}";
+                        xval = dtSplit[dataCount];
+                        if (xval.indexOf("{") >= 0) {
+                            //console.log(xval);
+                            var dt = JSON.parse(xval);
+                            var playerId = dt.playerId;
+                            var pkgName = dt.pkgName;
+                            var phoneNo = dt.phoneNo;
 
-                var myData = {
-                    playerId: playerId, phoneNo: phoneNo, socket: socket, pkgs: pkgs, alive: 0
-                };
-                var d = new Date();
-                var n = d.getTime();
-                myData.alive = n;
-
-                if (knd == "add") {
-
-                    if (pkgs != undefined) {
-                        for (var j = 0; j < pkgs.length; j++) {
-                            if (Players[pkgs[j]] == undefined && pkgs[j] != "null") {
-                                Players[pkgs[j]] = { players: [] };
-                                Players[pkgs[j]].players[playerId] = myData;
+                            if (dt.hasOwnProperty('pkgs')) {
+                                pkgs = dt.pkgs;
                             }
-                            else {
-                                Players[pkgs[j]].players[playerId] = myData;
+
+                            var knd = dt.kind;
+                            var added = 0;
+                            myId = playerId;
+
+                            var myData = {
+                                playerId: playerId, phoneNo: phoneNo, socket: socket, pkgs: pkgs, alive: 0
+                            };
+                            var d = new Date();
+                            var n = d.getTime();
+                            myData.alive = n;
+
+                            if (knd == "add") {
+
+                                if (pkgs != undefined) {
+                                    for (var j = 0; j < pkgs.length; j++) {
+                                        //console.log(pkgs[j]);
+                                        if (Players[pkgs[j]] == undefined && pkgs[j] != "null") {
+                                            Players[pkgs[j]] = { players: [] };
+                                            Players[pkgs[j]].players[playerId] = myData;
+                                        }
+                                        else {
+                                            Players[pkgs[j]].players[playerId] = myData;
+                                        }
+                                    }
+
+                                    PlayerConnectedSql(playerId, pkgs);
+                                }
+                            }
+
+                            else if (knd == "Alive") {
+                                var data = {
+                                    alive: true, Meskind: "Alive"
+                                };
+                                for (var j = 0; j < pkgs.length; j++) {
+                                    if (Players[pkgs[j]] != undefined) {
+                                        if (Players[pkgs[j]].players[playerId] != undefined) {
+                                            Players[pkgs[j]].players[playerId].alive = Date.now();
+                                        }
+                                    }
+                                }
+                                socket.write(JSON.stringify(data) + "\n");
+                            }
+                            else if (knd == "Deliver") {
+                                var nid = dt.nid;
+                                if (delivery[nid] == undefined) {
+                                    delivery[nid] = { players: [] };
+                                    delivery[nid].players[playerId] = 1;
+                                }
+                                else {
+                                    delivery[nid].players[playerId] = 1;
+                                }
+                                console.log("Set delivery --- " + nid + " --- " + playerId);
+
+                                SetDeliverySql(nid, playerId);
                             }
                         }
-
-                        PlayerConnectedSql(playerId, pkgs);
                     }
-                }
-
-                else if (knd == "Alive") {
-                    var data = {
-                        alive: true, Meskind: "Alive"
-                    };
-                    for (var j = 0; j < pkgs.length; j++) {
-                        if (Players[pkgs[j]] != undefined) {
-                            if (Players[pkgs[j]].players[playerId] != undefined) {
-                                Players[pkgs[j]].players[playerId].alive = Date.now();
-                            }
-                        }
-                    }
-                    socket.write(JSON.stringify(data) + "\n");
-                }
-                else if (knd == "Deliver") {
-                    var nid = dt.nid;
-                    if (delivery[nid] == undefined) {
-                        delivery[nid] = { players: [] };
-                        delivery[nid].players[playerId] = 1;
-                    }
-                    else {
-                        delivery[nid].players[playerId] = 1;
-                    }
-                    console.log("Set delivery --- " + nid + " --- " + playerId);
-
-                    SetDeliverySql(nid, playerId);
                 }
 
 

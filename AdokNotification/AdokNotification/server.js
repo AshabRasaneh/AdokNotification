@@ -647,7 +647,7 @@ function GetNotificationMysql() {
 
                 var row = result;
                 for (var i = 0; i < row.length; i++) {
-                    //console.log("row.id: " + row[i].id);
+                    console.log("row.id: " + row[i].id);
                     var id = row[i].id;
                     var appId = row[i].appId;
                     var title = row[i].title;
@@ -825,6 +825,7 @@ function GetNotificationMysql() {
                         }
                     }
                 }
+            canCheckNotify = 1;
             console.log("Result: " + result);
         });
     

@@ -810,8 +810,8 @@ function GetNotificationMysql() {
 }
 
 function SendNoti(noti) {
-    chanelName = resultchanel[0].name;
-    chanelDes = resultchanel[0].des;
+
+    console.log(noti);
 
     var timeToSend = timeStartSend + timeToLive;
     var sendH = Math.floor(timeToSend / 60);

@@ -34,6 +34,7 @@ var delivery = [];
             //console.log(canCheckNotify);
             if (canCheckNotify > 0) {
                 canCheckNotify = 0;
+                console.log("here");
                 GetNotificationMysql();
             }
 
@@ -85,146 +86,146 @@ try {
     server.on('connection', function (socket) {
 
         //console.log('CONNECTED: ' + socket.remoteAddress + ':' + socket.remotePort);
-        //var myId = -1;
-        //var pkgs = [];
-        //socket.on('data', function (data) {
+        var myId = -1;
+        var pkgs = [];
+        socket.on('data', function (data) {
 
-        //    try {
+            try {
 
-        //        if (data && data.byteLength != undefined) {
-        //            data = new Buffer(data).toString('utf8');
-        //        }
-
-
-        //        var dtSplit = data.split("}");
-
-        //        for (var dataCount = 0; dataCount < dtSplit.length; dataCount++) {
-        //            if (dtSplit[dataCount].trim() != "") {
-        //                dtSplit[dataCount] += "}";
-        //                var xval = dtSplit[dataCount];
-        //                if (xval.indexOf("{") >= 0) {
-
-        //                }
-        //                else {
-        //                    xval = "{" + xval;
-        //                }
-        //                console.log(xval);
-        //                var dt = JSON.parse(xval);
-        //                var playerId = dt.playerId;
-        //                var pkgName = dt.pkgName;
-        //                var phoneNo = dt.phoneNo;
-
-        //                if (dt.hasOwnProperty('pkgs')) {
-        //                    pkgs = dt.pkgs;
-        //                }
-
-        //                var knd = dt.kind;
-        //                var added = 0;
-        //                myId = playerId;
-
-        //                var myData = {
-        //                    playerId: playerId, phoneNo: phoneNo, socket: socket, pkgs: pkgs, alive: 0
-        //                };
-        //                var d = new Date();
-        //                var n = d.getTime();
-        //                myData.alive = n;
-
-        //                if (knd == "add") {
-
-        //                    if (pkgs != undefined) {
-        //                        for (var j = 0; j < pkgs.length; j++) {
-        //                            console.log(pkgs[j]);
-        //                            if (Players[pkgs[j]] == undefined && pkgs[j] != "null") {
-        //                                Players[pkgs[j]] = { players: [] };
-        //                                Players[pkgs[j]].players[playerId] = myData;
-        //                            }
-        //                            else {
-        //                                Players[pkgs[j]].players[playerId] = myData;
-        //                            }
-        //                        }
-
-        //                        PlayerConnectedWeb(playerId, pkgs);
-        //                    }
-        //                }
-
-        //                else if (knd == "Alive") {
-        //                    var data = {
-        //                        alive: true, Meskind: "Alive"
-        //                    };
-        //                    for (var j = 0; j < pkgs.length; j++) {
-        //                        if (Players[pkgs[j]] != undefined) {
-        //                            if (Players[pkgs[j]].players[playerId] != undefined) {
-        //                                Players[pkgs[j]].players[playerId].alive = Date.now();
-        //                            }
-        //                        }
-        //                    }
-        //                    socket.write(JSON.stringify(data) + "\n");
-        //                }
-        //                else if (knd == "Deliver") {
-        //                    var nid = dt.nid;
-        //                    if (delivery[nid] == undefined) {
-        //                        delivery[nid] = { players: [] };
-        //                        delivery[nid].players[playerId] = 1;
-        //                    }
-        //                    else {
-        //                        delivery[nid].players[playerId] = 1;
-        //                    }
-        //                    console.log("Set delivery --- " + nid + " --- " + playerId);
-
-        //                    SetDelivery(nid, playerId);
-        //                }
-        //            }
-        //        }
+                if (data && data.byteLength != undefined) {
+                    data = new Buffer(data).toString('utf8');
+                }
 
 
-        //    }
-        //    catch (e) {
-        //        console.log("3: " + e.message);
-        //    }
-        //});
+                var dtSplit = data.split("}");
 
-        //socket.on('close', function (data) {
-        //    try {
-        //        PlayerDisonnectedWeb(myId);
-        //        for (var j = 0; j < pkgs.length; j++) {
-        //            if (Players[pkgs[j]] != undefined) {
-        //                if (Players[pkgs[j]].players[myId] != undefined) {
-        //                    delete Players[pkgs[j]].players[myId];
-        //                }
-        //            }
-        //        }
-        //    }
-        //    catch (e) {
-        //        console.log("4: " + e.message);
-        //    }
-        //});
+                for (var dataCount = 0; dataCount < dtSplit.length; dataCount++) {
+                    if (dtSplit[dataCount].trim() != "") {
+                        dtSplit[dataCount] += "}";
+                        var xval = dtSplit[dataCount];
+                        if (xval.indexOf("{") >= 0) {
 
-        //socket.on('disconnect', function (data) {
-        //    PlayerDisonnectedWeb(myId);
-        //});
+                        }
+                        else {
+                            xval = "{" + xval;
+                        }
+                        //console.log(xval);
+                        var dt = JSON.parse(xval);
+                        var playerId = dt.playerId;
+                        var pkgName = dt.pkgName;
+                        var phoneNo = dt.phoneNo;
+
+                        if (dt.hasOwnProperty('pkgs')) {
+                            pkgs = dt.pkgs;
+                        }
+
+                        var knd = dt.kind;
+                        var added = 0;
+                        myId = playerId;
+
+                        var myData = {
+                            playerId: playerId, phoneNo: phoneNo, socket: socket, pkgs: pkgs, alive: 0
+                        };
+                        var d = new Date();
+                        var n = d.getTime();
+                        myData.alive = n;
+
+                        if (knd == "add") {
+
+                            if (pkgs != undefined) {
+                                for (var j = 0; j < pkgs.length; j++) {
+                                    //console.log(pkgs[j]);
+                                    if (Players[pkgs[j]] == undefined && pkgs[j] != "null") {
+                                        Players[pkgs[j]] = { players: [] };
+                                        Players[pkgs[j]].players[playerId] = myData;
+                                    }
+                                    else {
+                                        Players[pkgs[j]].players[playerId] = myData;
+                                    }
+                                }
+
+                                PlayerConnectedWeb(playerId, pkgs);
+                            }
+                        }
+
+                        else if (knd == "Alive") {
+                            var data = {
+                                alive: true, Meskind: "Alive"
+                            };
+                            for (var j = 0; j < pkgs.length; j++) {
+                                if (Players[pkgs[j]] != undefined) {
+                                    if (Players[pkgs[j]].players[playerId] != undefined) {
+                                        Players[pkgs[j]].players[playerId].alive = Date.now();
+                                    }
+                                }
+                            }
+                            socket.write(JSON.stringify(data) + "\n");
+                        }
+                        else if (knd == "Deliver") {
+                            var nid = dt.nid;
+                            if (delivery[nid] == undefined) {
+                                delivery[nid] = { players: [] };
+                                delivery[nid].players[playerId] = 1;
+                            }
+                            else {
+                                delivery[nid].players[playerId] = 1;
+                            }
+                           // console.log("Set delivery --- " + nid + " --- " + playerId);
+
+                            SetDelivery(nid, playerId);
+                        }
+                    }
+                }
 
 
-        //socket.on('error', function (data) {
-        //    try {
-        //        for (var j = 0; j < pkgs.length; j++) {
-        //            if (Players[pkgs[j]] != undefined) {
-        //                if (Players[pkgs[j]].players[myId] != undefined) {
-        //                    delete Players[pkgs[j]].players[myId];
-        //                }
-        //            }
-        //        }
-        //    }
-        //    catch (e) {
-        //        console.log("5: " + e.message);
-        //    }
-        //});
+            }
+            catch (e) {
+                //console.log("3: " + e.message);
+            }
+        });
+
+        socket.on('close', function (data) {
+            try {
+                PlayerDisonnectedWeb(myId);
+                for (var j = 0; j < pkgs.length; j++) {
+                    if (Players[pkgs[j]] != undefined) {
+                        if (Players[pkgs[j]].players[myId] != undefined) {
+                            delete Players[pkgs[j]].players[myId];
+                        }
+                    }
+                }
+            }
+            catch (e) {
+                //console.log("4: " + e.message);
+            }
+        });
+
+        socket.on('disconnect', function (data) {
+            PlayerDisonnectedWeb(myId);
+        });
+
+
+        socket.on('error', function (data) {
+            try {
+                for (var j = 0; j < pkgs.length; j++) {
+                    if (Players[pkgs[j]] != undefined) {
+                        if (Players[pkgs[j]].players[myId] != undefined) {
+                            delete Players[pkgs[j]].players[myId];
+                        }
+                    }
+                }
+            }
+            catch (e) {
+                //console.log("5: " + e.message);
+            }
+        });
 
     });
 
     server.listen(_port, _ip);
 }
 catch (e) {
-    console.log("6: " + e.message);
+    //console.log("6: " + e.message);
 }
 
 function gregorian_to_jalali(gy, gm, gd) {

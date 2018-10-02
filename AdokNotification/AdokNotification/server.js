@@ -697,7 +697,7 @@ function GetNotificationMysql() {
 
                         var curtm = GetCurrentTime();
 
-                        if (timetolive > curtm) {
+                        if (timeToLive > curtm) {
                             if (budget < 10 && isTest == 0) {
                                 IsStop = 1;
                             }

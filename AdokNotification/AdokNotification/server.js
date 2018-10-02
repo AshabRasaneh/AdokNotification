@@ -729,7 +729,7 @@ function GetNotificationMysql() {
                                     var adid = resultadd[j].id;
                                     var adnid = resultadd[j].nId;
 
-                                    allNoties[adnid].additionalData[adid] = dta;
+                                    allNoties[adnid].AdditionalData[adid] = dta;
                                 }
 
                                 conGetNoti.query("SELECT id,nId,btnText,url,icon,actionType,dialogTitle,btnYesText,	btnNoText,dialogMessage,dialogActionType,dialogActionUrl FROM notiBtn where nId=" + id, function (errbtn, resultbtn, fieldsbtn) {

@@ -644,8 +644,9 @@ function GetNotificationMysql() {
         " FROM notification  inner join apps on notification.appId = apps.id inner join appTags on notification.tagId = appTags.id " +
             " where dateStartSend>= " + dateHejri + " and notification.IsStop = 0 and  notification.isActive = 1 and notification.isSend = 0", function (err, result, fields) {
                 if (err) throw err;
+                var row = JSON.parse(result);
+                //var row = result;
 
-                var row = result;
                 for (var i = 0; i < row.length; i++) {
                     console.log("row.id: " + row[i].id);
                     var id = row[i].id;

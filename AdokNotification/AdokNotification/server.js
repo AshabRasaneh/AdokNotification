@@ -785,14 +785,7 @@ function SendNoti() {
 
     allNoties.forEach(function (item, index, object) {
         var noti = item;
-        console.log(noti.id + " noti -- " + noti.title + " -- " + noti.chanelName + " -- " + noti.chanelDes);
-        if (noti.btns.length > 0) {
-            console.log(noti.id + " btn -- " + noti.btns[0].id + " -- " + noti.btns[0].btnText + " -- ");
-        }
-
-        if (noti.AdditionalData.length > 0) {
-            console.log(noti.id + " dt -- " + noti.AdditionalData[0].dtKey + " -- " + noti.AdditionalData[0].dtValue + " -- ");
-        }
+        console.log(noti);
 
         var timeToSend = noti.timeStartSend + noti.timeToLive;
         var sendH = Math.floor(timeToSend / 60);
@@ -889,6 +882,10 @@ function SendNoti() {
                     }
                     else {
                     }
+                }
+                else
+                {
+
                 }
             }
         }

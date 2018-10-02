@@ -32,8 +32,8 @@ var allNoties = [];
 
     try {
         var timeout = setInterval(function () {
-                GetNotificationMysql();
-                SendNoti(noti);
+            GetNotificationMysql();
+            SendNoti(noti);
         }, 60000);
     }
     catch (e) {
@@ -640,7 +640,7 @@ function GetNotificationMysql() {
             " where dateStartSend>= " + dateHejri + " and notification.IsStop = 0 and  notification.isActive = 1 and notification.isSend = 0", function (err, result, fields) {
                 if (!err) {
                     var row = result;
-                    
+
                     for (var i = 0; i < row.length; i++) {
                         console.log("row.id: " + row[i].id);
                         var id = row[i].id;
@@ -769,8 +769,7 @@ function GetNotificationMysql() {
                     canCheckNotify = 1;
                     //console.log("Result: " + result);
                 }
-                else
-                {
+                else {
                     canCheckNotify = 1;
                 }
             });
@@ -782,116 +781,118 @@ function GetNotificationMysql() {
     }
 }
 
-function SendNoti(noti) {
+function SendNoti() {
 
-    console.log(noti.id + " noti -- " + noti.title + " -- " + noti.chanelName + " -- " + noti.chanelDes);
-    if (noti.btns.length > 0)
-    {
-        console.log(noti.id + " btn -- " +noti.btns[0].id + " -- " + noti.btns[0].btnText + " -- ");
-    }
-
-    if (noti.AdditionalData.length > 0) {
-        console.log(noti.id + " dt -- " +noti.AdditionalData[0].dtKey + " -- " + noti.AdditionalData[0].dtValue + " -- ");
-    }
-
-    var timeToSend = noti.timeStartSend + noti.timeToLive;
-    var sendH = Math.floor(timeToSend / 60);
-    var sendM = Math.floor(timeToSend % 60);
-    var Days = 0;
-    var HAfter = 0;
-    if (sendH > 24) {
-        Days = Math.floor(sendH / 24);
-        HAfter = Math.floor(sendH - (Days * 24));
-    }
-    else {
-        HAfter = sendH;
-    }
-
-    var yy = parseInt(noti.dateStartSend.toString().substr(0, 4));
-    var mm = parseInt(noti.dateStartSend.toString().substr(4, 2));
-    var dd = parseInt(noti.dateStartSend.toString().substr(6, 2));
-
-    var curDateEnd = "";
-    if (Days > 0) {
-        dd += Days;
-        if (dd > 29 && mm == 12 && y % 4 != 3) {
-            dd = dd - 29;
-            mm = 1;
-            yy++;
+    allNoties.forEach(function (item, index, object) {
+        var noti = item;
+        console.log(noti.id + " noti -- " + noti.title + " -- " + noti.chanelName + " -- " + noti.chanelDes);
+        if (noti.btns.length > 0) {
+            console.log(noti.id + " btn -- " + noti.btns[0].id + " -- " + noti.btns[0].btnText + " -- ");
         }
-        else if (dd > 30 && mm == 12 && y % 4 == 3) {
-            dd = dd - 30;
-            mm = 1;
-            yy++;
+
+        if (noti.AdditionalData.length > 0) {
+            console.log(noti.id + " dt -- " + noti.AdditionalData[0].dtKey + " -- " + noti.AdditionalData[0].dtValue + " -- ");
         }
-        else if (dd > 31 && mm <= 6) {
-            dd = dd - 31;
-            mm++;
+
+        var timeToSend = noti.timeStartSend + noti.timeToLive;
+        var sendH = Math.floor(timeToSend / 60);
+        var sendM = Math.floor(timeToSend % 60);
+        var Days = 0;
+        var HAfter = 0;
+        if (sendH > 24) {
+            Days = Math.floor(sendH / 24);
+            HAfter = Math.floor(sendH - (Days * 24));
         }
-        else if (dd > 30 && mm > 6) {
-            dd = dd - 30;
-            mm++;
+        else {
+            HAfter = sendH;
         }
-    }
 
-    var year = "" + yy;
-    var mounth = "";
-    var dayOfMounth = "";
-    if (mm < 10) {
-        mounth = "0" + mm;
-    }
-    else {
-        mounth = "" + mm;
-    }
+        var yy = parseInt(noti.dateStartSend.toString().substr(0, 4));
+        var mm = parseInt(noti.dateStartSend.toString().substr(4, 2));
+        var dd = parseInt(noti.dateStartSend.toString().substr(6, 2));
 
-    if (dd < 10) {
-        dayOfMounth = "0" + dd;
-    }
-    else {
-        dayOfMounth = "" + dd;
-    }
-
-    var curDateEnd = year + "" + mounth + "" + dayOfMounth;
-
-    var hcur = GetCurrentTime().substr(0, 2);
-
-    if (noti.isTest > 0) {
-        if (noti.pkgNameAndroid != "") {
-            if (Players[pkgNameAndroid] != undefined) {
-                if (Players[pkgNameAndroid].players[testId] != undefined) {
-                    Players[pkgNameAndroid].players[testId].socket.write(JSON.stringify(noti) + "\n");
-                }
+        var curDateEnd = "";
+        if (Days > 0) {
+            dd += Days;
+            if (dd > 29 && mm == 12 && y % 4 != 3) {
+                dd = dd - 29;
+                mm = 1;
+                yy++;
+            }
+            else if (dd > 30 && mm == 12 && y % 4 == 3) {
+                dd = dd - 30;
+                mm = 1;
+                yy++;
+            }
+            else if (dd > 31 && mm <= 6) {
+                dd = dd - 31;
+                mm++;
+            }
+            else if (dd > 30 && mm > 6) {
+                dd = dd - 30;
+                mm++;
             }
         }
-    }
-    else {
-        curDatev = "" + noti.dateStartSend;
-        if (parseInt(curDatev) < parseInt(curDateEnd) || (parseInt(curDatev) == parseInt(curDateEnd) && parseInt(hcur) <= parseInt(HAfter))) {
-            if (noti.IsStop == 0) {
 
+        var year = "" + yy;
+        var mounth = "";
+        var dayOfMounth = "";
+        if (mm < 10) {
+            mounth = "0" + mm;
+        }
+        else {
+            mounth = "" + mm;
+        }
+
+        if (dd < 10) {
+            dayOfMounth = "0" + dd;
+        }
+        else {
+            dayOfMounth = "" + dd;
+        }
+
+        var curDateEnd = year + "" + mounth + "" + dayOfMounth;
+
+        var hcur = GetCurrentTime().substr(0, 2);
+
+        if (noti.isTest > 0) {
+            if (noti.pkgNameAndroid != "") {
                 if (Players[pkgNameAndroid] != undefined) {
-                    Players[pkgNameAndroid].players.forEach(function (itemp, indexp, objectp) {
-
-                        if (itemp.socket == undefined) {
-                            objectp.splice(indexp, 1);
-                        }
-                        else {
-                            if (delivery[noti.id] == undefined) {
-                                delivery[noti.id] = { players: [] };
-                            }
-
-                            if (delivery[noti.id].players[itemp.playerId] == undefined) {
-                                //console.log("noti.id: " + noti.id + "--- playerId: " + itemp.playerId);
-                                itemp.socket.write(JSON.stringify(noti) + "\n");
-                            }
-                        }
-                    });
-                }
-                else {
+                    if (Players[pkgNameAndroid].players[testId] != undefined) {
+                        Players[pkgNameAndroid].players[testId].socket.write(JSON.stringify(noti) + "\n");
+                    }
                 }
             }
         }
-    }
+        else {
+            curDatev = "" + noti.dateStartSend;
+            if (parseInt(curDatev) < parseInt(curDateEnd) || (parseInt(curDatev) == parseInt(curDateEnd) && parseInt(hcur) <= parseInt(HAfter))) {
+                if (noti.IsStop == 0) {
+
+                    if (Players[pkgNameAndroid] != undefined) {
+                        Players[pkgNameAndroid].players.forEach(function (itemp, indexp, objectp) {
+
+                            if (itemp.socket == undefined) {
+                                objectp.splice(indexp, 1);
+                            }
+                            else {
+                                if (delivery[noti.id] == undefined) {
+                                    delivery[noti.id] = { players: [] };
+                                }
+
+                                if (delivery[noti.id].players[itemp.playerId] == undefined) {
+                                    //console.log("noti.id: " + noti.id + "--- playerId: " + itemp.playerId);
+                                    itemp.socket.write(JSON.stringify(noti) + "\n");
+                                }
+                            }
+                        });
+                    }
+                    else {
+                    }
+                }
+            }
+        }
+    });
 }
 
 function PlayerConnectedWeb(pid, pkgs) {

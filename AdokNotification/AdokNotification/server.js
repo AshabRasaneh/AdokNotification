@@ -32,7 +32,7 @@ var allNoties = [];
     try {
         var timeout = setInterval(function () {
             GetNotificationMysql();
-        }, 30000);
+        }, 10000);
     }
     catch (e) {
         console.log("2: " + e.message);
@@ -44,7 +44,7 @@ var allNoties = [];
     try {
         var timeout = setInterval(function () {
             SendNoti();
-        }, 55000);
+        }, 15000);
     }
     catch (e) {
         console.log("2: " + e.message);

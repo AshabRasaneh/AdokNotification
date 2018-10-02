@@ -26,19 +26,15 @@ var _port = 3010;
 var Players = [];
 var canCheckNotify = 1;
 var delivery = [];
+var allNoties = [];
+
 (function () {
 
     try {
-        //var c = 0;
         var timeout = setInterval(function () {
-            //console.log(canCheckNotify);
-            if (canCheckNotify > 0) {
-                canCheckNotify = 0;
-                //console.log("here");
                 GetNotificationMysql();
-            }
-
-        }, 10000);
+                SendNoti(noti);
+        }, 60000);
     }
     catch (e) {
         console.log("2: " + e.message);
@@ -644,7 +640,7 @@ function GetNotificationMysql() {
             " where dateStartSend>= " + dateHejri + " and notification.IsStop = 0 and  notification.isActive = 1 and notification.isSend = 0", function (err, result, fields) {
                 if (!err) {
                     var row = result;
-                    var all = [];
+                    
                     for (var i = 0; i < row.length; i++) {
                         console.log("row.id: " + row[i].id);
                         var id = row[i].id;
@@ -724,65 +720,42 @@ function GetNotificationMysql() {
                             AdditionalData: additionalData, btns: btns, Meskind: "noti"
                         };
 
-                        //all[i] = noti;
+                        allNoties[id] = noti;
 
                         conGetNoti.query("SELECT id,nId,dtKey,dtValue FROM notiAdditionalData where nId=" + id, function (erradd, resultadd, fieldsadd) {
                             if (!erradd) {
                                 for (j = 0; j < resultadd.length; j++) {
-                                    additionalData.push({ "dtKey": resultadd[j].dtKey, "dtValue": resultadd[j].dtValue });
+                                    var dta = { "dtKey": resultadd[j].dtKey, "dtValue": resultadd[j].dtValue };
+                                    var adid = resultadd[j].id;
+                                    var adnid = resultadd[j].nId;
+
+                                    allNoties[adnid].additionalData[adid] = dta;
                                 }
 
                                 conGetNoti.query("SELECT id,nId,btnText,url,icon,actionType,dialogTitle,btnYesText,	btnNoText,dialogMessage,dialogActionType,dialogActionUrl FROM notiBtn where nId=" + id, function (errbtn, resultbtn, fieldsbtn) {
                                     if (!errbtn) {
                                         for (var j = 0; j < resultbtn.length; j++) {
-                                            btns.push({
+
+                                            var dtb = {
                                                 "id": resultbtn[j].id, "nId": resultbtn[j].nId, "btnText": resultbtn[j].btnText, "url": resultbtn[j].url, "icon": resultbtn[j].icon
                                                 , "dialogTitle": resultbtn[j].dialogTitle, "btnYesText": resultbtn[j].btnYesText, "btnNoText": resultbtn[j].btnNoText,
                                                 "dialogMessage": resultbtn[j].dialogMessage, "dialogActionType": resultbtn[j].dialogActionType, "dialogActionUrl": resultbtn[j].dialogActionUrl,
                                                 "actionType": resultbtn[j].actionType
-                                            });
+                                            };
+
+                                            var bid = resultbtn[j].id;
+                                            var bnid = resultbtn[j].nId;
+
+                                            allNoties[adnid].btns[bnid] = dtb;
                                         }
 
                                         conGetNoti.query("SELECT id, name, des FROM  notificationChanels where id=" + chanelId, function (errchanel, resultchanel, fieldschanel) {
                                             if (!errchanel) {
                                                 if (resultchanel.length > 0) {
-                                                    chanelName = resultchanel[0].name;
-                                                    chanelDes = resultchanel[0].des;
-
-                                                    
-
-                                                    SendNoti(noti);
-                                                }
-                                                else {
-                                                    conGetNoti.query("insert into notificationChanels (appId,name,des) values (" + appId + ",'def','default chanel for adok notifications')", function (erraddch, resultaddch, fieldsaddch) {
-                                                        if (!erraddch) {
-                                                            chanelName = "def";
-                                                            chanelDes = "default chanel for adok notifications";
-
-                                                            conGetNoti.query("select max(id) as mx from notificationChanels where appId=" + appId, function (errslCh, resultslCh, fieldsslCh) {
-                                                                if (!errslCh) {
-                                                                    chanelId = resultslCh[0].mx;
-                                                                    conGetNoti.query("update notification set chanelId=" + chanelId + " where id=" + id, function (errupch, resultupch, fieldsupch) {
-                                                                        if (!errupch) {
-
-                                                                            var noti = {
-                                                                                id: row[i].id, appId: row[i].appId, title: row[i].title, message: row[i].message, url: row[i].url, timeToLive: row[i].timeToLive
-                                                                                , dateStartSend: row[i].dateStartSend, timeStartSend: row[i].timeStartSend, sound: row[i].sound, smalIcon: row[i].smalIcon, largeIcon: row[i].largeIcon
-                                                                                , bigPicture: row[i].bigPicture, ledColor: row[i].ledColor, accentColor: row[i].accentColor, gId: row[i].gId, priority: row[i].priority
-                                                                                , pkgNameAndroid: row[i].pkgNameAndroid, pkgNameIos: row[i].pkgNameIos, kind: row[i].kind,
-                                                                                bigText: row[i].bigText, summary: row[i].summary,
-                                                                                actionType: row[i].actionType, hiddenNoti: row[i].hiddenNoti, showTime: row[i].showTime, tagName: row[i].tagName,
-                                                                                chanelId: chanelId, chanelName: chanelName, chanelDes: chanelDes,
-                                                                                dialogTitle: dialogTitle, btnYesText: btnYesText, btnNoText: btnNoText, dialogMessage: dialogMessage, dialogActionType: dialogActionType, dialogActionUrl: dialogActionUrl, isVibrate: isVibrate,
-                                                                                devEnvId: devEnvId, iconId: iconId,
-                                                                                AdditionalData: additionalData, btns: btns, Meskind: "noti"
-                                                                            };
-
-                                                                            SendNoti(noti);
-                                                                        }
-                                                                    });
-                                                                }
-                                                            });
+                                                    allNoties.forEach(function (item, index, object) {
+                                                        if (item.chanelId == chanelId) {
+                                                            item.chanelName = resultchanel[0].name;
+                                                            item.chanelDes = resultchanel[0].des;
                                                         }
                                                     });
                                                 }
@@ -811,7 +784,7 @@ function GetNotificationMysql() {
 
 function SendNoti(noti) {
 
-    console.log(noti.id + " noti -- " + noti.title + " -- ");
+    console.log(noti.id + " noti -- " + noti.title + " -- " + noti.chanelName + " -- " + noti.chanelDes);
     if (noti.btns.length > 0)
     {
         console.log(noti.id + " btn -- " +noti.btns[0].id + " -- " + noti.btns[0].btnText + " -- ");

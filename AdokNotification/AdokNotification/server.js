@@ -32,8 +32,19 @@ var allNoties = [];
     try {
         var timeout = setInterval(function () {
             GetNotificationMysql();
+        }, 30000);
+    }
+    catch (e) {
+        console.log("2: " + e.message);
+    }
+})();
+
+(function () {
+
+    try {
+        var timeout = setInterval(function () {
             SendNoti();
-        }, 60000);
+        }, 55000);
     }
     catch (e) {
         console.log("2: " + e.message);
@@ -101,7 +112,6 @@ try {
                                     PlayerConnectedSql(playerId, pkgs);
                                 }
                             }
-
                             else if (knd == "Alive") {
                                 var data = {
                                     alive: true, Meskind: "Alive"
@@ -131,8 +141,6 @@ try {
                         }
                     }
                 }
-
-
             }
             catch (e) {
 
@@ -342,7 +350,6 @@ function GetNotificationMysql() {
                     var row = result;
 
                     for (var i = 0; i < row.length; i++) {
-                        console.log("row.id: " + row[i].id);
                         var id = row[i].id;
                         var appId = row[i].appId;
                         var title = row[i].title;
@@ -485,7 +492,7 @@ function SendNoti() {
 
     allNoties.forEach(function (item, index, object) {
         var noti = item;
-        console.log(noti);
+        //console.log(noti);
 
         var timeToSend = noti.timeStartSend + noti.timeToLive;
         var sendH = Math.floor(timeToSend / 60);
@@ -548,6 +555,8 @@ function SendNoti() {
 
         var hcur = GetCurrentTime().substr(0, 2);
 
+        console.log("noti.isTest: " + noti.isTest);
+
         if (noti.isTest > 0) {
             if (noti.pkgNameAndroid != "") {
                 if (Players[pkgNameAndroid] != undefined) {
@@ -561,7 +570,7 @@ function SendNoti() {
         }
         else {
             curDatev = "" + noti.dateStartSend;
-            console.log(parseInt(curDatev) < parseInt(curDateEnd) + " --- " + parseInt(curDatev) == parseInt(curDateEnd) + " --- " + parseInt(hcur) <= parseInt(HAfter));
+            console.log(parseInt(curDatev) + " --- " + parseInt(curDateEnd) + " --- " + parseInt(curDatev) + " --- " + parseInt(curDateEnd) + " --- " + parseInt(hcur) + " --- " + parseInt(HAfter));
             if (parseInt(curDatev) < parseInt(curDateEnd) || (parseInt(curDatev) == parseInt(curDateEnd) && parseInt(hcur) <= parseInt(HAfter))) {
                 if (noti.IsStop == 0) {
 

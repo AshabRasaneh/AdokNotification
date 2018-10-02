@@ -813,7 +813,7 @@ function SendNoti(noti) {
 
     console.log(noti);
 
-    var timeToSend = timeStartSend + timeToLive;
+    var timeToSend = noti.timeStartSend + noti.timeToLive;
     var sendH = Math.floor(timeToSend / 60);
     var sendM = Math.floor(timeToSend % 60);
     var Days = 0;
@@ -826,9 +826,9 @@ function SendNoti(noti) {
         HAfter = sendH;
     }
 
-    var yy = parseInt(dateStartSend.toString().substr(0, 4));
-    var mm = parseInt(dateStartSend.toString().substr(4, 2));
-    var dd = parseInt(dateStartSend.toString().substr(6, 2));
+    var yy = parseInt(noti.dateStartSend.toString().substr(0, 4));
+    var mm = parseInt(noti.dateStartSend.toString().substr(4, 2));
+    var dd = parseInt(noti.dateStartSend.toString().substr(6, 2));
 
     var curDateEnd = "";
     if (Days > 0) {
@@ -874,8 +874,8 @@ function SendNoti(noti) {
 
     var hcur = GetCurrentTime().substr(0, 2);
 
-    if (isTest > 0) {
-        if (pkgNameAndroid != "") {
+    if (noti.isTest > 0) {
+        if (noti.pkgNameAndroid != "") {
             if (Players[pkgNameAndroid] != undefined) {
                 if (Players[pkgNameAndroid].players[testId] != undefined) {
                     Players[pkgNameAndroid].players[testId].socket.write(JSON.stringify(noti) + "\n");
@@ -886,7 +886,7 @@ function SendNoti(noti) {
     else {
         curDatev = "" + dateStartSend;
         if (parseInt(curDatev) < parseInt(curDateEnd) || (parseInt(curDatev) == parseInt(curDateEnd) && parseInt(hcur) <= parseInt(HAfter))) {
-            if (IsStop == 0) {
+            if (noti.IsStop == 0) {
 
                 if (Players[pkgNameAndroid] != undefined) {
                     Players[pkgNameAndroid].players.forEach(function (itemp, indexp, objectp) {

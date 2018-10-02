@@ -34,7 +34,7 @@ var delivery = [];
             //console.log(canCheckNotify);
             if (canCheckNotify > 0) {
                 canCheckNotify = 0;
-                console.log("here");
+                //console.log("here");
                 GetNotificationMysql();
             }
 
@@ -364,7 +364,7 @@ function GetCurrentTime() {
             SetLeagueState();
         }
         catch (e) {
-            console.log("11: " + e.message);
+            //console.log("11: " + e.message);
         }
     }, 60000);
 
@@ -679,7 +679,7 @@ function PlayerConnectedWeb(pid, pkgs) {
                 buffer += chunk;
             });
             res.on('end', function () {
-                console.log(buffer);
+                //console.log(buffer);
             });
         });
 
@@ -687,7 +687,7 @@ function PlayerConnectedWeb(pid, pkgs) {
         req.end();
     }
     catch (e) {
-        console.log("130: " + e.message);
+        //console.log("130: " + e.message);
     }
 }
 
@@ -718,7 +718,7 @@ function PlayerDisonnectedWeb(pid) {
                 buffer += chunk;
             });
             res.on('end', function () {
-                console.log(buffer);
+                //console.log(buffer);
             });
         });
 
@@ -726,7 +726,7 @@ function PlayerDisonnectedWeb(pid) {
         req.end();
     }
     catch (e) {
-        console.log("140: " + e.message);
+        //console.log("140: " + e.message);
     }
 }
 
@@ -757,7 +757,7 @@ function PlayersConnection(q1, q2) {
                 buffer += chunk;
             });
             res.on('end', function () {
-                console.log(buffer);
+                //console.log(buffer);
             });
         });
 
@@ -765,7 +765,7 @@ function PlayersConnection(q1, q2) {
         req.end();
     }
     catch (e) {
-        console.log("150: " + e.message);
+        //console.log("150: " + e.message);
     }
 }
 
@@ -796,7 +796,7 @@ function SetDelivery(nid, playerId) {
                 buffer += chunk;
             });
             res.on('end', function () {
-                console.log("SetDelivery.php result: " + buffer);
+                //console.log("SetDelivery.php result: " + buffer);
             });
         });
 
@@ -804,7 +804,7 @@ function SetDelivery(nid, playerId) {
         req.end();
     }
     catch (e) {
-        console.log("150: " + e.message);
+        //console.log("150: " + e.message);
     }
 }
 
@@ -835,7 +835,7 @@ function SetLeagueState() {
                 buffer += chunk;
             });
             res.on('end', function () {
-                console.log(buffer);
+                //console.log(buffer);
             });
         });
 
@@ -843,7 +843,7 @@ function SetLeagueState() {
         req.end();
     }
     catch (e) {
-        console.log("160: " + e.message);
+        //console.log("160: " + e.message);
     }
 }
 
@@ -858,7 +858,7 @@ async function SetDeliverySql(pid, pkgs) {
             " FROM notification  inner join apps on notification.appId = apps.id inner join appTags on notification.tagId = appTags.id " +
             " where dateStartSend>= $dateHejri and notification.IsStop = 0 and  notification.isActive = 1 and notification.isSend = 0");
 
-        console.log(string1);
+       // console.log(string1);
     } catch (err) {
         // do something
     }

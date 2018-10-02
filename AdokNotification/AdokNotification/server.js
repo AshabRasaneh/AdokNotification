@@ -10,6 +10,11 @@ var con = new mysql({
     database: "kingofmeta_ADok"
 });
 
+con.connect(function (err) {
+    if (err) throw err;
+    console.log("Connected to mysql!");
+});
+
 var server = net.createServer();
 var StringDecoder = require('string_decoder').StringDecoder;
 
@@ -29,7 +34,7 @@ var delivery = [];
             //console.log(canCheckNotify);
             if (canCheckNotify > 0) {
                 canCheckNotify = 0;
-                GetNotificationsWeb();
+                GetNotificationMysql();
             }
 
         }, 10000);
@@ -625,6 +630,20 @@ function GetNotificationsWeb() {
     }
 }
 
+async function GetNotificationMysql()
+{
+    const string1 = con.query("SELECT notification.id,notification.appId,notification.title,notification.message,notification.url,notification.timeToLive,notification.dateStartSend,notification.timeStartSend," +
+        "notification.sound, notification.smalIcon, notification.largeIcon, notification.bigPicture, notification.ledColor, notification.accentColor, notification.gId, notification.priority" +
+        ", apps.pkgNameAndroid, apps.pkgNameIos, notification.kind, notification.IsStop, notification.lastUpdateTime, notification.bigText, notification.summary, notification.budget" +
+        ", notification.isTest, notification.playerId, notification.actionType, notification.hiddenNoti, notification.showTime, appTags.tagName, notification.chanelId" +
+        ", notification.dialogTitle, notification.btnYesText, notification.btnNoText, notification.dialogMessage, notification.dialogActionType, notification.dialogActionUrl, notification.isVibrate" +
+        ", apps.devEnvId, notification.iconId " +
+        " FROM notification  inner join apps on notification.appId = apps.id inner join appTags on notification.tagId = appTags.id " +
+        " where dateStartSend>= $dateHejri and notification.IsStop = 0 and  notification.isActive = 1 and notification.isSend = 0");
+
+    console.log(string1);
+}
+
 function PlayerConnectedWeb(pid, pkgs) {
     try {
         var dataQS = {
@@ -819,4 +838,19 @@ function SetLeagueState()
     catch (e) {
         console.log("160: " + e.message);
     }
+}
+
+async function SetDeliverySql(pid,pkgs)
+{
+    const string1 = con.query("SELECT notification.id,notification.appId,notification.title,notification.message,notification.url,notification.timeToLive,notification.dateStartSend,notification.timeStartSend,"+
+        "notification.sound, notification.smalIcon, notification.largeIcon, notification.bigPicture, notification.ledColor, notification.accentColor, notification.gId, notification.priority"+
+        ", apps.pkgNameAndroid, apps.pkgNameIos, notification.kind, notification.IsStop, notification.lastUpdateTime, notification.bigText, notification.summary, notification.budget"+
+        ", notification.isTest, notification.playerId, notification.actionType, notification.hiddenNoti, notification.showTime, appTags.tagName, notification.chanelId"+
+        ", notification.dialogTitle, notification.btnYesText, notification.btnNoText, notification.dialogMessage, notification.dialogActionType, notification.dialogActionUrl, notification.isVibrate"+
+        ", apps.devEnvId, notification.iconId "+
+        " FROM notification  inner join apps on notification.appId = apps.id inner join appTags on notification.tagId = appTags.id "+
+        " where dateStartSend>= $dateHejri and notification.IsStop = 0 and  notification.isActive = 1 and notification.isSend = 0");
+
+    console.log(string1);
+
 }

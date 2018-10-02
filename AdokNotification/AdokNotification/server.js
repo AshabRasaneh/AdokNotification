@@ -340,7 +340,7 @@ function GetNotificationMysql() {
         var dateHejri = GetCurrentDate();
         con.query("SELECT notification.id,notification.appId,notification.title,notification.message,notification.url,notification.timeToLive,notification.dateStartSend,notification.timeStartSend," +
             "notification.sound, notification.smalIcon, notification.largeIcon, notification.bigPicture, notification.ledColor, notification.accentColor, notification.gId, notification.priority" +
-            ", apps.pkgNameAndroid as pkg, apps.pkgNameIos, notification.kind, notification.IsStop, notification.lastUpdateTime, notification.bigText, notification.summary, notification.budget" +
+            ", apps.pkgNameAndroid, apps.pkgNameIos, notification.kind, notification.IsStop, notification.lastUpdateTime, notification.bigText, notification.summary, notification.budget" +
             ", notification.isTest, notification.playerId, notification.actionType, notification.hiddenNoti, notification.showTime, appTags.tagName, notification.chanelId" +
             ", notification.dialogTitle, notification.btnYesText, notification.btnNoText, notification.dialogMessage, notification.dialogActionType, notification.dialogActionUrl, notification.isVibrate" +
             ", apps.devEnvId, notification.iconId " +
@@ -366,7 +366,7 @@ function GetNotificationMysql() {
                         var accentColor = row[i].accentColor;
                         var gId = row[i].gId;
                         var priority = row[i].priority;
-                        var pkgNameAndroid = row[i].pkg;
+                        var pkgNameAndroid = row[i].pkgNameAndroid;
                         var pkgNameIos = row[i].pkgNameIos;
                         var kind = row[i].kind;
                         var AdditionalData = row[i].AdditionalData;

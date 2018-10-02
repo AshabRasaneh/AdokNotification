@@ -647,7 +647,7 @@ async function GetNotificationMysql() {
     canCheckNotify = 1;
     } catch (err) {
         // do something
-        console.log(err);
+        console.log("myError: "+err);
         canCheckNotify = 1;
     }
 }

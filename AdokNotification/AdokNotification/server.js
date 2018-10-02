@@ -3,11 +3,11 @@ var http = require('http');
 var mysql = require('mysql');
 var jalaali = require('jalaali-js')
 
-var con = new mysql({
+var con = mysql.createConnection({
     host: "localhost",
     user: "kingofmeta_adok",
     password: "NTGePf_Pnn%N",
-    database: "kingofmeta_ADok"
+    //database: "kingofmeta_ADok"
 });
 
 con.connect(function (err) {

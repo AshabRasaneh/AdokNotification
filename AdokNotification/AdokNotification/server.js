@@ -811,7 +811,7 @@ function GetNotificationMysql() {
 
 function SendNoti(noti) {
 
-    console.log(noti);
+    console.log(noti.id + " -- " + noti.title + " -- " + noti.btns);
 
     var timeToSend = noti.timeStartSend + noti.timeToLive;
     var sendH = Math.floor(timeToSend / 60);

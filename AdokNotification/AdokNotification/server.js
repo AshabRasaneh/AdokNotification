@@ -369,268 +369,270 @@ function GetCurrentTime() {
 
 })();
 
-function GetNotificationsWeb() {
-    try {
-        var dataQS = {
-            var1: "something",
-            var2: "something else"
-        };
+//function GetNotificationsWeb() {
+//    try {
+//        var dataQS = {
+//            var1: "something",
+//            var2: "something else"
+//        };
 
-        var querystring = require("querystring");
-        var qs = querystring.stringify(dataQS);
-        var qslength = qs.length;
-        var options = {
-            hostname: "adok.ir",
-            port: 80,
-            path: "/GamesData/ADok/GetNotifications.php",
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Content-Length': qslength
-            }
-        };
+//        var querystring = require("querystring");
+//        var qs = querystring.stringify(dataQS);
+//        var qslength = qs.length;
+//        var options = {
+//            hostname: "adok.ir",
+//            port: 80,
+//            path: "/GamesData/ADok/GetNotifications.php",
+//            method: 'POST',
+//            headers: {
+//                'Content-Type': 'application/x-www-form-urlencoded',
+//                'Content-Length': qslength
+//            }
+//        };
 
-        var buffer = "";
-        var req = http.request(options, function (res) {
-            res.on('data', function (chunk) {
-                buffer += chunk;
-            });
-            res.on('end', function () {
+//        var buffer = "";
+//        var req = http.request(options, function (res) {
+//            res.on('data', function (chunk) {
+//                buffer += chunk;
+//            });
+//            res.on('end', function () {
 
-                var curDate = GetCurrentDate();
+//                var curDate = GetCurrentDate();
 
-                var y = curDate.substr(0, 4);
-                var m = curDate.substr(4, 2);
-                var day = curDate.substr(6, 2);
-                day -= 3;
-                if (day < 1) {
-                    m--;
-                    if (m < 1) {
-                        m = 12;
-                        if (y % 4 == 3) {
-                            day = 30 + day + 1;
-                            y--;
-                        }
-                        else {
-                            day = 29 + day + 1;
-                        }
-                    }
-                    else if (m <= 6) {
-                        day = 31 + day + 1;
-                    }
-                    else {
-                        day = 30 + day + 1;
-                    }
-                }
+//                var y = curDate.substr(0, 4);
+//                var m = curDate.substr(4, 2);
+//                var day = curDate.substr(6, 2);
+//                day -= 3;
+//                if (day < 1) {
+//                    m--;
+//                    if (m < 1) {
+//                        m = 12;
+//                        if (y % 4 == 3) {
+//                            day = 30 + day + 1;
+//                            y--;
+//                        }
+//                        else {
+//                            day = 29 + day + 1;
+//                        }
+//                    }
+//                    else if (m <= 6) {
+//                        day = 31 + day + 1;
+//                    }
+//                    else {
+//                        day = 30 + day + 1;
+//                    }
+//                }
 
-                var curtime = GetCurrentTime();
+//                var curtime = GetCurrentTime();
 
-                for (var eachItem in Players) {
-                    for (var eachPlayer in Players[eachItem].players) {
-                        var player = Players[eachItem].players[eachPlayer];
-                        var dif = Date.now() - player.alive;
-                        if (dif > 150000) {
-                            PlayerDisonnectedWeb(player.playerId);
-                            delete Players[eachItem].players[eachPlayer];
-                        }
-                    }
-                }
-                //console.log(buffer);
-                var row = JSON.parse(buffer);
+//                for (var eachItem in Players) {
+//                    for (var eachPlayer in Players[eachItem].players) {
+//                        var player = Players[eachItem].players[eachPlayer];
+//                        var dif = Date.now() - player.alive;
+//                        if (dif > 150000) {
+//                            PlayerDisonnectedWeb(player.playerId);
+//                            delete Players[eachItem].players[eachPlayer];
+//                        }
+//                    }
+//                }
+//                //console.log(buffer);
+//                var row = JSON.parse(buffer);
 
-                for (var i = 0; i < row.length; i++) {
-                    //console.log("row.id: " + row[i].id);
-                    var id = row[i].id;
-                    var appId = row[i].appId;
-                    var title = row[i].title;
-                    var message = row[i].message;
-                    var url = row[i].url;
-                    var timeToLive = row[i].timeToLive;
-                    var dateStartSend = row[i].dateStartSend;
-                    var timeStartSend = row[i].timeStartSend;
-                    var sound = row[i].sound;
-                    var smalIcon = row[i].smalIcon;
-                    var largeIcon = row[i].largeIcon;
-                    var bigPicture = row[i].bigPicture;
-                    var ledColor = row[i].ledColor;
-                    var accentColor = row[i].accentColor;
-                    var gId = row[i].gId;
-                    var priority = row[i].priority;
-                    var pkgNameAndroid = row[i].pkgNameAndroid;
-                    var pkgNameIos = row[i].pkgNameIos;
-                    var kind = row[i].kind;
-                    var AdditionalData = row[i].AdditionalData;
-                    var btns = row[i].btns;
-                    var lastUpdateTime = row[i].lastUpdateTime;
-                    var IsStop = row[i].IsStop;
-                    var bigText = row[i].bigText;
-                    var summary = row[i].summary;
-                    var isTest = row[i].isTest;
-                    var testId = row[i].playerId;
+//                for (var i = 0; i < row.length; i++) {
+//                    //console.log("row.id: " + row[i].id);
+//                    var id = row[i].id;
+//                    var appId = row[i].appId;
+//                    var title = row[i].title;
+//                    var message = row[i].message;
+//                    var url = row[i].url;
+//                    var timeToLive = row[i].timeToLive;
+//                    var dateStartSend = row[i].dateStartSend;
+//                    var timeStartSend = row[i].timeStartSend;
+//                    var sound = row[i].sound;
+//                    var smalIcon = row[i].smalIcon;
+//                    var largeIcon = row[i].largeIcon;
+//                    var bigPicture = row[i].bigPicture;
+//                    var ledColor = row[i].ledColor;
+//                    var accentColor = row[i].accentColor;
+//                    var gId = row[i].gId;
+//                    var priority = row[i].priority;
+//                    var pkgNameAndroid = row[i].pkgNameAndroid;
+//                    var pkgNameIos = row[i].pkgNameIos;
+//                    var kind = row[i].kind;
+//                    var AdditionalData = row[i].AdditionalData;
+//                    var btns = row[i].btns;
+//                    var lastUpdateTime = row[i].lastUpdateTime;
+//                    var IsStop = row[i].IsStop;
+//                    var bigText = row[i].bigText;
+//                    var summary = row[i].summary;
+//                    var isTest = row[i].isTest;
+//                    var testId = row[i].playerId;
 
-                    var actionType = row[i].actionType;
-                    var hiddenNoti = row[i].hiddenNoti;
-                    var showTime = row[i].showTime;
-                    var tagName = row[i].tagName;
-                    var chanelId = row[i].chanelId;
+//                    var actionType = row[i].actionType;
+//                    var hiddenNoti = row[i].hiddenNoti;
+//                    var showTime = row[i].showTime;
+//                    var tagName = row[i].tagName;
+//                    var chanelId = row[i].chanelId;
 
-                    var dialogTitle = row[i].dialogTitle;
-                    var btnYesText = row[i].btnYesText;
-                    var btnNoText = row[i].btnNoText;
-                    var dialogMessage = row[i].dialogMessage;
-                    var dialogActionType = row[i].dialogActionType;
-                    var dialogActionUrl = row[i].dialogActionUrl;
-                    var isVibrate = row[i].isVibrate;
-                    var devEnvId = row[i].devEnvId;
+//                    var dialogTitle = row[i].dialogTitle;
+//                    var btnYesText = row[i].btnYesText;
+//                    var btnNoText = row[i].btnNoText;
+//                    var dialogMessage = row[i].dialogMessage;
+//                    var dialogActionType = row[i].dialogActionType;
+//                    var dialogActionUrl = row[i].dialogActionUrl;
+//                    var isVibrate = row[i].isVibrate;
+//                    var devEnvId = row[i].devEnvId;
 
-                    var iconId = row[i].iconId;
+//                    var iconId = row[i].iconId;
 
-                    var chanelName = row[i].chanelName;
-                    var chanelDes = row[i].chanelDes;
+//                    var chanelName = row[i].chanelName;
+//                    var chanelDes = row[i].chanelDes;
 
-                    var additionalData = [];
-                    var btns = [];
+//                    var additionalData = [];
+//                    var btns = [];
 
-                    for (var j = 0; j < row[i].additionalData.length; j++) {
-                        additionalData.push({ "dtKey": row[i].additionalData[j].dtKey, "dtValue": row[i].additionalData[j].dtValue });
-                    }
+//                    for (var j = 0; j < row[i].additionalData.length; j++) {
+//                        additionalData.push({ "dtKey": row[i].additionalData[j].dtKey, "dtValue": row[i].additionalData[j].dtValue });
+//                    }
 
-                    //Get btns
-                    for (var j = 0; j < row[i].btns.length; j++) {
-                        btns.push({
-                            "id": row[i].btns[j].id, "nId": row[i].btns[j].nId, "btnText": row[i].btns[j].btnText, "url": row[i].btns[j].url, "icon": row[i].btns[j].icon
-                            , "dialogTitle": row[i].btns[j].dialogTitle, "btnYesText": row[i].btns[j].btnYesText, "btnNoText": row[i].btns[j].btnNoText,
-                            "dialogMessage": row[i].btns[j].dialogMessage, "dialogActionType": row[i].btns[j].dialogActionType, "dialogActionUrl": row[i].btns[j].dialogActionUrl,
-                            "actionType": row[i].btns[j].actionType
-                        });
-                    }
+//                    //Get btns
+//                    for (var j = 0; j < row[i].btns.length; j++) {
+//                        btns.push({
+//                            "id": row[i].btns[j].id, "nId": row[i].btns[j].nId, "btnText": row[i].btns[j].btnText, "url": row[i].btns[j].url, "icon": row[i].btns[j].icon
+//                            , "dialogTitle": row[i].btns[j].dialogTitle, "btnYesText": row[i].btns[j].btnYesText, "btnNoText": row[i].btns[j].btnNoText,
+//                            "dialogMessage": row[i].btns[j].dialogMessage, "dialogActionType": row[i].btns[j].dialogActionType, "dialogActionUrl": row[i].btns[j].dialogActionUrl,
+//                            "actionType": row[i].btns[j].actionType
+//                        });
+//                    }
 
-                    var timeToSend = timeStartSend + timeToLive;
-                    var sendH = Math.floor(timeToSend / 60);
-                    var sendM = Math.floor(timeToSend % 60);
-                    var Days = 0;
-                    var HAfter = 0;
-                    if (sendH > 24) {
-                        Days = Math.floor(sendH / 24);
-                        HAfter = Math.floor(sendH - (Days * 24));
-                    }
-                    else {
-                        HAfter = sendH;
-                    }
+//                    var timeToSend = timeStartSend + timeToLive;
+//                    var sendH = Math.floor(timeToSend / 60);
+//                    var sendM = Math.floor(timeToSend % 60);
+//                    var Days = 0;
+//                    var HAfter = 0;
+//                    if (sendH > 24) {
+//                        Days = Math.floor(sendH / 24);
+//                        HAfter = Math.floor(sendH - (Days * 24));
+//                    }
+//                    else {
+//                        HAfter = sendH;
+//                    }
 
-                    var yy = parseInt(dateStartSend.toString().substr(0, 4));
-                    var mm = parseInt(dateStartSend.toString().substr(4, 2));
-                    var dd = parseInt(dateStartSend.toString().substr(6, 2));
+//                    var yy = parseInt(dateStartSend.toString().substr(0, 4));
+//                    var mm = parseInt(dateStartSend.toString().substr(4, 2));
+//                    var dd = parseInt(dateStartSend.toString().substr(6, 2));
 
-                    var curDateEnd = "";
-                    if (Days > 0) {
-                        dd += Days;
-                        if (dd > 29 && mm == 12 && y % 4 != 3) {
-                            dd = dd - 29;
-                            mm = 1;
-                            yy++;
-                        }
-                        else if (dd > 30 && mm == 12 && y % 4 == 3) {
-                            dd = dd - 30;
-                            mm = 1;
-                            yy++;
-                        }
-                        else if (dd > 31 && mm <= 6) {
-                            dd = dd - 31;
-                            mm++;
-                        }
-                        else if (dd > 30 && mm > 6) {
-                            dd = dd - 30;
-                            mm++;
-                        }
-                    }
+//                    var curDateEnd = "";
+//                    if (Days > 0) {
+//                        dd += Days;
+//                        if (dd > 29 && mm == 12 && y % 4 != 3) {
+//                            dd = dd - 29;
+//                            mm = 1;
+//                            yy++;
+//                        }
+//                        else if (dd > 30 && mm == 12 && y % 4 == 3) {
+//                            dd = dd - 30;
+//                            mm = 1;
+//                            yy++;
+//                        }
+//                        else if (dd > 31 && mm <= 6) {
+//                            dd = dd - 31;
+//                            mm++;
+//                        }
+//                        else if (dd > 30 && mm > 6) {
+//                            dd = dd - 30;
+//                            mm++;
+//                        }
+//                    }
 
-                    var year = "" + yy;
-                    var mounth = "";
-                    var dayOfMounth = "";
-                    if (mm < 10) {
-                        mounth = "0" + mm;
-                    }
-                    else {
-                        mounth = "" + mm;
-                    }
+//                    var year = "" + yy;
+//                    var mounth = "";
+//                    var dayOfMounth = "";
+//                    if (mm < 10) {
+//                        mounth = "0" + mm;
+//                    }
+//                    else {
+//                        mounth = "" + mm;
+//                    }
 
-                    if (dd < 10) {
-                        dayOfMounth = "0" + dd;
-                    }
-                    else {
-                        dayOfMounth = "" + dd;
-                    }
+//                    if (dd < 10) {
+//                        dayOfMounth = "0" + dd;
+//                    }
+//                    else {
+//                        dayOfMounth = "" + dd;
+//                    }
 
-                    var curDateEnd = year + "" + mounth + "" + dayOfMounth;
+//                    var curDateEnd = year + "" + mounth + "" + dayOfMounth;
 
-                    var hcur = GetCurrentTime().substr(0, 2);
+//                    var hcur = GetCurrentTime().substr(0, 2);
 
-                    var noti = {
-                        id: row[i].id, appId: row[i].appId, title: row[i].title, message: row[i].message, url: row[i].url, timeToLive: row[i].timeToLive
-                        , dateStartSend: row[i].dateStartSend, timeStartSend: row[i].timeStartSend, sound: row[i].sound, smalIcon: row[i].smalIcon, largeIcon: row[i].largeIcon
-                        , bigPicture: row[i].bigPicture, ledColor: row[i].ledColor, accentColor: row[i].accentColor, gId: row[i].gId, priority: row[i].priority
-                        , pkgNameAndroid: row[i].pkgNameAndroid, pkgNameIos: row[i].pkgNameIos, kind: row[i].kind,
-                        bigText: row[i].bigText, summary: row[i].summary,
-                        actionType: row[i].actionType, hiddenNoti: row[i].hiddenNoti, showTime: row[i].showTime, tagName: row[i].tagName,
-                        chanelId: chanelId, chanelName: chanelName, chanelDes: chanelDes,
-                        dialogTitle: dialogTitle, btnYesText: btnYesText, btnNoText: btnNoText, dialogMessage: dialogMessage, dialogActionType: dialogActionType, dialogActionUrl: dialogActionUrl, isVibrate: isVibrate,
-                        devEnvId: devEnvId, iconId: iconId,
-                        AdditionalData: additionalData, btns: btns, Meskind: "noti"
-                    };
+//                    var noti = {
+//                        id: row[i].id, appId: row[i].appId, title: row[i].title, message: row[i].message, url: row[i].url, timeToLive: row[i].timeToLive
+//                        , dateStartSend: row[i].dateStartSend, timeStartSend: row[i].timeStartSend, sound: row[i].sound, smalIcon: row[i].smalIcon, largeIcon: row[i].largeIcon
+//                        , bigPicture: row[i].bigPicture, ledColor: row[i].ledColor, accentColor: row[i].accentColor, gId: row[i].gId, priority: row[i].priority
+//                        , pkgNameAndroid: row[i].pkgNameAndroid, pkgNameIos: row[i].pkgNameIos, kind: row[i].kind,
+//                        bigText: row[i].bigText, summary: row[i].summary,
+//                        actionType: row[i].actionType, hiddenNoti: row[i].hiddenNoti, showTime: row[i].showTime, tagName: row[i].tagName,
+//                        chanelId: chanelId, chanelName: chanelName, chanelDes: chanelDes,
+//                        dialogTitle: dialogTitle, btnYesText: btnYesText, btnNoText: btnNoText, dialogMessage: dialogMessage, dialogActionType: dialogActionType, dialogActionUrl: dialogActionUrl, isVibrate: isVibrate,
+//                        devEnvId: devEnvId, iconId: iconId,
+//                        AdditionalData: additionalData, btns: btns, Meskind: "noti"
+//                    };
 
-                    if (isTest > 0) {
-                        if (pkgNameAndroid != "") {
-                            if (Players[pkgNameAndroid] != undefined) {
-                                if (Players[pkgNameAndroid].players[testId] != undefined) {
-                                    Players[pkgNameAndroid].players[testId].socket.write(JSON.stringify(noti) + "\n");
-                                }
-                            }
-                        }
-                    }
-                    else {
-                        curDatev = "" + dateStartSend;
-                        if (parseInt(curDatev) < parseInt(curDateEnd) || (parseInt(curDatev) == parseInt(curDateEnd) && parseInt(hcur) <= parseInt(HAfter))) {
-                            if (IsStop == 0) {
+//                    if (isTest > 0) {
+//                        if (pkgNameAndroid != "") {
+//                            if (Players[pkgNameAndroid] != undefined) {
+//                                if (Players[pkgNameAndroid].players[testId] != undefined) {
+//                                    Players[pkgNameAndroid].players[testId].socket.write(JSON.stringify(noti) + "\n");
+//                                }
+//                            }
+//                        }
+//                    }
+//                    else {
+//                        curDatev = "" + dateStartSend;
+//                        if (parseInt(curDatev) < parseInt(curDateEnd) || (parseInt(curDatev) == parseInt(curDateEnd) && parseInt(hcur) <= parseInt(HAfter))) {
+//                            if (IsStop == 0) {
 
-                                if (Players[pkgNameAndroid] != undefined) {
-                                    Players[pkgNameAndroid].players.forEach(function (itemp, indexp, objectp) {
+//                                if (Players[pkgNameAndroid] != undefined) {
+//                                    Players[pkgNameAndroid].players.forEach(function (itemp, indexp, objectp) {
 
-                                        if (itemp.socket == undefined) {
-                                            objectp.splice(indexp, 1);
-                                        }
-                                        else {
-                                            if (delivery[noti.id] == undefined) {
-                                                delivery[noti.id] = { players: [] };
-                                            }
+//                                        if (itemp.socket == undefined) {
+//                                            objectp.splice(indexp, 1);
+//                                        }
+//                                        else {
+//                                            if (delivery[noti.id] == undefined) {
+//                                                delivery[noti.id] = { players: [] };
+//                                            }
 
-                                            if (delivery[noti.id].players[itemp.playerId] == undefined) {
-                                                //console.log("noti.id: " + noti.id + "--- playerId: " + itemp.playerId);
-                                                itemp.socket.write(JSON.stringify(noti) + "\n");
-                                            }
-                                        }
-                                    });
-                                }
-                                else {
-                                }
-                            }
-                        }
-                    }
-                }
+//                                            if (delivery[noti.id].players[itemp.playerId] == undefined) {
+//                                                //console.log("noti.id: " + noti.id + "--- playerId: " + itemp.playerId);
+//                                                itemp.socket.write(JSON.stringify(noti) + "\n");
+//                                            }
+//                                        }
+//                                    });
+//                                }
+//                                else {
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
 
-            });
-        });
-        canCheckNotify = 1;
-        req.write(qs);
-        req.end();
-    }
-    catch (e) {
-        canCheckNotify = 1;
-        console.log("120: " + e.message);
-    }
-}
+//            });
+//        });
+//        canCheckNotify = 1;
+//        req.write(qs);
+//        req.end();
+//    }
+//    catch (e) {
+//        canCheckNotify = 1;
+//        console.log("120: " + e.message);
+//    }
+//}
 
 async function GetNotificationMysql() {
+    try
+    {
     const string1 = con.query("SELECT notification.id,notification.appId,notification.title,notification.message,notification.url,notification.timeToLive,notification.dateStartSend,notification.timeStartSend," +
         "notification.sound, notification.smalIcon, notification.largeIcon, notification.bigPicture, notification.ledColor, notification.accentColor, notification.gId, notification.priority" +
         ", apps.pkgNameAndroid, apps.pkgNameIos, notification.kind, notification.IsStop, notification.lastUpdateTime, notification.bigText, notification.summary, notification.budget" +
@@ -641,6 +643,12 @@ async function GetNotificationMysql() {
         " where dateStartSend>= $dateHejri and notification.IsStop = 0 and  notification.isActive = 1 and notification.isSend = 0");
 
     console.log(string1);
+    canCheckNotify = 1;
+    } catch (err) {
+        // do something
+        console.log(err);
+        canCheckNotify = 1;
+    }
 }
 
 function PlayerConnectedWeb(pid, pkgs) {

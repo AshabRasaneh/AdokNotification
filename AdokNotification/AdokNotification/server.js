@@ -377,7 +377,7 @@ function GetNotificationMysql() {
                         var summary = row[i].summary;
                         var isTest = row[i].isTest;
                         var testId = row[i].playerId;
-
+                        var budget = row[i].budget;
                         var actionType = row[i].actionType;
                         var hiddenNoti = row[i].hiddenNoti;
                         var showTime = row[i].showTime;
@@ -398,19 +398,6 @@ function GetNotificationMysql() {
                         var chanelName = "";
                         var chanelDes = "";
 
-                        var curtm = GetCurrentTime();
-
-                        if (timeToLive > curtm) {
-                            if (budget < 10 && isTest == 0) {
-                                IsStop = 1;
-                            }
-
-                        }
-                        else {
-                            if (isTest == 0)
-                                IsStop = 1;
-                        }
-
                         var additionalData = [];
                         var btns = [];
 
@@ -427,6 +414,18 @@ function GetNotificationMysql() {
                             AdditionalData: additionalData, btns: btns, Meskind: "noti"
                         };
 
+                        var curtm = GetCurrentTime();
+
+                        if (noti.timeToLive > curtm) {
+                            if (budget < 10 && noti.isTest == 0) {
+                                noti.IsStop = 1;
+                            }
+
+                        }
+                        else {
+                            if (noti.isTest == 0)
+                                noti.IsStop = 1;
+                        }
                         allNoties[id] = noti;
                     }
 

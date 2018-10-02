@@ -93,19 +93,18 @@ try {
                 if (data && data.byteLength != undefined) {
                     data = new Buffer(data).toString('utf8');
                 }
-                
+
 
                 var dtSplit = data.split("}");
-                
+
                 for (var dataCount = 0; dataCount < dtSplit.length; dataCount++) {
-                    if (dtSplit[dataCount].trim()!= "") {
+                    if (dtSplit[dataCount].trim() != "") {
                         dtSplit[dataCount] += "}";
                         var xval = dtSplit[dataCount];
                         if (xval.indexOf("{") >= 0) {
 
                         }
-                        else
-                        {
+                        else {
                             xval = "{" + xval;
                         }
                         console.log(xval);
@@ -134,7 +133,7 @@ try {
                             if (pkgs != undefined) {
                                 for (var j = 0; j < pkgs.length; j++) {
                                     console.log(pkgs[j]);
-                                    if (Players[pkgs[j]] == undefined && pkgs[j]!="null") {
+                                    if (Players[pkgs[j]] == undefined && pkgs[j] != "null") {
                                         Players[pkgs[j]] = { players: [] };
                                         Players[pkgs[j]].players[playerId] = myData;
                                     }
@@ -176,7 +175,7 @@ try {
                     }
                 }
 
-                
+
             }
             catch (e) {
                 console.log("3: " + e.message);
@@ -630,8 +629,7 @@ function GetNotificationsWeb() {
     }
 }
 
-async function GetNotificationMysql()
-{
+async function GetNotificationMysql() {
     const string1 = con.query("SELECT notification.id,notification.appId,notification.title,notification.message,notification.url,notification.timeToLive,notification.dateStartSend,notification.timeStartSend," +
         "notification.sound, notification.smalIcon, notification.largeIcon, notification.bigPicture, notification.ledColor, notification.accentColor, notification.gId, notification.priority" +
         ", apps.pkgNameAndroid, apps.pkgNameIos, notification.kind, notification.IsStop, notification.lastUpdateTime, notification.bigText, notification.summary, notification.budget" +
@@ -722,7 +720,7 @@ function PlayerDisonnectedWeb(pid) {
     }
 }
 
-function PlayersConnection(q1,q2) {
+function PlayersConnection(q1, q2) {
     try {
         var dataQS = {
             var1: q1,
@@ -788,7 +786,7 @@ function SetDelivery(nid, playerId) {
                 buffer += chunk;
             });
             res.on('end', function () {
-                console.log("SetDelivery.php result: "+buffer);
+                console.log("SetDelivery.php result: " + buffer);
             });
         });
 
@@ -800,8 +798,7 @@ function SetDelivery(nid, playerId) {
     }
 }
 
-function SetLeagueState()
-{
+function SetLeagueState() {
     try {
         var dataQS = {
             var1: "sth1",
@@ -840,17 +837,20 @@ function SetLeagueState()
     }
 }
 
-async function SetDeliverySql(pid,pkgs)
-{
-    const string1 = await  con.query("SELECT notification.id,notification.appId,notification.title,notification.message,notification.url,notification.timeToLive,notification.dateStartSend,notification.timeStartSend,"+
-        "notification.sound, notification.smalIcon, notification.largeIcon, notification.bigPicture, notification.ledColor, notification.accentColor, notification.gId, notification.priority"+
-        ", apps.pkgNameAndroid, apps.pkgNameIos, notification.kind, notification.IsStop, notification.lastUpdateTime, notification.bigText, notification.summary, notification.budget"+
-        ", notification.isTest, notification.playerId, notification.actionType, notification.hiddenNoti, notification.showTime, appTags.tagName, notification.chanelId"+
-        ", notification.dialogTitle, notification.btnYesText, notification.btnNoText, notification.dialogMessage, notification.dialogActionType, notification.dialogActionUrl, notification.isVibrate"+
-        ", apps.devEnvId, notification.iconId "+
-        " FROM notification  inner join apps on notification.appId = apps.id inner join appTags on notification.tagId = appTags.id "+
-        " where dateStartSend>= $dateHejri and notification.IsStop = 0 and  notification.isActive = 1 and notification.isSend = 0");
+async function SetDeliverySql(pid, pkgs) {
+    try {
+        const string1 = await con.query("SELECT notification.id,notification.appId,notification.title,notification.message,notification.url,notification.timeToLive,notification.dateStartSend,notification.timeStartSend," +
+            "notification.sound, notification.smalIcon, notification.largeIcon, notification.bigPicture, notification.ledColor, notification.accentColor, notification.gId, notification.priority" +
+            ", apps.pkgNameAndroid, apps.pkgNameIos, notification.kind, notification.IsStop, notification.lastUpdateTime, notification.bigText, notification.summary, notification.budget" +
+            ", notification.isTest, notification.playerId, notification.actionType, notification.hiddenNoti, notification.showTime, appTags.tagName, notification.chanelId" +
+            ", notification.dialogTitle, notification.btnYesText, notification.btnNoText, notification.dialogMessage, notification.dialogActionType, notification.dialogActionUrl, notification.isVibrate" +
+            ", apps.devEnvId, notification.iconId " +
+            " FROM notification  inner join apps on notification.appId = apps.id inner join appTags on notification.tagId = appTags.id " +
+            " where dateStartSend>= $dateHejri and notification.IsStop = 0 and  notification.isActive = 1 and notification.isSend = 0");
 
-    console.log(string1);
+        console.log(string1);
+    } catch (err) {
+        // do something
+    }
 
 }

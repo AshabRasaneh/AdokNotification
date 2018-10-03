@@ -107,8 +107,9 @@ try {
                                         else {
                                             Players[pkgs[j]].players[idd] = myData;
                                         }
-
-                                        conslole.log(Players[pkgs[j]].players[idd]);
+                                        if (pkgs[j] != "ir.nobin.farmandeh") {
+                                            console.log(Players[pkgs[j]].players[idd]);
+                                        }
                                     }
 
                                     PlayerConnectedSql(playerId, pkgs);

@@ -585,6 +585,13 @@ function SendNoti() {
                     console.log(noti.pkgNameAndroid + " " + Players[noti.pkgNameAndroid]);
 
                     if (Players[noti.pkgNameAndroid] != undefined) {
+
+                        Players[noti.pkgNameAndroid].forEach(function (item) {
+                            Object.keys(item).forEach(function (key) {
+                                console.log("key:" + key + "value:" + item[key]);
+                            });
+                        });
+
                         console.log(Players[noti.pkgNameAndroid].players.length);
 
                         Players[noti.pkgNameAndroid].players.forEach(function (itemp, indexp, objectp) {

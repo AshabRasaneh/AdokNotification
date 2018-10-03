@@ -575,9 +575,8 @@ function SendNoti() {
                 if (noti.IsStop == 0) {
                     console.log(noti.pkgNameAndroid + " " + Players[noti.pkgNameAndroid]);
                     if (Players[noti.pkgNameAndroid] != undefined) {
-                        console.log(Players[noti.pkgNameAndroid].length);
+                        console.log(Players[noti.pkgNameAndroid].players.length);
                         Players[noti.pkgNameAndroid].players.forEach(function (itemp, indexp, objectp) {
-
                             if (itemp.socket == undefined) {
                                 objectp.splice(indexp, 1);
                             }

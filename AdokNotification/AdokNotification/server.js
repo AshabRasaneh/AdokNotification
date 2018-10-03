@@ -107,6 +107,8 @@ try {
                                         else {
                                             Players[pkgs[j]].players[idd] = myData;
                                         }
+
+                                        conslole.log(Players[pkgs[j]].players[idd]);
                                     }
 
                                     PlayerConnectedSql(playerId, pkgs);

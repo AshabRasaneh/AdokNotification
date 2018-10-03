@@ -54,8 +54,6 @@ var allNoties = [];
 try {
     var decoder = new StringDecoder('utf8');
     server.on('connection', function (socket) {
-
-        // console.log('CONNECTED: ' + socket.remoteAddress + ':' + socket.remotePort);
         var myId = -1;
         var pkgs = [];
         socket.on('data', function (data) {
@@ -74,7 +72,6 @@ try {
                         dtSplit[dataCount] += "}";
                         xval = dtSplit[dataCount];
                         if (xval.indexOf("{") >= 0) {
-                            //console.log(xval);
                             var dt = JSON.parse(xval);
                             var playerId = dt.playerId;
                             var pkgName = dt.pkgName;
@@ -99,7 +96,6 @@ try {
 
                                 if (pkgs != undefined) {
                                     for (var j = 0; j < pkgs.length; j++) {
-                                        //console.log(pkgs[j]);
                                         if (Players[pkgs[j]] == undefined && pkgs[j] != "null") {
                                             Players[pkgs[j]] = { players: [] };
                                             Players[pkgs[j]].players[playerId] = myData;
@@ -134,7 +130,6 @@ try {
                                 else {
                                     delivery[nid].players[playerId] = 1;
                                 }
-                                console.log("Set delivery --- " + nid + " --- " + playerId);
 
                                 SetDeliverySql(nid, playerId);
                             }
@@ -338,7 +333,6 @@ function GetCurrentTime() {
 function GetNotificationMysql() {
     try {
         var dateHejri = GetCurrentDate();
-        console.log(dateHejri);
         con.query("(SELECT "
             + " notification.id, notification.appId, notification.title, notification.message, notification.url, notification.timeToLive, notification.dateStartSend,"
             + " notification.timeStartSend, notification.sound, notification.smalIcon, notification.largeIcon, notification.bigPicture, notification.ledColor, "
@@ -494,7 +488,6 @@ function GetNotificationMysql() {
             });
 
     } catch (err) {
-        // do something
         console.log("myError: " + err);
         canCheckNotify = 1;
     }
@@ -504,7 +497,6 @@ function SendNoti() {
 
     allNoties.forEach(function (item, index, object) {
         var noti = item;
-        //console.log(noti);
 
         var timeToSend = noti.timeStartSend + noti.timeToLive;
         var sendH = Math.floor(timeToSend / 60);
@@ -567,13 +559,9 @@ function SendNoti() {
 
         var hcur = GetCurrentTime().substr(0, 2);
 
-        console.log("noti.isTest: " + noti.isTest);
-
         if (noti.isTest > 0) {
             if (noti.pkgNameAndroid != "") {
                 if (Players[noti.pkgNameAndroid] != undefined) {
-                    console.log(noti.pkgNameAndroid + " --- " + testId + " --- " + Players[noti.pkgNameAndroid].players[testId]);
-
                     if (Players[noti.pkgNameAndroid].players[noti.testId] != undefined) {
                         Players[noti.pkgNameAndroid].players[noti.testId].socket.write(JSON.stringify(noti) + "\n");
                     }
@@ -589,7 +577,7 @@ function SendNoti() {
                     if (Players[noti.pkgNameAndroid] != undefined) {
                         console.log(Players[noti.pkgNameAndroid].length);
                         Players[noti.pkgNameAndroid].players.forEach(function (itemp, indexp, objectp) {
-                            console.log(itemp.socket);
+
                             if (itemp.socket == undefined) {
                                 objectp.splice(indexp, 1);
                             }

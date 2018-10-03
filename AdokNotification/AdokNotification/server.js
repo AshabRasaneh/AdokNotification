@@ -511,9 +511,9 @@ function SendNoti() {
             HAfter = sendH;
         }
 
-        var yy = parseInt(noti.dateStartSend.substr(0, 4));
-        var mm = parseInt(noti.dateStartSend.substr(4, 2));
-        var dd = parseInt(noti.dateStartSend.substr(6, 2));
+        var yy = parseInt(noti.dateStartSend.toString().substr(0, 4));
+        var mm = parseInt(noti.dateStartSend.toString().substr(4, 2));
+        var dd = parseInt(noti.dateStartSend.toString().substr(6, 2));
 
         var curDateEnd = "";
         if (Days > 0) {

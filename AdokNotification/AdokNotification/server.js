@@ -98,10 +98,10 @@ try {
                                     for (var j = 0; j < pkgs.length; j++) {
                                         if (Players[pkgs[j]] == undefined && pkgs[j] != "null") {
                                             Players[pkgs[j]] = { players: [] };
-                                            Players[pkgs[j]].players[playerId.toString()] = myData;
+                                            Players[pkgs[j]].players["p"+playerId.toString()] = myData;
                                         }
                                         else {
-                                            Players[pkgs[j]].players[playerId.toString()] = myData;
+                                            Players[pkgs[j]].players["p"+playerId.toString()] = myData;
                                         }
                                     }
 
@@ -114,8 +114,8 @@ try {
                                 };
                                 for (var j = 0; j < pkgs.length; j++) {
                                     if (Players[pkgs[j]] != undefined) {
-                                        if (Players[pkgs[j]].players[playerId.toString()] != undefined) {
-                                            Players[pkgs[j]].players[playerId.toString()].alive = Date.now();
+                                        if (Players[pkgs[j]].players["p"+playerId.toString()] != undefined) {
+                                            Players[pkgs[j]].players["p"+playerId.toString()].alive = Date.now();
                                         }
                                     }
                                 }
@@ -125,10 +125,10 @@ try {
                                 var nid = dt.nid;
                                 if (delivery[nid] == undefined) {
                                     delivery[nid] = { players: [] };
-                                    delivery[nid].players[playerId.toString()] = 1;
+                                    delivery[nid].players["p"+playerId.toString()] = 1;
                                 }
                                 else {
-                                    delivery[nid].players[playerId.toString()] = 1;
+                                    delivery[nid].players["p"+playerId.toString()] = 1;
                                 }
 
                                 SetDeliverySql(nid, playerId.toString());
@@ -149,8 +149,8 @@ try {
                 PlayerDisonnectedSql(myId);
                 for (var j = 0; j < pkgs.length; j++) {
                     if (Players[pkgs[j]] != undefined) {
-                        if (Players[pkgs[j]].players[myId.toString()] != undefined) {
-                            delete Players[pkgs[j]].players[myId.toString()];
+                        if (Players[pkgs[j]].players["p"+myId.toString()] != undefined) {
+                            delete Players[pkgs[j]].players["p"+myId.toString()];
                         }
                     }
                 }
@@ -169,8 +169,8 @@ try {
             try {
                 for (var j = 0; j < pkgs.length; j++) {
                     if (Players[pkgs[j]] != undefined) {
-                        if (Players[pkgs[j]].players[myId.toString()] != undefined) {
-                            delete Players[pkgs[j]].players[myId.toString()];
+                        if (Players[pkgs[j]].players["p"+myId.toString()] != undefined) {
+                            delete Players[pkgs[j]].players["p"+myId.toString()];
                         }
                     }
                 }
@@ -562,8 +562,8 @@ function SendNoti() {
         if (noti.isTest > 0) {
             if (noti.pkgNameAndroid != "") {
                 if (Players[noti.pkgNameAndroid] != undefined) {
-                    if (Players[noti.pkgNameAndroid].players[noti.testId.toString()] != undefined) {
-                        Players[noti.pkgNameAndroid].players[noti.testId.toString()].socket.write(JSON.stringify(noti) + "\n");
+                    if (Players[noti.pkgNameAndroid].players["p"+noti.testId.toString()] != undefined) {
+                        Players[noti.pkgNameAndroid].players["p"+noti.testId.toString()].socket.write(JSON.stringify(noti) + "\n");
                     }
                 }
             }
@@ -584,8 +584,8 @@ function SendNoti() {
                                 if (delivery[noti.id] == undefined) {
                                     delivery[noti.id] = { players: [] };
                                 }
-                                console.log(noti.id + " --- " + itemp.playerId + " --- " + delivery[noti.id].players[itemp.playerId.toString()]);
-                                if (delivery[noti.id].players[itemp.playerId.toString()] == undefined) {
+                                console.log(noti.id + " --- " + itemp.playerId + " --- " + delivery[noti.id].players["p"+itemp.playerId.toString()]);
+                                if (delivery[noti.id].players["p"+itemp.playerId.toString()] == undefined) {
                                     itemp.socket.write(JSON.stringify(noti) + "\n");
                                 }
                             }

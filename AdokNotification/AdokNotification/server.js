@@ -98,14 +98,14 @@ try {
                                     for (var j = 0; j < pkgs.length; j++) {
                                         if (Players[pkgs[j]] == undefined && pkgs[j] != "null") {
                                             Players[pkgs[j]] = { players: [] };
-                                            Players[pkgs[j]].players[String(playerId)] = myData;
+                                            Players[pkgs[j]].players[playerId.toString()] = myData;
                                         }
                                         else {
-                                            Players[pkgs[j]].players[String(playerId)] = myData;
+                                            Players[pkgs[j]].players[playerId.toString()] = myData;
                                         }
                                     }
 
-                                    PlayerConnectedSql(playerId, pkgs);
+                                    PlayerConnectedSql(playerId.toString(), pkgs);
                                 }
                             }
                             else if (knd == "Alive") {
@@ -114,8 +114,8 @@ try {
                                 };
                                 for (var j = 0; j < pkgs.length; j++) {
                                     if (Players[pkgs[j]] != undefined) {
-                                        if (Players[pkgs[j]].players[String(playerId)] != undefined) {
-                                            Players[pkgs[j]].players[String(playerId)].alive = Date.now();
+                                        if (Players[pkgs[j]].players[playerId.toString()] != undefined) {
+                                            Players[pkgs[j]].players[playerId.toString()].alive = Date.now();
                                         }
                                     }
                                 }
@@ -125,13 +125,13 @@ try {
                                 var nid = dt.nid;
                                 if (delivery[nid] == undefined) {
                                     delivery[nid] = { players: [] };
-                                    delivery[nid].players[String(playerId)] = 1;
+                                    delivery[nid].players[playerId.toString()] = 1;
                                 }
                                 else {
-                                    delivery[nid].players[String(playerId)] = 1;
+                                    delivery[nid].players[playerId.toString()] = 1;
                                 }
 
-                                SetDeliverySql(nid, playerId);
+                                SetDeliverySql(nid, playerId.toString());
                             }
                         }
                     }
@@ -149,8 +149,8 @@ try {
                 PlayerDisonnectedSql(myId);
                 for (var j = 0; j < pkgs.length; j++) {
                     if (Players[pkgs[j]] != undefined) {
-                        if (Players[pkgs[j]].players[String(myId)] != undefined) {
-                            delete Players[pkgs[j]].players[String(myId)];
+                        if (Players[pkgs[j]].players[myId.toString()] != undefined) {
+                            delete Players[pkgs[j]].players[myId.toString()];
                         }
                     }
                 }
@@ -169,8 +169,8 @@ try {
             try {
                 for (var j = 0; j < pkgs.length; j++) {
                     if (Players[pkgs[j]] != undefined) {
-                        if (Players[pkgs[j]].players[String(myId)] != undefined) {
-                            delete Players[pkgs[j]].players[String(myId)];
+                        if (Players[pkgs[j]].players[myId.toString()] != undefined) {
+                            delete Players[pkgs[j]].players[myId.toString()];
                         }
                     }
                 }
@@ -340,9 +340,9 @@ function GetNotificationMysql() {
             + " notification.lastUpdateTime, notification.bigText, notification.summary, notification.budget, notification.isTest, notification.playerId, "
             + " notification.actionType, notification.hiddenNoti, notification.showTime, appTags.tagName, notification.chanelId, notification.dialogTitle, "
             + " notification.btnYesText, notification.btnNoText, notification.dialogMessage, notification.dialogActionType, notification.dialogActionUrl, "
-            +" notification.isVibrate, apps.devEnvId, notification.iconId "
-            +" FROM notification  inner join apps on notification.appId = apps.id inner join appTags on notification.tagId = appTags.id"
-            + " where dateStartSend>= " + dateHejri+" and notification.isTest = 1 and notification.isSend = 0)"
+            + " notification.isVibrate, apps.devEnvId, notification.iconId "
+            + " FROM notification  inner join apps on notification.appId = apps.id inner join appTags on notification.tagId = appTags.id"
+            + " where dateStartSend>= " + dateHejri + " and notification.isTest = 1 and notification.isSend = 0)"
             + " UNION "
             + " (SELECT notification.id, notification.appId, notification.title, notification.message, notification.url, notification.timeToLive, notification.dateStartSend,"
             + "  notification.timeStartSend, notification.sound, notification.smalIcon, notification.largeIcon, notification.bigPicture, notification.ledColor, "
@@ -350,9 +350,9 @@ function GetNotificationMysql() {
             + " notification.lastUpdateTime, notification.bigText, notification.summary, notification.budget, notification.isTest, notification.playerId, "
             + " notification.actionType, notification.hiddenNoti, notification.showTime, appTags.tagName, notification.chanelId, notification.dialogTitle, "
             + " notification.btnYesText, notification.btnNoText, notification.dialogMessage, notification.dialogActionType, notification.dialogActionUrl, "
-            +" notification.isVibrate, apps.devEnvId, notification.iconId "
-            +" FROM notification  inner join apps on notification.appId = apps.id inner join appTags on notification.tagId = appTags.id "
-            + " where dateStartSend>= " + dateHejri+" and notification.IsStop = 0 and  notification.isActive = 1 and notification.isTest = 0)", function (err, result, fields) {
+            + " notification.isVibrate, apps.devEnvId, notification.iconId "
+            + " FROM notification  inner join apps on notification.appId = apps.id inner join appTags on notification.tagId = appTags.id "
+            + " where dateStartSend>= " + dateHejri + " and notification.IsStop = 0 and  notification.isActive = 1 and notification.isTest = 0)", function (err, result, fields) {
                 if (!err) {
                     var row = result;
 
@@ -417,7 +417,7 @@ function GetNotificationMysql() {
                             actionType: row[i].actionType, hiddenNoti: row[i].hiddenNoti, showTime: row[i].showTime, tagName: row[i].tagName,
                             chanelId: chanelId, chanelName: chanelName, chanelDes: chanelDes,
                             dialogTitle: dialogTitle, btnYesText: btnYesText, btnNoText: btnNoText, dialogMessage: dialogMessage, dialogActionType: dialogActionType, dialogActionUrl: dialogActionUrl, isVibrate: isVibrate,
-                            devEnvId: devEnvId, iconId: iconId, isTest: row[i].isTest, IsStop:"0",
+                            devEnvId: devEnvId, iconId: iconId, isTest: row[i].isTest, IsStop: "0",
                             AdditionalData: additionalData, btns: btns, Meskind: "noti"
                         };
 
@@ -562,8 +562,8 @@ function SendNoti() {
         if (noti.isTest > 0) {
             if (noti.pkgNameAndroid != "") {
                 if (Players[noti.pkgNameAndroid] != undefined) {
-                    if (Players[noti.pkgNameAndroid].players[String(noti.testId)] != undefined) {
-                        Players[noti.pkgNameAndroid].players[String(noti.testId)].socket.write(JSON.stringify(noti) + "\n");
+                    if (Players[noti.pkgNameAndroid].players[noti.testId.toString()] != undefined) {
+                        Players[noti.pkgNameAndroid].players[noti.testId.toString()].socket.write(JSON.stringify(noti) + "\n");
                     }
                 }
             }
@@ -584,8 +584,8 @@ function SendNoti() {
                                 if (delivery[noti.id] == undefined) {
                                     delivery[noti.id] = { players: [] };
                                 }
-                                console.log(noti.id + " --- " + itemp.playerId + " --- " + delivery[noti.id].players[String(itemp.playerId)]);
-                                if (delivery[noti.id].players[String(itemp.playerId)] == undefined) {
+                                console.log(noti.id + " --- " + itemp.playerId + " --- " + delivery[noti.id].players[itemp.playerId.toString()]);
+                                if (delivery[noti.id].players[itemp.playerId.toString()] == undefined) {
                                     itemp.socket.write(JSON.stringify(noti) + "\n");
                                 }
                             }

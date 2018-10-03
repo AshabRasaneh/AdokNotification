@@ -107,9 +107,7 @@ try {
                                         else {
                                             Players[pkgs[j]].players[idd] = myData;
                                         }
-                                        if (pkgs[j] != "ir.nobin.farmandeh") {
-                                            console.log(Players[pkgs[j]].players[idd]);
-                                        }
+
                                     }
 
                                     PlayerConnectedSql(playerId, pkgs);
@@ -582,24 +580,21 @@ function SendNoti() {
         }
         else {
             curDatev = "" + noti.dateStartSend;
-            console.log(parseInt(curDatev) + " --- " + parseInt(curDateEnd) + " --- " + parseInt(curDatev) + " --- " + parseInt(curDateEnd) + " --- " + parseInt(hcur) + " --- " + parseInt(HAfter) + " --- " + noti.IsStop);
             if (parseInt(curDatev) < parseInt(curDateEnd) || (parseInt(curDatev) == parseInt(curDateEnd) && parseInt(hcur) <= parseInt(HAfter))) {
                 if (noti.IsStop == 0) {
                     console.log(noti.pkgNameAndroid + " " + Players[noti.pkgNameAndroid]);
 
                     if (Players[noti.pkgNameAndroid] != undefined) {
-
-                        Players[noti.pkgNameAndroid].players.forEach(function (item) {
-                            Object.keys(item).forEach(function (key) {
-                                console.log("key:" + key + "value:" + item[key]);
-                            });
-                        });
+                        // loop over values
+                        for (let value of Object.keys(Players[noti.pkgNameAndroid].players)) {
+                            console.log(value); // John, then 30
+                        }
 
                         console.log(Players[noti.pkgNameAndroid].players.length);
 
                         Players[noti.pkgNameAndroid].players.forEach(function (itemp, indexp, objectp) {
                             console.log(itemp.playerId);
-                            var idd = "p" + itemp.playerId+ "p";
+                            var idd = "p" + itemp.playerId + "p";
                             if (itemp.socket == undefined) {
                                 objectp.splice(indexp, 1);
                             }

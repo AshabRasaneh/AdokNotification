@@ -98,10 +98,10 @@ try {
                                     for (var j = 0; j < pkgs.length; j++) {
                                         if (Players[pkgs[j]] == undefined && pkgs[j] != "null") {
                                             Players[pkgs[j]] = { players: [] };
-                                            Players[pkgs[j]].players[playerId] = myData;
+                                            Players[pkgs[j]].players["p"+playerId] = myData;
                                         }
                                         else {
-                                            Players[pkgs[j]].players[playerId] = myData;
+                                            Players[pkgs[j]].players["p"+playerId] = myData;
                                         }
                                     }
 
@@ -114,8 +114,8 @@ try {
                                 };
                                 for (var j = 0; j < pkgs.length; j++) {
                                     if (Players[pkgs[j]] != undefined) {
-                                        if (Players[pkgs[j]].players[playerId] != undefined) {
-                                            Players[pkgs[j]].players[playerId].alive = Date.now();
+                                        if (Players[pkgs[j]].players["p"+playerId] != undefined) {
+                                            Players[pkgs[j]].players["p"+playerId].alive = Date.now();
                                         }
                                     }
                                 }
@@ -125,10 +125,10 @@ try {
                                 var nid = dt.nid;
                                 if (delivery[nid] == undefined) {
                                     delivery[nid] = { players: [] };
-                                    delivery[nid].players[playerId] = 1;
+                                    delivery[nid].players["p"+playerId] = 1;
                                 }
                                 else {
-                                    delivery[nid].players[playerId] = 1;
+                                    delivery[nid].players["p"+playerId] = 1;
                                 }
 
                                 SetDeliverySql(nid, playerId);
@@ -149,8 +149,8 @@ try {
                 PlayerDisonnectedSql(myId);
                 for (var j = 0; j < pkgs.length; j++) {
                     if (Players[pkgs[j]] != undefined) {
-                        if (Players[pkgs[j]].players[myId] != undefined) {
-                            delete Players[pkgs[j]].players[myId];
+                        if (Players[pkgs[j]].players["p"+myId] != undefined) {
+                            delete Players[pkgs[j]].players["p"+myId];
                         }
                     }
                 }
@@ -169,8 +169,8 @@ try {
             try {
                 for (var j = 0; j < pkgs.length; j++) {
                     if (Players[pkgs[j]] != undefined) {
-                        if (Players[pkgs[j]].players[myId] != undefined) {
-                            delete Players[pkgs[j]].players[myId];
+                        if (Players[pkgs[j]].players["p"+myId] != undefined) {
+                            delete Players[pkgs[j]].players["p"+myId];
                         }
                     }
                 }
@@ -562,8 +562,8 @@ function SendNoti() {
         if (noti.isTest > 0) {
             if (noti.pkgNameAndroid != "") {
                 if (Players[noti.pkgNameAndroid] != undefined) {
-                    if (Players[noti.pkgNameAndroid].players[noti.testId] != undefined) {
-                        Players[noti.pkgNameAndroid].players[noti.testId].socket.write(JSON.stringify(noti) + "\n");
+                    if (Players[noti.pkgNameAndroid].players["p"+noti.testId] != undefined) {
+                        Players[noti.pkgNameAndroid].players["p"+noti.testId].socket.write(JSON.stringify(noti) + "\n");
                     }
                 }
             }
@@ -588,8 +588,8 @@ function SendNoti() {
                                 if (delivery[noti.id] == undefined) {
                                     delivery[noti.id] = { players: [] };
                                 }
-                                console.log(noti.id + " --- " + itemp.playerId + " --- " + delivery[noti.id].players[itemp.playerId]);
-                                if (delivery[noti.id].players[itemp.playerId] == undefined) {
+                                console.log(noti.id + " --- " + itemp.playerId + " --- " + delivery[noti.id].players["p"+itemp.playerId]);
+                                if (delivery[noti.id].players["p"+itemp.playerId] == undefined) {
                                     itemp.socket.write(JSON.stringify(noti) + "\n");
                                 }
                             }

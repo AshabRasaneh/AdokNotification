@@ -586,7 +586,7 @@ function SendNoti() {
 
                     if (Players[noti.pkgNameAndroid] != undefined) {
 
-                        Players[noti.pkgNameAndroid].forEach(function (item) {
+                        Players[noti.pkgNameAndroid].players.forEach(function (item) {
                             Object.keys(item).forEach(function (key) {
                                 console.log("key:" + key + "value:" + item[key]);
                             });

@@ -350,7 +350,7 @@ function GetNotificationMysql() {
             +" FROM notification  inner join apps on notification.appId = apps.id inner join appTags on notification.tagId = appTags.id"
             + " where dateStartSend>= " + dateHejri+" and notification.isTest = 1 and notification.isSend = 0)"
             + " UNION "
-            + " (SELECT notification.id, notification.appId, notification.title, notification.message, notification.url, notification.timeToLive, notification.dateStartSend,
+            + " (SELECT notification.id, notification.appId, notification.title, notification.message, notification.url, notification.timeToLive, notification.dateStartSend,"
             + "  notification.timeStartSend, notification.sound, notification.smalIcon, notification.largeIcon, notification.bigPicture, notification.ledColor, "
             + " notification.accentColor, notification.gId, notification.priority, apps.pkgNameAndroid, apps.pkgNameIos, notification.kind, notification.IsStop, "
             + " notification.lastUpdateTime, notification.bigText, notification.summary, notification.budget, notification.isTest, notification.playerId, "

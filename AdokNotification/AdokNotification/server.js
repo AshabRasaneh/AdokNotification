@@ -586,28 +586,42 @@ function SendNoti() {
 
                     if (Players[noti.pkgNameAndroid] != undefined) {
                         // loop over values
-                        for (let value of Object.keys(Players[noti.pkgNameAndroid].players)) {
-                            console.log(value); // John, then 30
-                        }
-
-                        console.log(Players[noti.pkgNameAndroid].players.length);
-
-                        Players[noti.pkgNameAndroid].players.forEach(function (itemp, indexp, objectp) {
-                            console.log(itemp.playerId);
-                            var idd = "p" + itemp.playerId + "p";
-                            if (itemp.socket == undefined) {
+                        for (let value of Object.values(Players[noti.pkgNameAndroid].players)) {
+                            //console.log(value); // John, then 30
+                            var val = value;
+                            var idd = "p" + val.playerId + "p";
+                            if (val.socket == undefined) {
                                 objectp.splice(indexp, 1);
                             }
                             else {
                                 if (delivery[noti.id] == undefined) {
                                     delivery[noti.id] = { players: [] };
                                 }
-                                console.log(noti.id + " --- " + itemp.playerId + " --- " + delivery[noti.id].players[idd]);
+                                console.log(noti.id + " --- " + val.playerId + " --- " + delivery[noti.id].players[idd]);
                                 if (delivery[noti.id].players[idd] == undefined) {
-                                    itemp.socket.write(JSON.stringify(noti) + "\n");
+                                    val.socket.write(JSON.stringify(noti) + "\n");
                                 }
                             }
-                        });
+                        }
+
+                        //console.log(Players[noti.pkgNameAndroid].players.length);
+
+                        //Players[noti.pkgNameAndroid].players.forEach(function (itemp, indexp, objectp) {
+                        //    console.log(itemp.playerId);
+                        //    var idd = "p" + itemp.playerId + "p";
+                        //    if (itemp.socket == undefined) {
+                        //        objectp.splice(indexp, 1);
+                        //    }
+                        //    else {
+                        //        if (delivery[noti.id] == undefined) {
+                        //            delivery[noti.id] = { players: [] };
+                        //        }
+                        //        console.log(noti.id + " --- " + itemp.playerId + " --- " + delivery[noti.id].players[idd]);
+                        //        if (delivery[noti.id].players[idd] == undefined) {
+                        //            itemp.socket.write(JSON.stringify(noti) + "\n");
+                        //        }
+                        //    }
+                        //});
                     }
                     else {
                     }

@@ -616,27 +616,9 @@ function SendNoti() {
                                 }
                             }
                         }
-
-                        //console.log(Players[noti.pkgNameAndroid].players.length);
-
-                        //Players[noti.pkgNameAndroid].players.forEach(function (itemp, indexp, objectp) {
-                        //    console.log(itemp.playerId);
-                        //    var idd = "p" + itemp.playerId + "p";
-                        //    if (itemp.socket == undefined) {
-                        //        objectp.splice(indexp, 1);
-                        //    }
-                        //    else {
-                        //        if (delivery[noti.id] == undefined) {
-                        //            delivery[noti.id] = { players: [] };
-                        //        }
-                        //        console.log(noti.id + " --- " + itemp.playerId + " --- " + delivery[noti.id].players[idd]);
-                        //        if (delivery[noti.id].players[idd] == undefined) {
-                        //            itemp.socket.write(JSON.stringify(noti) + "\n");
-                        //        }
-                        //    }
-                        //});
                     }
                     else {
+                        console.log("else");
                     }
                 }
                 else {

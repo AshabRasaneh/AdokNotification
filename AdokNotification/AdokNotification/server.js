@@ -22,7 +22,7 @@ var _ip = "188.253.2.147";
 
 var _port = 3010;
 
-var Players = [];
+var Players = {};
 var canCheckNotify = 1;
 var delivery = [];
 var allNoties = [];
@@ -102,20 +102,24 @@ try {
                                             canLog = 1;
                                         }
 
-                                        if (Players[pkgs[j]] == undefined && pkgs[j] != "null") {
+                                        if (Players[pkgs[j]]  && pkgs[j] != "null") {
                                             var stt = {
-                                                players: []
+                                                players: {}
                                             };
                                             Players[pkgs[j]] = stt;
                                             Players[pkgs[j]].players[idd] = myData;
+
                                             if (canLog > 0) {
                                                 console.log(Players[pkgs[j]].players[idd].playerId);
                                             }
+
                                         }
                                         else {
+
                                             if (canLog > 0) {
                                                 console.log(Players[pkgs[j]].players[idd].playerId);
                                             }
+
                                             Players[pkgs[j]].players[idd] = myData;
                                         }
 
@@ -129,7 +133,7 @@ try {
                                     alive: true, Meskind: "Alive"
                                 };
                                 for (var j = 0; j < pkgs.length; j++) {
-                                    if (Players[pkgs[j]] != undefined) {
+                                    if (Players[pkgs[j]]) {
                                         var idd = "p" + playerId + "p";
                                         if (Players[pkgs[j]].players[idd] != undefined) {
                                             Players[pkgs[j]].players[idd].alive = Date.now();
@@ -187,7 +191,7 @@ try {
         socket.on('error', function (data) {
             try {
                 for (var j = 0; j < pkgs.length; j++) {
-                    if (Players[pkgs[j]] != undefined) {
+                    if (Players[pkgs[j]]) {
                         var idd = "p" + myId + "p";
                         if (Players[pkgs[j]].players[idd] != undefined) {
                             delete Players[pkgs[j]].players[idd];
@@ -581,9 +585,9 @@ function SendNoti() {
 
         if (noti.isTest > 0) {
             if (noti.pkgNameAndroid != "") {
-                if (Players[noti.pkgNameAndroid] != undefined) {
+                if (Players[noti.pkgNameAndroid]) {
                     var idd = "p" + noti.testId + "p";
-                    if (Players[noti.pkgNameAndroid].players[idd] != undefined) {
+                    if (Players[noti.pkgNameAndroid].players[idd]) {
                         Players[noti.pkgNameAndroid].players[idd].socket.write(JSON.stringify(noti) + "\n");
                     }
                 }
@@ -595,7 +599,7 @@ function SendNoti() {
                 if (noti.IsStop == 0) {
                     console.log(noti.pkgNameAndroid + " " + Players[noti.pkgNameAndroid]);
 
-                    if (Players[noti.pkgNameAndroid] != undefined) {
+                    if (Players[noti.pkgNameAndroid]) {
                         // loop over values
                         for (let key of Object.keys(Players[noti.pkgNameAndroid].players)) {
                             // John, then 30
@@ -609,7 +613,7 @@ function SendNoti() {
                             else {
                                 console.log(delivery[noti.id]);
                                 if (delivery[noti.id] == undefined) {
-                                    delivery[noti.id] = { players: [] };
+                                    delivery[noti.id] = { players: {} };
                                 }
                                 console.log(noti.id + " --- " + val.playerId + " --- " + delivery[noti.id].players[idd]);
                                 if (delivery[noti.id].players[idd] == undefined) {

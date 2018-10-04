@@ -22,10 +22,10 @@ var _ip = "188.253.2.147";
 
 var _port = 3010;
 
-var Players = new Map();
+let Players = new Map();
 var canCheckNotify = 1;
-var delivery = new Map();
-var allNoties = new Map();
+let delivery = new Map();
+let allNoties = new Map();
 
 (function () {
 

@@ -207,8 +207,10 @@ try {
                 for (var j = 0; j < pkgs.length; j++) {
                     if (Players.has(pkgs[j])) {
                         let p = Players.get(pkgs[j]);
-                        p.delete(idd);
-                        Players.set(pkgs[j], p);
+                        if (p.has(idd)) {
+                            p.delete(idd);
+                            Players.set(pkgs[j], p);
+                        }
                     }
                 }
 
@@ -237,8 +239,10 @@ try {
 
                     if (Players.has(pkgs[j])) {
                         let p = Players.get(pkgs[j]);
-                        p.delete(idd);
-                        Players.set(pkgs[j], p);
+                        if (p.has(idd)) {
+                            p.delete(idd);
+                            Players.set(pkgs[j], p);
+                        }
                     }
 
                     //if (Players[pkgs[j]]) {

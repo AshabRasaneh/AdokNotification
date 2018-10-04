@@ -107,7 +107,7 @@ try {
                                             var players = new Map();
                                             players.set(idd, myData);
                                             
-                                            Players.set(pkgs[j], stt);
+                                            Players.set(pkgs[j], players);
 
                                         }
                                         else {

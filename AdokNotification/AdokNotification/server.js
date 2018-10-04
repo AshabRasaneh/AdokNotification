@@ -24,7 +24,7 @@ var _port = 3010;
 
 var Players = {};
 var canCheckNotify = 1;
-var delivery = [];
+var delivery = {};
 var allNoties = [];
 
 (function () {
@@ -145,7 +145,7 @@ try {
                             else if (knd == "Deliver") {
                                 var nid = dt.nid;
                                 var idd = "p" + playerId + "p";
-                                if (delivery[nid] == undefined) {
+                                if (!delivery[nid]) {
                                     delivery[nid] = { players: [] };
                                     delivery[nid].players[idd] = 1;
                                 }
@@ -612,11 +612,11 @@ function SendNoti() {
                             }
                             else {
                                 console.log(delivery[noti.id]);
-                                if (delivery[noti.id] == undefined) {
+                                if (!delivery[noti.id]) {
                                     delivery[noti.id] = { players: {} };
                                 }
                                 console.log(noti.id + " --- " + val.playerId + " --- " + delivery[noti.id].players[idd]);
-                                if (delivery[noti.id].players[idd] == undefined) {
+                                if (!delivery[noti.id].players[idd]) {
                                     val.socket.write(JSON.stringify(noti) + "\n");
                                 }
                             }

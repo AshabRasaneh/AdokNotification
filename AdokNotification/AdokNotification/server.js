@@ -206,16 +206,16 @@ try {
                 PlayerDisonnectedSql(myId);
                 var idd = "p" + myId + "p";
 
-                for (var j = 0; j < pkgs.length; j++) {
-                    if (Players.has(pkgs[j])) {
-                        let p = Players.get(pkgs[j]);
+                //for (var j = 0; j < pkgs.length; j++) {
+                //    if (Players.has(pkgs[j])) {
+                //        let p = Players.get(pkgs[j]);
                         
-                        if (p.has(idd)) {
-                            p.delete(idd);
-                            Players.set(pkgs[j], p);
-                        }
-                    }
-                }
+                //        if (p.has(idd)) {
+                //            p.delete(idd);
+                //            Players.set(pkgs[j], p);
+                //        }
+                //    }
+                //}
 
                 //for (var j = 0; j < pkgs.length; j++) {
                 //    if (Players[pkgs[j]] != undefined) {
@@ -241,13 +241,13 @@ try {
                 var idd = "p" + myId + "p";
                 for (var j = 0; j < pkgs.length; j++) {
 
-                    if (Players.has(pkgs[j])) {
-                        let p = Players.get(pkgs[j]);
-                        if (p.has(idd)) {
-                            p.delete(idd);
-                            Players.set(pkgs[j], p);
-                        }
-                    }
+                    //if (Players.has(pkgs[j])) {
+                    //    let p = Players.get(pkgs[j]);
+                    //    if (p.has(idd)) {
+                    //        p.delete(idd);
+                    //        Players.set(pkgs[j], p);
+                    //    }
+                    //}
 
                     //if (Players[pkgs[j]]) {
                     //    var idd = "p" + myId + "p";
@@ -662,9 +662,10 @@ function SendNoti() {
         }
         else {
             curDatev = "" + noti.dateStartSend;
+            console.log(noti.id + " " + noti.IsStop);
             if (parseInt(curDatev) < parseInt(curDateEnd) || (parseInt(curDatev) == parseInt(curDateEnd) && parseInt(hcur) <= parseInt(HAfter))) {
                 if (noti.IsStop == 0) {
-
+                    console.log(Players.has(noti.pkgNameAndroid));
                     if (Players.has(noti.pkgNameAndroid)) {
                         let p = Players.get(noti.pkgNameAndroid);
                         for (let idd of p.keys()) {

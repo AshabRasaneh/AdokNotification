@@ -668,15 +668,21 @@ function SendNoti() {
                     if (Players.has(noti.pkgNameAndroid)) {
                         let p = Players.get(noti.pkgNameAndroid);
                         for (let idd of p.keys()) {
-                            //alert(vegetable); // cucumber, tomatoes, onion
+                            console.log(idd);
                             var data = p.get(idd);
+                            console.log(delivery.has(noti.id));
                             if (delivery.has(noti.id)) {
                                 let deliv = delivery.get(noti.id);
+                                console.log(deliv.has(idd));
                                 if (!deliv.has(idd)) {
-                                    deliv.set(idd, 1);
-                                    delivery.set(noti.id, deliv);
+                                    console.log("send Noti "+ idd);
                                     data.socket.write(JSON.stringify(noti) + "\n");
                                 }
+                            }
+                            else
+                            {
+                                console.log("send Noti " + idd);
+                                data.socket.write(JSON.stringify(noti) + "\n");
                             }
                         }
                     }

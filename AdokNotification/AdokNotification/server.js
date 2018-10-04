@@ -157,8 +157,8 @@ try {
             }
             catch (e) {
 
-                console.log("3: " + e.message);
-                console.log("3: " + xval);
+                //console.log("3: " + e.message);
+                //console.log("3: " + xval);
             }
         });
 
@@ -598,13 +598,15 @@ function SendNoti() {
                     if (Players[noti.pkgNameAndroid] != undefined) {
                         // loop over values
                         for (let value of Object.values(Players[noti.pkgNameAndroid].players)) {
-                            //console.log(value); // John, then 30
+                            // John, then 30
                             var val = value;
+                            console.log(val);
                             var idd = "p" + val.playerId + "p";
                             if (val.socket == undefined) {
-                                objectp.splice(indexp, 1);
+                               // objectp.splice(indexp, 1);
                             }
                             else {
+                                console.log(delivery[noti.id]);
                                 if (delivery[noti.id] == undefined) {
                                     delivery[noti.id] = { players: [] };
                                 }

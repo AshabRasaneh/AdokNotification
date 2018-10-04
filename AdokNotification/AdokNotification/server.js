@@ -103,13 +103,12 @@ try {
                                         }
 
                                         if (!Players.has(pkgs[j]) && pkgs[j] != "null") {
-                                            if (canLog > 0) {
-                                                //console.log(Players[pkgs[j]].players[idd].playerId);
-                                            }
-
                                             var players = new Map();
                                             players.set(idd, myData);
+                                            console.log("1");
                                             Players.set(pkgs[j], stt);
+                                            console.log("2");
+
                                         }
                                         else {
                                             if (canLog > 0) {
@@ -118,7 +117,9 @@ try {
 
                                             let p = Players.get(pkgs[j]);
                                             p.set(idd, myData);
+                                            console.log("3");
                                             Players.set(pkgs[j], p);
+                                            console.log("4");
                                         }
 
                                         //if (Players[pkgs[j]]  && pkgs[j] != "null") {

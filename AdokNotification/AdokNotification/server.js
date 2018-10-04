@@ -104,7 +104,7 @@ try {
 
                                         if (!Players.has(pkgs[j]) && pkgs[j] != "null") {
                                             if (canLog > 0) {
-                                                console.log(Players[pkgs[j]].players[idd].playerId);
+                                                //console.log(Players[pkgs[j]].players[idd].playerId);
                                             }
 
                                             var players = new Map();
@@ -113,7 +113,7 @@ try {
                                         }
                                         else {
                                             if (canLog > 0) {
-                                                console.log(Players[pkgs[j]].players[idd].playerId);
+                                                //console.log(Players[pkgs[j]].players[idd].playerId);
                                             }
 
                                             let p = Players.get(pkgs[j]);

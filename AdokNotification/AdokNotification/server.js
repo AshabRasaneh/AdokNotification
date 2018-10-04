@@ -101,11 +101,12 @@ try {
                                         if (pkgs[j] == "com.arp.testvideo") {
                                             canLog = 1;
                                         }
+                                        console.log(Players);
 
                                         if (!Players.has(pkgs[j]) && pkgs[j] != "null") {
                                             var players = new Map();
                                             players.set(idd, myData);
-                                            console.log(pkgs[j]);
+                                            
                                             Players.set(pkgs[j], stt);
 
                                         }

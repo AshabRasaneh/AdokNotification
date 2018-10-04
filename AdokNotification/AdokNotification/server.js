@@ -105,9 +105,8 @@ try {
                                         if (!Players.has(pkgs[j]) && pkgs[j] != "null") {
                                             var players = new Map();
                                             players.set(idd, myData);
-                                            console.log("1");
+                                            console.log(pkgs[j]);
                                             Players.set(pkgs[j], stt);
-                                            console.log("2");
 
                                         }
                                         else {
@@ -117,9 +116,7 @@ try {
 
                                             let p = Players.get(pkgs[j]);
                                             p.set(idd, myData);
-                                            console.log("3");
                                             Players.set(pkgs[j], p);
-                                            console.log("4");
                                         }
 
                                         //if (Players[pkgs[j]]  && pkgs[j] != "null") {

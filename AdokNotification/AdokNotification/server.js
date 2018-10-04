@@ -25,7 +25,7 @@ var _port = 3010;
 let Players = new Map();
 var canCheckNotify = 1;
 let delivery = new Map();
-let allNoties = new Map();
+var allNoties = [];
 
 (function () {
 

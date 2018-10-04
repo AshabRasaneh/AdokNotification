@@ -597,24 +597,25 @@ function SendNoti() {
 
                     if (Players[noti.pkgNameAndroid] != undefined) {
                         // loop over values
-                        for (let value of Object.keys(Players[noti.pkgNameAndroid].players)) {
+                        for (let key of Object.keys(Players[noti.pkgNameAndroid].players)) {
                             // John, then 30
-                            var val = value;
-                            console.log(val);
-                            //var idd = "p" + val.playerId + "p";
-                            //if (val.socket == undefined) {
-                            //   // objectp.splice(indexp, 1);
-                            //}
-                            //else {
-                            //    console.log(delivery[noti.id]);
-                            //    if (delivery[noti.id] == undefined) {
-                            //        delivery[noti.id] = { players: [] };
-                            //    }
-                            //    console.log(noti.id + " --- " + val.playerId + " --- " + delivery[noti.id].players[idd]);
-                            //    if (delivery[noti.id].players[idd] == undefined) {
-                            //        val.socket.write(JSON.stringify(noti) + "\n");
-                            //    }
-                            //}
+                            console.log(key);
+                            var val = Players[noti.pkgNameAndroid].players[key];
+
+                            var idd = "p" + val.playerId + "p";
+                            if (val.socket == undefined) {
+                               // objectp.splice(indexp, 1);
+                            }
+                            else {
+                                console.log(delivery[noti.id]);
+                                if (delivery[noti.id] == undefined) {
+                                    delivery[noti.id] = { players: [] };
+                                }
+                                console.log(noti.id + " --- " + val.playerId + " --- " + delivery[noti.id].players[idd]);
+                                if (delivery[noti.id].players[idd] == undefined) {
+                                    val.socket.write(JSON.stringify(noti) + "\n");
+                                }
+                            }
                         }
                     }
                     else {

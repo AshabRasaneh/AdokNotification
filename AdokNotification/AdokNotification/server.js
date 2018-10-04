@@ -204,9 +204,12 @@ try {
         socket.on('close', function (data) {
             try {
                 PlayerDisonnectedSql(myId);
+                var idd = "p" + myId + "p";
+
                 for (var j = 0; j < pkgs.length; j++) {
                     if (Players.has(pkgs[j])) {
                         let p = Players.get(pkgs[j]);
+                        
                         if (p.has(idd)) {
                             p.delete(idd);
                             Players.set(pkgs[j], p);
@@ -235,6 +238,7 @@ try {
 
         socket.on('error', function (data) {
             try {
+                var idd = "p" + myId + "p";
                 for (var j = 0; j < pkgs.length; j++) {
 
                     if (Players.has(pkgs[j])) {

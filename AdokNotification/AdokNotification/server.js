@@ -97,14 +97,25 @@ try {
                                 if (pkgs != undefined) {
                                     for (var j = 0; j < pkgs.length; j++) {
                                         var idd = "p" + playerId + "p";
+                                        var canLog = 0;
+                                        if (pkgs[j] == "com.arp.testvideo") {
+                                            canLog = 1;
+                                        }
+
                                         if (Players[pkgs[j]] == undefined && pkgs[j] != "null") {
                                             var stt = {
                                                 players: []
                                             };
                                             Players[pkgs[j]] = stt;
                                             Players[pkgs[j]].players[idd] = myData;
+                                            if (canLog > 0) {
+                                                console.log(Players[pkgs[j]].players[idd].playerId);
+                                            }
                                         }
                                         else {
+                                            if (canLog > 0) {
+                                                console.log(Players[pkgs[j]].players[idd].playerId);
+                                            }
                                             Players[pkgs[j]].players[idd] = myData;
                                         }
 

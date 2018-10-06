@@ -101,7 +101,12 @@ try {
                                         if (pkgs[j] == "com.arp.testvideo") {
                                             canLog = 1;
                                         }
- 
+
+                                        if (canLog > 1)
+                                        {
+                                            console.log(Players.has(pkgs[j]) + " " + pkgs[j]);
+                                        }
+
                                         if (!Players.has(pkgs[j]) && pkgs[j] != "null") {
                                             if (canLog > 0) {
                                                 console.log(myData.playerId);
@@ -123,27 +128,6 @@ try {
                                             p.set(idd, myData);
                                             Players.set(pkgs[j], p);
                                         }
-
-                                        //if (Players[pkgs[j]]  && pkgs[j] != "null") {
-                                        //    var stt = {
-                                        //        players: {}
-                                        //    };
-                                        //    Players[pkgs[j]] = stt;
-                                        //    Players[pkgs[j]].players[idd] = myData;
-
-                                        //    if (canLog > 0) {
-                                        //        console.log(Players[pkgs[j]].players[idd].playerId);
-                                        //    }
-
-                                        //}
-                                        //else {
-
-                                        //    if (canLog > 0) {
-                                        //        console.log(Players[pkgs[j]].players[idd].playerId);
-                                        //    }
-
-                                        //    Players[pkgs[j]].players[idd] = myData;
-                                        //}
 
                                     }
 

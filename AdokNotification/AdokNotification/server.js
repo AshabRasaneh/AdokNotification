@@ -102,7 +102,7 @@ try {
                                             canLog = 1;
                                         }
 
-                                        if (canLog > 1)
+                                        if (canLog > 0)
                                         {
                                             console.log(Players.has(pkgs[j]) + " " + pkgs[j]);
                                         }

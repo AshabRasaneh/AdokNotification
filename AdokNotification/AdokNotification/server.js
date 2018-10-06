@@ -168,6 +168,7 @@ try {
                                 var nid = dt.nid;
                                 var idd = "p" + playerId + "p";
 
+                                console.log("delivery: " + nid + " " + idd);
                                 if (delivery.has(nid)) {
                                     let deliv = delivery.get(nid);
                                     deliv.set(idd, 1);
@@ -206,16 +207,16 @@ try {
                 PlayerDisonnectedSql(myId);
                 var idd = "p" + myId + "p";
 
-                //for (var j = 0; j < pkgs.length; j++) {
-                //    if (Players.has(pkgs[j])) {
-                //        let p = Players.get(pkgs[j]);
+                for (var j = 0; j < pkgs.length; j++) {
+                    if (Players.has(pkgs[j])) {
+                        let p = Players.get(pkgs[j]);
                         
-                //        if (p.has(idd)) {
-                //            p.delete(idd);
-                //            Players.set(pkgs[j], p);
-                //        }
-                //    }
-                //}
+                        if (p.has(idd)) {
+                            p.delete(idd);
+                            Players.set(pkgs[j], p);
+                        }
+                    }
+                }
 
                 //for (var j = 0; j < pkgs.length; j++) {
                 //    if (Players[pkgs[j]] != undefined) {
@@ -241,13 +242,13 @@ try {
                 var idd = "p" + myId + "p";
                 for (var j = 0; j < pkgs.length; j++) {
 
-                    //if (Players.has(pkgs[j])) {
-                    //    let p = Players.get(pkgs[j]);
-                    //    if (p.has(idd)) {
-                    //        p.delete(idd);
-                    //        Players.set(pkgs[j], p);
-                    //    }
-                    //}
+                    if (Players.has(pkgs[j])) {
+                        let p = Players.get(pkgs[j]);
+                        if (p.has(idd)) {
+                            p.delete(idd);
+                            Players.set(pkgs[j], p);
+                        }
+                    }
 
                     //if (Players[pkgs[j]]) {
                     //    var idd = "p" + myId + "p";
@@ -676,14 +677,18 @@ function SendNoti() {
                                 let deliv = delivery.get(noti.id);
                                 console.log(deliv.has(idd));
                                 if (!deliv.has(idd)) {
-                                    console.log("send Noti "+ idd);
+                                    console.log("send Noti " + idd);
+                                    deliv.set(idd, 1);
+                                    delivery.set(noti.id, deliv);
                                     data.socket.write(JSON.stringify(noti) + "\n");
                                 }
                             }
-                            else
-                            {
+                            else {
                                 console.log("send Noti " + idd);
                                 data.socket.write(JSON.stringify(noti) + "\n");
+                                let deliv = new Map();
+                                deliv.set(idd, 1);
+                                delivery.set(noti.id, deliv);
                             }
                         }
                     }

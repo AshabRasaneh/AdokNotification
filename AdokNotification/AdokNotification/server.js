@@ -191,16 +191,16 @@ try {
                 PlayerDisonnectedSql(myId);
                 var idd = "p" + myId + "p";
 
-                for (var j = 0; j < pkgs.length; j++) {
-                    if (Players.has(pkgs[j])) {
-                        let p = Players.get(pkgs[j]);
+                //for (var j = 0; j < pkgs.length; j++) {
+                //    if (Players.has(pkgs[j])) {
+                //        let p = Players.get(pkgs[j]);
                         
-                        if (p.has(idd)) {
-                            p.delete(idd);
-                            Players.set(pkgs[j], p);
-                        }
-                    }
-                }
+                //        if (p.has(idd)) {
+                //            p.delete(idd);
+                //            Players.set(pkgs[j], p);
+                //        }
+                //    }
+                //}
 
                 //for (var j = 0; j < pkgs.length; j++) {
                 //    if (Players[pkgs[j]] != undefined) {
@@ -224,23 +224,23 @@ try {
         socket.on('error', function (data) {
             try {
                 var idd = "p" + myId + "p";
-                for (var j = 0; j < pkgs.length; j++) {
+                //for (var j = 0; j < pkgs.length; j++) {
 
-                    if (Players.has(pkgs[j])) {
-                        let p = Players.get(pkgs[j]);
-                        if (p.has(idd)) {
-                            p.delete(idd);
-                            Players.set(pkgs[j], p);
-                        }
-                    }
+                //    if (Players.has(pkgs[j])) {
+                //        let p = Players.get(pkgs[j]);
+                //        if (p.has(idd)) {
+                //            p.delete(idd);
+                //            Players.set(pkgs[j], p);
+                //        }
+                //    }
 
-                    //if (Players[pkgs[j]]) {
-                    //    var idd = "p" + myId + "p";
-                    //    if (Players[pkgs[j]].players[idd] != undefined) {
-                    //        delete Players[pkgs[j]].players[idd];
-                    //    }
-                    //}
-                }
+                //    //if (Players[pkgs[j]]) {
+                //    //    var idd = "p" + myId + "p";
+                //    //    if (Players[pkgs[j]].players[idd] != undefined) {
+                //    //        delete Players[pkgs[j]].players[idd];
+                //    //    }
+                //    //}
+                //}
             }
             catch (e) {
                 console.log("5: " + e.message);

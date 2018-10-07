@@ -1,8 +1,25 @@
 ﻿var net = require("net");
 var mysql = require('mysql');
 var jalaali = require('jalaali-js')
-var io = require('socket.io')(process.env.PORT || 3010);
+//var io = require('socket.io')(process.env.PORT || 3010);
 var http = require('http');
+
+// Setup basic express server
+var express = require('express');
+var app = express();
+var path = require('path');
+var server = require('http').createServer(app);
+var io = require('../..')(server);
+var port = process.env.PORT || 3010;
+
+server.listen(port, () => {
+    console.log('Server listening at port %d', port);
+});
+
+// Routing
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Chatroom
 
 var con = mysql.createConnection({
     host: "localhost",
@@ -52,18 +69,18 @@ var allNoties = [];
     }
 })();
 
-io.on('connection', function (socket) {
+io.on('connection', (socket) => {
     console.log('a user connected');
 
     var myId = -1;
     var pkgs = [];
 
-    socket.on('disconnect', function () {
+    socket.on('disconnect', () => {
         console.log('user disconnected');
         PlayerDisonnectedSql(myId);
     });
 
-    socket.on('add', function (msg) {
+    socket.on('add', (msg) => {
         try {
             console.log('message: ' + msg);
             var dt = JSON.parse(msg);
@@ -127,7 +144,7 @@ io.on('connection', function (socket) {
         //io.emit('chat message', msg);
     });
 
-    socket.on('Alive', function (msg) {
+    socket.on('Alive', (msg) => {
         try {
             var dt = JSON.parse(msg);
             var playerId = dt.playerId.toString();
@@ -159,7 +176,7 @@ io.on('connection', function (socket) {
         //io.emit('chat message', msg);
     });
 
-    socket.on('Deliver', function (msg) {
+    socket.on('Deliver', (msg) => {
         try {
             var dt = JSON.parse(msg);
             var playerId = dt.playerId.toString();

@@ -55,6 +55,11 @@ io.on('connection', function (socket) {
     var myId = -1;
     var pkgs = [];
 
+    var dtAdd = {
+        Meskind: "Connected"
+    };
+    socket.emit('new message', data);
+
     socket.on('disconnect', function () {
         console.log('user disconnected');
         PlayerDisonnectedSql(myId);

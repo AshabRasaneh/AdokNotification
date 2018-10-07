@@ -58,7 +58,7 @@ io.on('connection', function (socket) {
     var dtAdd = {
         Meskind: "Connected"
     };
-    socket.emit('new message', data);
+    socket.emit('new message', dtAdd);
 
     socket.on('disconnect', function () {
         console.log('user disconnected');

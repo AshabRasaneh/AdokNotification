@@ -1,25 +1,5 @@
-﻿var net = require("net");
-var mysql = require('mysql');
+﻿var mysql = require('mysql');
 var jalaali = require('jalaali-js')
-//var io = require('socket.io')(process.env.PORT || 3010);
-var http = require('http');
-
-// Setup basic express server
-var express = require('express');
-var app = express();
-var path = require('path');
-var server = require('http').createServer(app);
-var io = require('socket.io')(server);
-var port = process.env.PORT || 3010;
-
-server.listen(port, () => {
-    console.log('Server listening at port %d', port);
-});
-
-// Routing
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Chatroom
 
 var con = mysql.createConnection({
     host: "localhost",
@@ -33,8 +13,8 @@ con.connect(function (err) {
     console.log("Connected to mysql!");
 });
 
-var server = net.createServer();
-var StringDecoder = require('string_decoder').StringDecoder;
+var server = require('http').createServer();
+var io = require('socket.io')(server);
 
 var _ip = "188.253.2.147";
 
@@ -69,18 +49,18 @@ var allNoties = [];
     }
 })();
 
-io.on('connection', (socket) => {
+io.on('connection', function (socket) {
     console.log('a user connected');
 
     var myId = -1;
     var pkgs = [];
 
-    socket.on('disconnect', () => {
+    socket.on('disconnect', function () {
         console.log('user disconnected');
         PlayerDisonnectedSql(myId);
     });
 
-    socket.on('add', (msg) => {
+    socket.on('add', function (msg) {
         try {
             console.log('message: ' + msg);
             var dt = JSON.parse(msg);
@@ -144,7 +124,7 @@ io.on('connection', (socket) => {
         //io.emit('chat message', msg);
     });
 
-    socket.on('Alive', (msg) => {
+    socket.on('Alive', function (msg) {
         try {
             var dt = JSON.parse(msg);
             var playerId = dt.playerId.toString();
@@ -176,7 +156,7 @@ io.on('connection', (socket) => {
         //io.emit('chat message', msg);
     });
 
-    socket.on('Deliver', (msg) => {
+    socket.on('Deliver', function (msg) {
         try {
             var dt = JSON.parse(msg);
             var playerId = dt.playerId.toString();
@@ -210,6 +190,7 @@ io.on('connection', (socket) => {
     });
 
 });
+server.listen(_port);
 
 function gregorian_to_jalali(gy, gm, gd) {
     g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
@@ -355,7 +336,7 @@ function GetCurrentTime() {
 
 function GetNotificationMysql() {
     try {
-        console.log("getNotif" + GetCurrentDate() + " " + GetCurrentTime());
+        console.log("getNotif" + GetCurrentDate() + " " + GetCurrentTime);
         var dateHejri = GetCurrentDate();
         con.query("(SELECT "
             + " notification.id, notification.appId, notification.title, notification.message, notification.url, notification.timeToLive, notification.dateStartSend,"

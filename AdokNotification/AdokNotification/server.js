@@ -336,7 +336,7 @@ function GetCurrentTime() {
 
 function GetNotificationMysql() {
     try {
-        console.log("getNotif" + GetCurrentDate() + " " + GetCurrentTime);
+        console.log("getNotif " + GetCurrentDate() + " " + GetCurrentTime());
         var dateHejri = GetCurrentDate();
         con.query("(SELECT "
             + " notification.id, notification.appId, notification.title, notification.message, notification.url, notification.timeToLive, notification.dateStartSend,"

@@ -1,7 +1,8 @@
 ﻿var net = require("net");
-var http = require('http');
 var mysql = require('mysql');
 var jalaali = require('jalaali-js')
+var io = require('socket.io')(process.env.PORT || 3010);
+var http = require('http');
 
 var con = mysql.createConnection({
     host: "localhost",
@@ -51,209 +52,147 @@ var allNoties = [];
     }
 })();
 
-try {
-    var decoder = new StringDecoder('utf8');
-    server.on('connection', function (socket) {
-        var myId = -1;
-        var pkgs = [];
-        socket.on('data', function (data) {
-            xval = "";
-            try {
+io.on('connection', function (socket) {
+    console.log('a user connected');
 
-                if (data && data.byteLength != undefined) {
-                    data = new Buffer(data).toString('utf8');
-                }
+    var myId = -1;
+    var pkgs = [];
 
-
-                var dtSplit = data.split("}");
-
-                for (var dataCount = 0; dataCount < dtSplit.length; dataCount++) {
-                    if (dtSplit[dataCount].trim() != "") {
-                        dtSplit[dataCount] += "}";
-                        xval = dtSplit[dataCount];
-                        if (xval.indexOf("{") >= 0) {
-                            var dt = JSON.parse(xval);
-                            var playerId = dt.playerId.toString();
-                            var pkgName = dt.pkgName;
-                            var phoneNo = dt.phoneNo;
-
-                            if (dt.hasOwnProperty('pkgs')) {
-                                pkgs = dt.pkgs;
-                            }
-
-                            var knd = dt.kind;
-                            var added = 0;
-                            myId = playerId;
-
-                            var myData = {
-                                playerId: playerId, phoneNo: phoneNo, socket: socket, pkgs: pkgs, alive: 0
-                            };
-                            var d = new Date();
-                            var n = d.getTime();
-                            myData.alive = n;
-
-                            if (knd == "add") {
-
-                                if (pkgs != undefined) {
-                                    for (var j = 0; j < pkgs.length; j++) {
-                                        var idd = "p" + playerId + "p";
-                                        var canLog = 0;
-                                        if (pkgs[j] == "com.arp.testvideo") {
-                                            canLog = 1;
-                                        }
-
-                                        if (canLog > 0)
-                                        {
-                                            console.log(Players.has(pkgs[j]) + " " + pkgs[j]);
-                                        }
-
-                                        if (!Players.has(pkgs[j]) && pkgs[j] != "null") {
-                                            if (canLog > 0) {
-                                                console.log(myData.playerId);
-                                            }
-
-                                            var players = new Map();
-                                            players.set(idd, myData);
-                                            
-                                            Players.set(pkgs[j], players);
-
-                                        }
-                                        else {
-
-                                            if (canLog > 0) {
-                                                console.log(myData.playerId);
-                                            }
-
-                                            let p = Players.get(pkgs[j]);
-                                            p.set(idd, myData);
-                                            Players.set(pkgs[j], p);
-                                        }
-
-                                    }
-
-                                    PlayerConnectedSql(playerId, pkgs);
-                                }
-                            }
-                            else if (knd == "Alive") {
-                                var data = {
-                                    alive: true, Meskind: "Alive"
-                                };
-                                for (var j = 0; j < pkgs.length; j++) {
-                                    //if (Players[pkgs[j]]) {
-                                    //    var idd = "p" + playerId + "p";
-                                    //    if (Players[pkgs[j]].players[idd] != undefined) {
-                                    //        Players[pkgs[j]].players[idd].alive = Date.now();
-                                    //    }
-                                    //}
-                                }
-                                socket.write(JSON.stringify(data) + "\n");
-                            }
-                            else if (knd == "Deliver") {
-                                var nid = dt.nid;
-                                var idd = "p" + playerId + "p";
-
-                                console.log("delivery: " + nid + " " + idd);
-                                if (delivery.has(nid)) {
-                                    let deliv = delivery.get(nid);
-                                    deliv.set(idd, 1);
-                                    delivery.set(nid, deliv);
-                                }
-                                else
-                                {
-                                    let deliv = new Map();
-                                    deliv.set(idd, 1);
-                                    delivery.set(nid, deliv);
-                                }
-
-                                //if (!delivery[nid]) {
-                                //    delivery[nid] = { players: [] };
-                                //    delivery[nid].players[idd] = 1;
-                                //}
-                                //else {
-                                //    delivery[nid].players[idd] = 1;
-                                //}
-
-                                SetDeliverySql(nid, playerId);
-                            }
-                        }
-                    }
-                }
-            }
-            catch (e) {
-
-                //console.log("3: " + e.message);
-                //console.log("3: " + xval);
-            }
-        });
-
-        socket.on('close', function (data) {
-            try {
-                PlayerDisonnectedSql(myId);
-                var idd = "p" + myId + "p";
-
-                //for (var j = 0; j < pkgs.length; j++) {
-                //    if (Players.has(pkgs[j])) {
-                //        let p = Players.get(pkgs[j]);
-                        
-                //        if (p.has(idd)) {
-                //            p.delete(idd);
-                //            Players.set(pkgs[j], p);
-                //        }
-                //    }
-                //}
-
-                //for (var j = 0; j < pkgs.length; j++) {
-                //    if (Players[pkgs[j]] != undefined) {
-                //        var idd = "p" + myId + "p";
-                //        if (Players[pkgs[j]].players[idd] != undefined) {
-                //            delete Players[pkgs[j]].players[idd];
-                //        }
-                //    }
-                //}
-            }
-            catch (e) {
-                console.log("4: " + e.message);
-            }
-        });
-
-        socket.on('disconnect', function (data) {
-            PlayerDisonnectedSql(myId);
-        });
-
-
-        socket.on('error', function (data) {
-            try {
-                var idd = "p" + myId + "p";
-                //for (var j = 0; j < pkgs.length; j++) {
-
-                //    if (Players.has(pkgs[j])) {
-                //        let p = Players.get(pkgs[j]);
-                //        if (p.has(idd)) {
-                //            p.delete(idd);
-                //            Players.set(pkgs[j], p);
-                //        }
-                //    }
-
-                //    //if (Players[pkgs[j]]) {
-                //    //    var idd = "p" + myId + "p";
-                //    //    if (Players[pkgs[j]].players[idd] != undefined) {
-                //    //        delete Players[pkgs[j]].players[idd];
-                //    //    }
-                //    //}
-                //}
-            }
-            catch (e) {
-                console.log("5: " + e.message);
-            }
-        });
-
+    socket.on('disconnect', function () {
+        console.log('user disconnected');
+        PlayerDisonnectedSql(myId);
     });
 
-    server.listen(_port, _ip);
-}
-catch (e) {
-    console.log("6: " + e.message);
-}
+    socket.on('add', function (msg) {
+        try {
+            console.log('message: ' + msg);
+            var dt = JSON.parse(msg);
+            var playerId = dt.playerId.toString();
+            var pkgName = dt.pkgName;
+            var phoneNo = dt.phoneNo;
+
+            if (dt.hasOwnProperty('pkgs')) {
+                pkgs = dt.pkgs;
+            }
+
+            var added = 0;
+            myId = playerId;
+
+            var myData = {
+                playerId: playerId, phoneNo: phoneNo, socket: socket, pkgs: pkgs, alive: 0
+            };
+            var d = new Date();
+            var n = d.getTime();
+            if (pkgs != undefined) {
+                for (var j = 0; j < pkgs.length; j++) {
+                    var idd = "p" + playerId + "p";
+                    var canLog = 0;
+                    if (pkgs[j] == "com.arp.testvideo") {
+                        canLog = 1;
+                    }
+
+                    if (canLog > 0) {
+                        console.log(Players.has(pkgs[j]) + " " + pkgs[j]);
+                    }
+
+                    if (!Players.has(pkgs[j]) && pkgs[j] != "null") {
+                        if (canLog > 0) {
+                            console.log(myData.playerId);
+                        }
+
+                        var players = new Map();
+                        players.set(idd, myData);
+
+                        Players.set(pkgs[j], players);
+
+                    }
+                    else {
+
+                        if (canLog > 0) {
+                            console.log(myData.playerId);
+                        }
+
+                        let p = Players.get(pkgs[j]);
+                        p.set(idd, myData);
+                        Players.set(pkgs[j], p);
+                    }
+
+                }
+
+                PlayerConnectedSql(playerId, pkgs);
+            }
+        } catch (e) {
+            console.log("addProblem: " + e.message);
+        }
+        //io.emit('chat message', msg);
+    });
+
+    socket.on('Alive', function (msg) {
+        try {
+            var dt = JSON.parse(msg);
+            var playerId = dt.playerId.toString();
+            var pkgName = dt.pkgName;
+            var phoneNo = dt.phoneNo;
+
+            if (dt.hasOwnProperty('pkgs')) {
+                pkgs = dt.pkgs;
+            }
+
+            var data = {
+                alive: true, Meskind: "Alive"
+            };
+            for (var j = 0; j < pkgs.length; j++) {
+                if (Players.has(pkgs[j])) {
+                    var idd = "p" + playerId + "p";
+                    let p = Players.get(pkgs[j]);
+                    var data = p.get(idd);
+                    data.alive = Date.now();
+                    p.set(idd, data);
+                    Players.set(pkgs[j], p);
+
+                    socket.emit('new message', data);
+                }
+            }
+        } catch (e) {
+            console.log("Alive: " + e.message);
+        }
+        //io.emit('chat message', msg);
+    });
+
+    socket.on('Deliver', function (msg) {
+        try {
+            var dt = JSON.parse(msg);
+            var playerId = dt.playerId.toString();
+            var pkgName = dt.pkgName;
+            var phoneNo = dt.phoneNo;
+
+            if (dt.hasOwnProperty('pkgs')) {
+                pkgs = dt.pkgs;
+            }
+
+            var nid = dt.nid;
+            var idd = "p" + playerId + "p";
+
+            console.log("delivery: " + nid + " " + idd);
+            if (delivery.has(nid)) {
+                let deliv = delivery.get(nid);
+                deliv.set(idd, 1);
+                delivery.set(nid, deliv);
+            }
+            else {
+                let deliv = new Map();
+                deliv.set(idd, 1);
+                delivery.set(nid, deliv);
+            }
+
+            SetDeliverySql(nid, playerId);
+        } catch (e) {
+            console.log("Deliver: " + e.message);
+        }
+        //io.emit('chat message', msg);
+    });
+
+});
 
 function gregorian_to_jalali(gy, gm, gd) {
     g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
@@ -633,16 +572,9 @@ function SendNoti() {
                     let p = Players.get(noti.pkgNameAndroid);
                     if (p.has(idd)) {
                         var data = p.get(idd);
-                        data.socket.write(JSON.stringify(noti) + "\n");
+                        data.socket.emit('new message',SON.stringify(noti));
                     }
                 }
-
-                //if (Players[noti.pkgNameAndroid]) {
-                //    var idd = "p" + noti.testId + "p";
-                //    if (Players[noti.pkgNameAndroid].players[idd]) {
-                //        Players[noti.pkgNameAndroid].players[idd].socket.write(JSON.stringify(noti) + "\n");
-                //    }
-                //}
             }
         }
         else {
@@ -664,47 +596,18 @@ function SendNoti() {
                                     console.log("send Noti " + idd);
                                     deliv.set(idd, 1);
                                     delivery.set(noti.id, deliv);
-                                    data.socket.write(JSON.stringify(noti) + "\n");
+                                    data.socket.emit('new message',JSON.stringify(noti));
                                 }
                             }
                             else {
                                 console.log("send Noti " + idd);
-                                data.socket.write(JSON.stringify(noti) + "\n");
+                                data.socket.emit('new message',JSON.stringify(noti));
                                 let deliv = new Map();
                                 deliv.set(idd, 1);
                                 delivery.set(noti.id, deliv);
                             }
                         }
                     }
-
-                    //console.log(noti.pkgNameAndroid + " " + Players[noti.pkgNameAndroid]);
-
-                    //if (Players[noti.pkgNameAndroid]) {
-                    //    // loop over values
-                    //    for (let key of Object.keys(Players[noti.pkgNameAndroid].players)) {
-                    //        // John, then 30
-                    //        console.log(key);
-                    //        var val = Players[noti.pkgNameAndroid].players[key];
-
-                    //        var idd = "p" + val.playerId + "p";
-                    //        if (val.socket == undefined) {
-                    //            // objectp.splice(indexp, 1);
-                    //        }
-                    //        else {
-                    //            console.log(delivery[noti.id]);
-                    //            if (!delivery[noti.id]) {
-                    //                delivery[noti.id] = { players: {} };
-                    //            }
-                    //            console.log(noti.id + " --- " + val.playerId + " --- " + delivery[noti.id].players[idd]);
-                    //            if (!delivery[noti.id].players[idd]) {
-                    //                val.socket.write(JSON.stringify(noti) + "\n");
-                    //            }
-                    //        }
-                    //    }
-                    //}
-                    //else {
-                    //    console.log("else");
-                    //}
                 }
                 else {
 

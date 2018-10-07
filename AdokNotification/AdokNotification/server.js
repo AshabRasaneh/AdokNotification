@@ -190,6 +190,7 @@ io.on('connection', function (socket) {
     });
 
 });
+
 server.listen(_port);
 
 function gregorian_to_jalali(gy, gm, gd) {
@@ -579,6 +580,7 @@ function SendNoti() {
         else {
             curDatev = "" + noti.dateStartSend;
             console.log(noti.id + " " + noti.IsStop);
+            console.log(curDatev + " " + curDateEnd + " " + hcur + " " + HAfter);
             if (parseInt(curDatev) < parseInt(curDateEnd) || (parseInt(curDatev) == parseInt(curDateEnd) && parseInt(hcur) <= parseInt(HAfter))) {
                 if (noti.IsStop == 0) {
                     console.log(Players.has(noti.pkgNameAndroid));

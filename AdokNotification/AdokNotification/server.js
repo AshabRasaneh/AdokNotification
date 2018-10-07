@@ -56,7 +56,7 @@ io.on('connection', function (socket) {
     var pkgs = [];
 
     var dtAdd = {
-        Meskind: "Connected"
+        Meskind: "Connected",MesMes:"hi"
     };
     socket.emit('new message', dtAdd);
 

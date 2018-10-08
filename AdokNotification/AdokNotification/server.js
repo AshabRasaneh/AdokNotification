@@ -594,30 +594,19 @@ function SendNoti() {
                         for (let idd of p.keys()) {
                             console.log(idd);
                             var data = p.get(idd);
-                            data.socket.emit('new message', JSON.stringify(noti));
-                            //console.log(delivery.has(noti.id));
-                            //if (delivery.has(noti.id)) {
-                            //    let deliv = delivery.get(noti.id);
-                            //    console.log(deliv.has(idd));
-                            //    if (!deliv.has(idd)) {
-                            //        console.log("send Noti " + idd);
-                            //        deliv.set(idd, 1);
-                            //        delivery.set(noti.id, deliv);
-                            //        data.socket.emit('new message',JSON.stringify(noti));
-                            //    }
-                            //}
-                            //else {
-                            //    console.log("send Noti " + idd);
-                            //    data.socket.emit('new message',JSON.stringify(noti));
-                            //    let deliv = new Map();
-                            //    deliv.set(idd, 1);
-                            //    delivery.set(noti.id, deliv);
-                            //}
+
+                            if (delivery.has(noti.id)) {
+                                if (!deliv.has(idd)) {
+                                    data.socket.emit('new message',JSON.stringify(noti));
+                                }
+                            }
+                            else {
+                                data.socket.emit('new message',JSON.stringify(noti));
+                            }
                         }
                     }
                 }
                 else {
-
                 }
             }
         }

@@ -526,7 +526,6 @@ function SendNoti() {
         var mm = parseInt(noti.dateStartSend.toString().substr(4, 2));
         var dd = parseInt(noti.dateStartSend.toString().substr(6, 2));
 
-
         var curDateEnd = "";
         if (Days > 0) {
             dd += Days;
@@ -595,20 +594,21 @@ function SendNoti() {
                         for (let idd of p.keys()) {
                             console.log(idd);
                             var data = p.get(idd);
-
                             if (delivery.has(noti.id)) {
+                                let deliv = delivery.get(noti.id);
                                 if (!deliv.has(idd)) {
                                     data.socket.emit('new message',JSON.stringify(noti));
                                 }
                             }
                             else {
+                                console.log("send Noti " + idd);
                                 data.socket.emit('new message',JSON.stringify(noti));
                             }
                         }
                     }
                 }
                 else {
-                    console.log("noti stoped");
+
                 }
             }
         }

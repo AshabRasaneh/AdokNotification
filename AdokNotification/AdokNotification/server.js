@@ -607,6 +607,7 @@ function SendNoti() {
                     }
                 }
                 else {
+                    console.log("noti stoped");
                 }
             }
         }

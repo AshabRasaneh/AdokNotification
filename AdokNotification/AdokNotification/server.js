@@ -94,18 +94,18 @@ io.on('connection', function (socket) {
                     }
 
                     if (canLog > 0) {
-                        console.log(Players.has(pkgs[j]) + " " + pkgs[j]);
+                        console.log(Players.has("" +pkgs[j]) + " " + pkgs[j]);
                     }
 
-                    if (!Players.has(pkgs[j]) && pkgs[j] != "null") {
+                    if (!Players.has("" +pkgs[j]) && pkgs[j] != "null") {
                         if (canLog > 0) {
                             console.log(myData.playerId);
                         }
 
                         var players = new Map();
-                        players.set(idd, myData);
+                        players.set("" +idd, myData);
 
-                        Players.set(pkgs[j], players);
+                        Players.set("" +pkgs[j], players);
 
                     }
                     else {
@@ -114,9 +114,9 @@ io.on('connection', function (socket) {
                             console.log(myData.playerId);
                         }
 
-                        let p = Players.get(pkgs[j]);
-                        p.set(idd, myData);
-                        Players.set(pkgs[j], p);
+                        let p = Players.get("" +pkgs[j]);
+                        p.set("" +idd, myData);
+                        Players.set("" +pkgs[j], p);
                     }
 
                 }
@@ -144,13 +144,13 @@ io.on('connection', function (socket) {
                 alive: true, Meskind: "Alive"
             };
             for (var j = 0; j < pkgs.length; j++) {
-                if (Players.has(pkgs[j])) {
+                if (Players.has("" +pkgs[j])) {
                     var idd =  playerId ;
-                    let p = Players.get(pkgs[j]);
-                    var data = p.get(idd);
+                    let p = Players.get("" +pkgs[j]);
+                    var data = p.get("" +idd);
                     data.alive = Date.now();
-                    p.set(idd, data);
-                    Players.set(pkgs[j], p);
+                    p.set("" +idd, data);
+                    Players.set("" +pkgs[j], p);
 
                     socket.emit('new message', data);
                 }
@@ -176,17 +176,17 @@ io.on('connection', function (socket) {
             var idd =  playerId ;
 
             console.log("delivery: " + nid + " " + idd);
-            console.log(delivery.has(nid));
+            console.log(delivery.has("" +nid));
 
-            if (delivery.has(nid)) {
-                let deliv = delivery.get(nid);
-                deliv.set(idd, 1);
-                delivery.set(nid, deliv);
+            if (delivery.has("" +nid)) {
+                let deliv = delivery.get("" +nid);
+                deliv.set("" +idd, 1);
+                delivery.set("" +nid, deliv);
             }
             else {
                 let deliv = new Map();
-                deliv.set(idd, 1);
-                delivery.set(nid, deliv);
+                deliv.set("" +idd, 1);
+                delivery.set("" +nid, deliv);
             }
 
             SetDeliverySql(nid, playerId);
@@ -575,10 +575,10 @@ function SendNoti() {
         if (noti.isTest > 0) {
             if (noti.pkgNameAndroid != "") {
 
-                if (Players.has(noti.pkgNameAndroid)) {
-                    let p = Players.get(noti.pkgNameAndroid);
-                    if (p.has(idd)) {
-                        var data = p.get(idd);
+                if (Players.has("" +noti.pkgNameAndroid)) {
+                    let p = Players.get("" +noti.pkgNameAndroid);
+                    if (p.has("" +idd)) {
+                        var data = p.get("" +idd);
                         data.socket.emit('new message',SON.stringify(noti));
                     }
                 }
@@ -590,15 +590,15 @@ function SendNoti() {
             console.log(curDatev + " " + curDateEnd + " " + hcur + " " + HAfter);
             if (parseInt(curDatev) < parseInt(curDateEnd) || (parseInt(curDatev) == parseInt(curDateEnd) && parseInt(hcur) <= parseInt(HAfter))) {
                 if (noti.IsStop == 0) {
-                    console.log(Players.has(noti.pkgNameAndroid));
-                    if (Players.has(noti.pkgNameAndroid)) {
-                        let p = Players.get(noti.pkgNameAndroid);
+                    console.log(Players.has("" +noti.pkgNameAndroid));
+                    if (Players.has("" +noti.pkgNameAndroid)) {
+                        let p = Players.get("" +noti.pkgNameAndroid);
                         for (let idd of p.keys()) {
                             console.log(idd);
-                            var data = p.get(idd);
-                            if (delivery.has(noti.id)) {
-                                let deliv = delivery.get(noti.id);
-                                if (!deliv.has(idd)) {
+                            var data = p.get(""+idd);
+                            if (delivery.has("" +noti.id)) {
+                                let deliv = delivery.get("" +noti.id);
+                                if (!deliv.has("" +idd)) {
                                     data.socket.emit('new message',JSON.stringify(noti));
                                 }
                             }

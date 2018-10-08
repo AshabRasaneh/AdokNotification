@@ -526,6 +526,7 @@ function SendNoti() {
         var mm = parseInt(noti.dateStartSend.toString().substr(4, 2));
         var dd = parseInt(noti.dateStartSend.toString().substr(6, 2));
 
+
         var curDateEnd = "";
         if (Days > 0) {
             dd += Days;

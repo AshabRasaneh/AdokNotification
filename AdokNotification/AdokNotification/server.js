@@ -87,7 +87,7 @@ io.on('connection', function (socket) {
             var n = d.getTime();
             if (pkgs != undefined) {
                 for (var j = 0; j < pkgs.length; j++) {
-                    var idd = "p" + playerId + "p";
+                    var idd =  playerId ;
                     var canLog = 0;
                     if (pkgs[j] == "com.arp.testvideo") {
                         canLog = 1;
@@ -145,7 +145,7 @@ io.on('connection', function (socket) {
             };
             for (var j = 0; j < pkgs.length; j++) {
                 if (Players.has(pkgs[j])) {
-                    var idd = "p" + playerId + "p";
+                    var idd =  playerId ;
                     let p = Players.get(pkgs[j]);
                     var data = p.get(idd);
                     data.alive = Date.now();
@@ -173,9 +173,11 @@ io.on('connection', function (socket) {
             }
 
             var nid = dt.nid;
-            var idd = "p" + playerId + "p";
+            var idd =  playerId ;
 
             console.log("delivery: " + nid + " " + idd);
+            console.log(delivery.has(nid));
+
             if (delivery.has(nid)) {
                 let deliv = delivery.get(nid);
                 deliv.set(idd, 1);

@@ -50,7 +50,7 @@ var allNoties = [];
 })();
 
 io.on('connection', function (socket) {
-    console.log('a user connected');
+    //console.log('a user connected');
 
     var myId = -1;
     var pkgs = [];
@@ -61,13 +61,13 @@ io.on('connection', function (socket) {
     socket.emit('new message', dtAdd);
 
     socket.on('disconnect', function () {
-        console.log('user disconnected');
+        //console.log('user disconnected');
         PlayerDisonnectedSql(myId);
     });
 
     socket.on('add', function (msg) {
         try {
-            console.log('message: ' + msg);
+            //console.log('message: ' + msg);
             var dt = JSON.parse(msg);
             var playerId = dt.playerId.toString();
             var pkgName = dt.pkgName;
@@ -93,14 +93,14 @@ io.on('connection', function (socket) {
                         canLog = 1;
                     }
 
-                    if (canLog > 0) {
-                        console.log(Players.has("" + pkgs[j]) + " " + pkgs[j]);
-                    }
+                    //if (canLog > 0) {
+                        //console.log(Players.has("" + pkgs[j]) + " " + pkgs[j]);
+                    //}
 
                     if (!Players.has("" + pkgs[j]) && pkgs[j] != "null") {
-                        if (canLog > 0) {
-                            console.log(myData.playerId);
-                        }
+                       // if (canLog > 0) {
+                            //console.log(myData.playerId);
+                        //}
 
                         var players = new Map();
                         players.set("" + idd, myData);
@@ -110,9 +110,9 @@ io.on('connection', function (socket) {
                     }
                     else {
 
-                        if (canLog > 0) {
-                            console.log(myData.playerId);
-                        }
+                       // if (canLog > 0) {
+                            //console.log(myData.playerId);
+                        //}
 
                         let p = Players.get("" + pkgs[j]);
                         p.set("" + idd, myData);
@@ -175,8 +175,8 @@ io.on('connection', function (socket) {
             var nid = dt.nid;
             var idd = playerId;
 
-            console.log("delivery: " + nid + " " + idd);
-            console.log(delivery.has("" + nid));
+           // console.log("delivery: " + nid + " " + idd);
+            //console.log(delivery.has("" + nid));
 
             if (delivery.has("" + nid)) {
                 let deliv = delivery.get("" + nid);
@@ -619,6 +619,8 @@ function SendNoti() {
 
 function SetLeagueState() {
     try {
+
+        console.log("setLeague");
         var curDate = GetCurrentDate();
         var curtime = GetCurrentTime();
 
@@ -675,6 +677,10 @@ function SetLeagueState() {
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
                                             if (!errqq) {
                                             }
+                                            else
+                                            {
+                                                console.log("err 1: " + errqq);
+                                            }
                                         });
 
                                         setLeagueBest(id, myCount, appId, curDate, curtime);
@@ -684,6 +690,9 @@ function SetLeagueState() {
                                     var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
                                         if (!errqq) {
+                                        }
+                                        else {
+                                            console.log("err 2: " + errqq);
                                         }
                                     });
                                 }
@@ -708,6 +717,9 @@ function SetLeagueState() {
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
                                         if (!errqq) {
                                         }
+                                        else {
+                                            console.log("err 3: " + errqq);
+                                        }
                                     });
 
                                     setLeagueBest(id, myCount, appId, curDate, curtime);
@@ -716,6 +728,9 @@ function SetLeagueState() {
                                     var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
                                         if (!errqq) {
+                                        }
+                                        else {
+                                            console.log("err 4: " + errqq);
                                         }
                                     });
                                 }
@@ -732,6 +747,9 @@ function SetLeagueState() {
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
                                             if (!errqq) {
                                             }
+                                            else {
+                                                console.log("err 5: " + errqq);
+                                            }
                                         });
 
                                         setLeagueBest(id, myCount, appId, curDate, curtime);
@@ -741,6 +759,9 @@ function SetLeagueState() {
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
                                             if (!errqq) {
                                             }
+                                            else {
+                                                console.log("err 6: " + errqq);
+                                            }
                                         });
                                     }
                                 }
@@ -748,6 +769,9 @@ function SetLeagueState() {
                                     var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
                                         if (!errqq) {
+                                        }
+                                        else {
+                                            console.log("err 7: " + errqq);
                                         }
                                     });
                                 }
@@ -771,6 +795,9 @@ function SetLeagueState() {
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
                                         if (!errqq) {
                                         }
+                                        else {
+                                            console.log("err 7: " + errqq);
+                                        }
                                     });
 
                                     setLeagueBest(id, myCount, appId, curDate, curtime);
@@ -779,6 +806,9 @@ function SetLeagueState() {
                                     var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
                                         if (!errqq) {
+                                        }
+                                        else {
+                                            console.log("err 8: " + errqq);
                                         }
                                     });
                                 }
@@ -795,6 +825,9 @@ function SetLeagueState() {
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
                                             if (!errqq) {
                                             }
+                                            else {
+                                                console.log("err 9: " + errqq);
+                                            }
                                         });
 
                                         setLeagueBest(id, myCount, appId, curDate, curtime);
@@ -804,6 +837,9 @@ function SetLeagueState() {
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
                                             if (!errqq) {
                                             }
+                                            else {
+                                                console.log("err 10: " + errqq);
+                                            }
                                         });
                                     }
                                 }
@@ -811,6 +847,9 @@ function SetLeagueState() {
                                     var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
                                         if (!errqq) {
+                                        }
+                                        else {
+                                            console.log("err 11: " + errqq);
                                         }
                                     });
                                 }
@@ -885,6 +924,9 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                                             }
                                         }
                                     }
+                                    else {
+                                        console.log("err errOlaviat: " + errOlaviat);
+                                    }
 
                                     crq += ",p.nickname from " + tbName + "  as tb inner join players as p on tb.playerId=p.id ";
                                     crq += " where myCount=" + myCount + "  and lId=" + lId + "  and isShow=1 ";
@@ -930,14 +972,24 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                                                 qIns += " ) values  (" + qValues + ")";
                                                 con.query(qIns, function (errqIns, resultqIns, fieldsqIns) {
                                                     if (!errqIns) { }
+                                                    else {
+                                                        console.log("err errqIns: " + errqIns);
+                                                    }
                                                 });
 
                                             }
+                                            
+                                        }
+                                        else {
+                                            console.log("err errqIns: " + errcrq);
                                         }
                                     });
                                 });
 
                             }
+                        }
+                        else {
+                            console.log("err errCol: " + errCol);
                         }
                     });
                 }

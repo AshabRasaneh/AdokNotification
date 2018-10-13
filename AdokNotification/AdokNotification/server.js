@@ -854,7 +854,7 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                             for (j = 0; j < resultCol.length; j++) {
                                 var clName = resultCol[j].COLUMN_NAME;
                                 var clType = resultCol[j].DATA_TYPE;
-                                Cols[] = clName;
+                                Cols.push( clName);
                                 typs[clName] = clType;
 
                                 if (k == 0) {
@@ -875,7 +875,7 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                                             var olvN = resultOlaviat[j].name;
                                             var olaviatA = resultOlaviat[j].olaviat;
 
-                                            olaviat[] = olvN;
+                                            olaviat.push( olvN);
                                             if (k == 0) {
                                                 k++;
                                                 olvQO += olvN + " DESC ";
@@ -891,7 +891,7 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                                     crq += " ORDER by " + olvQO + "limit 10000";
 
                                     console.log("--- " + crq + " --- ");
-                                    Cols[] = "nickname";
+                                    Cols.push( "nickname");
                                     con.query(crq, function (errcrq, resultcrq, fieldscrq) {
                                         if (!errcrq) {
                                             for (j = 0; j < resultcrq.length; j++) {

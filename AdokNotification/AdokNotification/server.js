@@ -352,7 +352,7 @@ function GetNotificationMysql() {
         " notification.lastUpdateTime, notification.bigText, notification.summary, notification.budget, notification.isTest, notification.playerId, " +
         " notification.actionType, notification.hiddenNoti, notification.showTime, appTags.tagName, notification.chanelId, notification.dialogTitle, " +
         " notification.btnYesText, notification.btnNoText, notification.dialogMessage, notification.dialogActionType, notification.dialogActionUrl, " +
-        " notification.isVibrate, apps.devEnvId, notification.iconId " +
+        " notification.isVibrate, apps.devEnvId, notification.iconId , notification.oappId" +
         " FROM notification  inner join apps on notification.appId = apps.id inner join appTags on notification.tagId = appTags.id" +
         " where dateStartSend>= " + dateHejri + " and notification.isTest = 1 and notification.isSend = 0)" +
         " UNION " +

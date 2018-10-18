@@ -333,7 +333,7 @@ function GetCurrentTime() {
 
     var timeout = setInterval(function () {
         try {
-            SetLeagueState();
+            //SetLeagueState();
         }
         catch (e) {
             console.log("11: " + e.message);

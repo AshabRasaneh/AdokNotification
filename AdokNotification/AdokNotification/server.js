@@ -363,7 +363,7 @@ function GetNotificationMysql() {
             + " notification.lastUpdateTime, notification.bigText, notification.summary, notification.budget, notification.isTest, notification.playerId, "
             + " notification.actionType, notification.hiddenNoti, notification.showTime, appTags.tagName, notification.chanelId, notification.dialogTitle, "
             + " notification.btnYesText, notification.btnNoText, notification.dialogMessage, notification.dialogActionType, notification.dialogActionUrl, "
-            + " notification.isVibrate, apps.devEnvId, notification.iconId "
+            + " notification.isVibrate, apps.devEnvId, notification.iconId, notification.oappId "
             + " FROM notification  inner join apps on notification.appId = apps.id inner join appTags on notification.tagId = appTags.id "
             + " where dateStartSend>= " + dateHejri + " and notification.IsStop = 0 and  notification.isActive = 1 and notification.isTest = 0)", function (err, result, fields) {
                 if (!err) {
@@ -371,7 +371,8 @@ function GetNotificationMysql() {
 
                     for (var i = 0; i < row.length; i++) {
                         var id = row[i].id;
-                        var appId = row[i].appId;
+                    var appId = row[i].appId;
+                    var oappId = row[i].oappId;
                         var title = row[i].title;
                         var message = row[i].message;
                         var url = row[i].url;
@@ -431,7 +432,7 @@ function GetNotificationMysql() {
                             chanelId: chanelId, chanelName: chanelName, chanelDes: chanelDes,
                             dialogTitle: dialogTitle, btnYesText: btnYesText, btnNoText: btnNoText, dialogMessage: dialogMessage, dialogActionType: dialogActionType, dialogActionUrl: dialogActionUrl, isVibrate: isVibrate,
                             devEnvId: devEnvId, iconId: iconId, isTest: row[i].isTest, IsStop: "0",
-                            AdditionalData: additionalData, btns: btns, Meskind: "noti"
+                            AdditionalData: additionalData, btns: btns, Meskind: "noti",oappId:oappId
                         };
 
                         var curtm = GetCurrentTime();
@@ -582,6 +583,23 @@ function SendNoti() {
                         data.socket.emit('new message', SON.stringify(noti));
                     }
                 }
+
+                if (noti.oappId != "") {
+                    var oapp = noti.oappId.split(",");
+                    for (var i = 0; i < oapp.lenght; i++) {
+                        var eachN = oapp.split("_");
+                        var nt = noti;
+                        nt.appId = eachN[0];
+                        nt.pkgNameAndroid = eachN[1];
+                        if (Players.has("" + nt.pkgNameAndroid)) {
+                            let p = Players.get("" + nt.pkgNameAndroid);
+                            if (p.has("" + idd)) {
+                                var data = p.get("" + idd);
+                                data.socket.emit('new message', SON.stringify(nt));
+                            }
+                        }
+                    }
+                }
             }
         }
         else {
@@ -608,6 +626,34 @@ function SendNoti() {
                             }
                         }
                     }
+
+                    if (noti.oappId != "") {
+                        var oapp = noti.oappId.split(",");
+                        for (var i = 0; i < oapp.lenght; i++) {
+                            var eachN = oapp.split("_");
+                            var nt = noti;
+                            nt.appId = eachN[0];
+                            nt.pkgNameAndroid = eachN[1];
+                            if (Players.has("" + nt.pkgNameAndroid)) {
+                                let p = Players.get("" + nt.pkgNameAndroid);
+                                for (let idd of p.keys()) {
+                                    console.log(idd);
+                                    var data = p.get("" + idd);
+                                    if (delivery.has("" + nt.id)) {
+                                        let deliv = delivery.get("" + nt.id);
+                                        if (!deliv.has("" + idd)) {
+                                            data.socket.emit('new message', JSON.stringify(nt));
+                                        }
+                                    }
+                                    else {
+                                        console.log("send Noti " + idd);
+                                        data.socket.emit('new message', JSON.stringify(nt));
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                 }
                 else {
 

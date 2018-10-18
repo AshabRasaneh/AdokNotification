@@ -633,7 +633,9 @@ function SendNoti() {
                             var eachN = oapp.split("_");
                             var nt = noti;
                             nt.appId = eachN[0];
-                            nt.pkgNameAndroid = eachN[1];
+        nt.pkgNameAndroid = eachN[1];
+        
+        console.log(nt.id+" "+nt.appId+" "+ nt.pkgNameAndroid);
                             if (Players.has("" + nt.pkgNameAndroid)) {
                                 let p = Players.get("" + nt.pkgNameAndroid);
                                 for (let idd of p.keys()) {

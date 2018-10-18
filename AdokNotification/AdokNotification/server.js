@@ -67,11 +67,13 @@ io.on('connection', function (socket) {
 
     socket.on('add', function (msg) {
         try {
-            //console.log('message: ' + msg);
+            
             var dt = JSON.parse(msg);
             var playerId = dt.playerId.toString();
             var pkgName = dt.pkgName;
             var phoneNo = dt.phoneNo;
+            
+            console.log('add: ' + playerId);
 
             if (dt.hasOwnProperty('pkgs')) {
                 pkgs = dt.pkgs;

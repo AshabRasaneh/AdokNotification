@@ -31,8 +31,7 @@ var allNoties = [];
         var timeout = setInterval(function () {
             GetNotificationMysql();
         }, 10000);
-    }
-    catch (e) {
+    } catch (e) {
         console.log("2: " + e.message);
     }
 })();
@@ -43,8 +42,7 @@ var allNoties = [];
         var timeout = setInterval(function () {
             SendNoti();
         }, 15000);
-    }
-    catch (e) {
+    } catch (e) {
         console.log("2: " + e.message);
     }
 })();
@@ -56,7 +54,8 @@ io.on('connection', function (socket) {
     var pkgs = [];
 
     var dtAdd = {
-        Meskind: "Connected", MesMes: "hi"
+        Meskind: "Connected",
+        MesMes: "hi"
     };
     socket.emit('new message', dtAdd);
 
@@ -67,12 +66,12 @@ io.on('connection', function (socket) {
 
     socket.on('add', function (msg) {
         try {
-            
+
             var dt = JSON.parse(msg);
             var playerId = dt.playerId.toString();
             var pkgName = dt.pkgName;
             var phoneNo = dt.phoneNo;
-            
+
             console.log('add: ' + playerId);
 
             if (dt.hasOwnProperty('pkgs')) {
@@ -83,7 +82,11 @@ io.on('connection', function (socket) {
             myId = playerId;
 
             var myData = {
-                playerId: playerId, phoneNo: phoneNo, socket: socket, pkgs: pkgs, alive: 0
+                playerId: playerId,
+                phoneNo: phoneNo,
+                socket: socket,
+                pkgs: pkgs,
+                alive: 0
             };
             var d = new Date();
             var n = d.getTime();
@@ -96,12 +99,12 @@ io.on('connection', function (socket) {
                     }
 
                     //if (canLog > 0) {
-                        //console.log(Players.has("" + pkgs[j]) + " " + pkgs[j]);
+                    //console.log(Players.has("" + pkgs[j]) + " " + pkgs[j]);
                     //}
 
                     if (!Players.has("" + pkgs[j]) && pkgs[j] != "null") {
-                       // if (canLog > 0) {
-                            //console.log(myData.playerId);
+                        // if (canLog > 0) {
+                        //console.log(myData.playerId);
                         //}
 
                         var players = new Map();
@@ -109,11 +112,10 @@ io.on('connection', function (socket) {
 
                         Players.set("" + pkgs[j], players);
 
-                    }
-                    else {
+                    } else {
 
-                       // if (canLog > 0) {
-                            //console.log(myData.playerId);
+                        // if (canLog > 0) {
+                        //console.log(myData.playerId);
                         //}
 
                         let p = Players.get("" + pkgs[j]);
@@ -143,7 +145,8 @@ io.on('connection', function (socket) {
             }
 
             var data = {
-                alive: true, Meskind: "Alive"
+                alive: true,
+                Meskind: "Alive"
             };
             for (var j = 0; j < pkgs.length; j++) {
                 if (Players.has("" + pkgs[j])) {
@@ -177,15 +180,14 @@ io.on('connection', function (socket) {
             var nid = dt.nid;
             var idd = playerId;
 
-           // console.log("delivery: " + nid + " " + idd);
+            // console.log("delivery: " + nid + " " + idd);
             //console.log(delivery.has("" + nid));
 
             if (delivery.has("" + nid)) {
                 let deliv = delivery.get("" + nid);
                 deliv.set("" + idd, 1);
                 delivery.set("" + nid, deliv);
-            }
-            else {
+            } else {
                 let deliv = new Map();
                 deliv.set("" + idd, 1);
                 delivery.set("" + nid, deliv);
@@ -272,15 +274,13 @@ function GetCurrentDate() {
     var dayOfMounth = "";
     if (m < 10) {
         mounth = "0" + m;
-    }
-    else {
+    } else {
         mounth = "" + m;
     }
 
     if (day < 10) {
         dayOfMounth = "0" + day;
-    }
-    else {
+    } else {
         dayOfMounth = "" + day;
     }
 
@@ -316,15 +316,13 @@ function GetCurrentTime() {
 
     if (h < 10) {
         hour = "0" + h;
-    }
-    else {
+    } else {
         hour = "" + h;
     }
 
     if (Min < 10) {
         minute = "0" + Min;
-    }
-    else {
+    } else {
         minute = "" + Min;
     }
     tm = hour + minute;
@@ -336,8 +334,7 @@ function GetCurrentTime() {
     var timeout = setInterval(function () {
         try {
             //SetLeagueState();
-        }
-        catch (e) {
+        } catch (e) {
             console.log("11: " + e.message);
         }
     }, 30000);
@@ -348,33 +345,35 @@ function GetNotificationMysql() {
     try {
         //console.log("getNotif " + GetCurrentDate() + " " + GetCurrentTime());
         var dateHejri = GetCurrentDate();
-        con.query("(SELECT "
-            + " notification.id, notification.appId, notification.title, notification.message, notification.url, notification.timeToLive, notification.dateStartSend,"
-            + " notification.timeStartSend, notification.sound, notification.smalIcon, notification.largeIcon, notification.bigPicture, notification.ledColor, "
-            + " notification.accentColor, notification.gId, notification.priority, apps.pkgNameAndroid, apps.pkgNameIos, notification.kind, notification.IsStop, "
-            + " notification.lastUpdateTime, notification.bigText, notification.summary, notification.budget, notification.isTest, notification.playerId, "
-            + " notification.actionType, notification.hiddenNoti, notification.showTime, appTags.tagName, notification.chanelId, notification.dialogTitle, "
-            + " notification.btnYesText, notification.btnNoText, notification.dialogMessage, notification.dialogActionType, notification.dialogActionUrl, "
-            + " notification.isVibrate, apps.devEnvId, notification.iconId "
-            + " FROM notification  inner join apps on notification.appId = apps.id inner join appTags on notification.tagId = appTags.id"
-            + " where dateStartSend>= " + dateHejri + " and notification.isTest = 1 and notification.isSend = 0)"
-            + " UNION "
-            + " (SELECT notification.id, notification.appId, notification.title, notification.message, notification.url, notification.timeToLive, notification.dateStartSend,"
-            + "  notification.timeStartSend, notification.sound, notification.smalIcon, notification.largeIcon, notification.bigPicture, notification.ledColor, "
-            + " notification.accentColor, notification.gId, notification.priority, apps.pkgNameAndroid, apps.pkgNameIos, notification.kind, notification.IsStop, "
-            + " notification.lastUpdateTime, notification.bigText, notification.summary, notification.budget, notification.isTest, notification.playerId, "
-            + " notification.actionType, notification.hiddenNoti, notification.showTime, appTags.tagName, notification.chanelId, notification.dialogTitle, "
-            + " notification.btnYesText, notification.btnNoText, notification.dialogMessage, notification.dialogActionType, notification.dialogActionUrl, "
-            + " notification.isVibrate, apps.devEnvId, notification.iconId, notification.oappId "
-            + " FROM notification  inner join apps on notification.appId = apps.id inner join appTags on notification.tagId = appTags.id "
-            + " where dateStartSend>= " + dateHejri + " and notification.IsStop = 0 and  notification.isActive = 1 and notification.isTest = 0)", function (err, result, fields) {
+        con.query("(SELECT " +
+            " notification.id, notification.appId, notification.title, notification.message, notification.url, notification.timeToLive, notification.dateStartSend," +
+            " notification.timeStartSend, notification.sound, notification.smalIcon, notification.largeIcon, notification.bigPicture, notification.ledColor, " +
+            " notification.accentColor, notification.gId, notification.priority, apps.pkgNameAndroid, apps.pkgNameIos, notification.kind, notification.IsStop, " +
+            " notification.lastUpdateTime, notification.bigText, notification.summary, notification.budget, notification.isTest, notification.playerId, " +
+            " notification.actionType, notification.hiddenNoti, notification.showTime, appTags.tagName, notification.chanelId, notification.dialogTitle, " +
+            " notification.btnYesText, notification.btnNoText, notification.dialogMessage, notification.dialogActionType, notification.dialogActionUrl, " +
+            " notification.isVibrate, apps.devEnvId, notification.iconId " +
+            " FROM notification  inner join apps on notification.appId = apps.id inner join appTags on notification.tagId = appTags.id" +
+            " where dateStartSend>= " + dateHejri + " and notification.isTest = 1 and notification.isSend = 0)" +
+            " UNION " +
+            " (SELECT notification.id, notification.appId, notification.title, notification.message, notification.url, notification.timeToLive, notification.dateStartSend," +
+            "  notification.timeStartSend, notification.sound, notification.smalIcon, notification.largeIcon, notification.bigPicture, notification.ledColor, " +
+            " notification.accentColor, notification.gId, notification.priority, apps.pkgNameAndroid, apps.pkgNameIos, notification.kind, notification.IsStop, " +
+            " notification.lastUpdateTime, notification.bigText, notification.summary, notification.budget, notification.isTest, notification.playerId, " +
+            " notification.actionType, notification.hiddenNoti, notification.showTime, appTags.tagName, notification.chanelId, notification.dialogTitle, " +
+            " notification.btnYesText, notification.btnNoText, notification.dialogMessage, notification.dialogActionType, notification.dialogActionUrl, " +
+            " notification.isVibrate, apps.devEnvId, notification.iconId, notification.oappId " +
+            " FROM notification  inner join apps on notification.appId = apps.id inner join appTags on notification.tagId = appTags.id " +
+            " where dateStartSend>= " + dateHejri + " and notification.IsStop = 0 and  notification.isActive = 1 and notification.isTest = 0)",
+            function (err, result, fields) {
                 if (!err) {
                     var row = result;
 
+                    
                     for (var i = 0; i < row.length; i++) {
                         var id = row[i].id;
-                    var appId = row[i].appId;
-                    var oappId = row[i].oappId;
+                        var appId = row[i].appId;
+                        var oappId = row[i].oappId;
                         var title = row[i].title;
                         var message = row[i].message;
                         var url = row[i].url;
@@ -423,18 +422,51 @@ function GetNotificationMysql() {
 
                         var additionalData = [];
                         var btns = [];
-
+                        console.log("noti for send: "+ id);
                         var noti = {
-                            id: row[i].id, appId: row[i].appId, title: row[i].title, message: row[i].message, url: row[i].url, timeToLive: row[i].timeToLive
-                            , dateStartSend: row[i].dateStartSend, timeStartSend: row[i].timeStartSend, sound: row[i].sound, smalIcon: row[i].smalIcon, largeIcon: row[i].largeIcon
-                            , bigPicture: row[i].bigPicture, ledColor: row[i].ledColor, accentColor: row[i].accentColor, gId: row[i].gId, priority: row[i].priority
-                            , pkgNameAndroid: row[i].pkgNameAndroid, pkgNameIos: row[i].pkgNameIos, kind: row[i].kind,
-                            bigText: row[i].bigText, summary: row[i].summary,
-                            actionType: row[i].actionType, hiddenNoti: row[i].hiddenNoti, showTime: row[i].showTime, tagName: row[i].tagName,
-                            chanelId: chanelId, chanelName: chanelName, chanelDes: chanelDes,
-                            dialogTitle: dialogTitle, btnYesText: btnYesText, btnNoText: btnNoText, dialogMessage: dialogMessage, dialogActionType: dialogActionType, dialogActionUrl: dialogActionUrl, isVibrate: isVibrate,
-                            devEnvId: devEnvId, iconId: iconId, isTest: row[i].isTest, IsStop: "0",
-                            AdditionalData: additionalData, btns: btns, Meskind: "noti",oappId:oappId
+                            id: row[i].id,
+                            appId: row[i].appId,
+                            title: row[i].title,
+                            message: row[i].message,
+                            url: row[i].url,
+                            timeToLive: row[i].timeToLive,
+                            dateStartSend: row[i].dateStartSend,
+                            timeStartSend: row[i].timeStartSend,
+                            sound: row[i].sound,
+                            smalIcon: row[i].smalIcon,
+                            largeIcon: row[i].largeIcon,
+                            bigPicture: row[i].bigPicture,
+                            ledColor: row[i].ledColor,
+                            accentColor: row[i].accentColor,
+                            gId: row[i].gId,
+                            priority: row[i].priority,
+                            pkgNameAndroid: row[i].pkgNameAndroid,
+                            pkgNameIos: row[i].pkgNameIos,
+                            kind: row[i].kind,
+                            bigText: row[i].bigText,
+                            summary: row[i].summary,
+                            actionType: row[i].actionType,
+                            hiddenNoti: row[i].hiddenNoti,
+                            showTime: row[i].showTime,
+                            tagName: row[i].tagName,
+                            chanelId: chanelId,
+                            chanelName: chanelName,
+                            chanelDes: chanelDes,
+                            dialogTitle: dialogTitle,
+                            btnYesText: btnYesText,
+                            btnNoText: btnNoText,
+                            dialogMessage: dialogMessage,
+                            dialogActionType: dialogActionType,
+                            dialogActionUrl: dialogActionUrl,
+                            isVibrate: isVibrate,
+                            devEnvId: devEnvId,
+                            iconId: iconId,
+                            isTest: row[i].isTest,
+                            IsStop: "0",
+                            AdditionalData: additionalData,
+                            btns: btns,
+                            Meskind: "noti",
+                            oappId: oappId
                         };
 
                         var curtm = GetCurrentTime();
@@ -456,7 +488,10 @@ function GetNotificationMysql() {
                         con.query("SELECT id,nId,dtKey,dtValue FROM notiAdditionalData where nId=" + item.id, function (erradd, resultadd, fieldsadd) {
                             if (!erradd) {
                                 for (j = 0; j < resultadd.length; j++) {
-                                    var dta = { "dtKey": resultadd[j].dtKey, "dtValue": resultadd[j].dtValue };
+                                    var dta = {
+                                        "dtKey": resultadd[j].dtKey,
+                                        "dtValue": resultadd[j].dtValue
+                                    };
                                     var adid = resultadd[j].id;
                                     var adnid = resultadd[j].nId;
                                     allNoties[adnid].AdditionalData[j] = dta;
@@ -471,9 +506,17 @@ function GetNotificationMysql() {
                                 for (var j = 0; j < resultbtn.length; j++) {
 
                                     var dtb = {
-                                        "id": resultbtn[j].id, "nId": resultbtn[j].nId, "btnText": resultbtn[j].btnText, "url": resultbtn[j].url, "icon": resultbtn[j].icon
-                                        , "dialogTitle": resultbtn[j].dialogTitle, "btnYesText": resultbtn[j].btnYesText, "btnNoText": resultbtn[j].btnNoText,
-                                        "dialogMessage": resultbtn[j].dialogMessage, "dialogActionType": resultbtn[j].dialogActionType, "dialogActionUrl": resultbtn[j].dialogActionUrl,
+                                        "id": resultbtn[j].id,
+                                        "nId": resultbtn[j].nId,
+                                        "btnText": resultbtn[j].btnText,
+                                        "url": resultbtn[j].url,
+                                        "icon": resultbtn[j].icon,
+                                        "dialogTitle": resultbtn[j].dialogTitle,
+                                        "btnYesText": resultbtn[j].btnYesText,
+                                        "btnNoText": resultbtn[j].btnNoText,
+                                        "dialogMessage": resultbtn[j].dialogMessage,
+                                        "dialogActionType": resultbtn[j].dialogActionType,
+                                        "dialogActionUrl": resultbtn[j].dialogActionUrl,
                                         "actionType": resultbtn[j].actionType
                                     };
 
@@ -522,8 +565,7 @@ function SendNoti() {
         if (sendH > 24) {
             Days = Math.floor(sendH / 24);
             HAfter = Math.floor(sendH - (Days * 24));
-        }
-        else {
+        } else {
             HAfter = sendH;
         }
 
@@ -538,17 +580,14 @@ function SendNoti() {
                 dd = dd - 29;
                 mm = 1;
                 yy++;
-            }
-            else if (dd > 30 && mm == 12 && y % 4 == 3) {
+            } else if (dd > 30 && mm == 12 && y % 4 == 3) {
                 dd = dd - 30;
                 mm = 1;
                 yy++;
-            }
-            else if (dd > 31 && mm <= 6) {
+            } else if (dd > 31 && mm <= 6) {
                 dd = dd - 31;
                 mm++;
-            }
-            else if (dd > 30 && mm > 6) {
+            } else if (dd > 30 && mm > 6) {
                 dd = dd - 30;
                 mm++;
             }
@@ -559,15 +598,13 @@ function SendNoti() {
         var dayOfMounth = "";
         if (mm < 10) {
             mounth = "0" + mm;
-        }
-        else {
+        } else {
             mounth = "" + mm;
         }
 
         if (dd < 10) {
             dayOfMounth = "0" + dd;
-        }
-        else {
+        } else {
             dayOfMounth = "" + dd;
         }
 
@@ -603,8 +640,7 @@ function SendNoti() {
                     }
                 }
             }
-        }
-        else {
+        } else {
             curDatev = "" + noti.dateStartSend;
             console.log(noti.id + " " + noti.IsStop);
             console.log(curDatev + " " + curDateEnd + " " + hcur + " " + HAfter);
@@ -621,13 +657,13 @@ function SendNoti() {
                                 if (!deliv.has("" + idd)) {
                                     data.socket.emit('new message', JSON.stringify(noti));
                                 }
-                            }
-                            else {
+                            } else {
                                 console.log("send Noti " + idd);
                                 data.socket.emit('new message', JSON.stringify(noti));
                             }
                         }
                     }
+
 
                     if (noti.oappId != "") {
                         var oapp = noti.oappId.split(",");
@@ -635,9 +671,9 @@ function SendNoti() {
                             var eachN = oapp.split("_");
                             var nt = noti;
                             nt.appId = eachN[0];
-        nt.pkgNameAndroid = eachN[1];
-        
-        console.log(nt.id+" "+nt.appId+" "+ nt.pkgNameAndroid);
+                            nt.pkgNameAndroid = eachN[1];
+
+                            console.log(nt.id + " " + nt.appId + " " + nt.pkgNameAndroid);
                             if (Players.has("" + nt.pkgNameAndroid)) {
                                 let p = Players.get("" + nt.pkgNameAndroid);
                                 for (let idd of p.keys()) {
@@ -648,8 +684,7 @@ function SendNoti() {
                                         if (!deliv.has("" + idd)) {
                                             data.socket.emit('new message', JSON.stringify(nt));
                                         }
-                                    }
-                                    else {
+                                    } else {
                                         console.log("send Noti " + idd);
                                         data.socket.emit('new message', JSON.stringify(nt));
                                     }
@@ -657,8 +692,7 @@ function SendNoti() {
                             }
                         }
                     }
-                }
-                else {
+                } else {
 
                 }
             }
@@ -724,29 +758,22 @@ function SetLeagueState() {
                                             ", " + endDay + ", " + startMounth + ", " + endMounth + ", " + isActive + ", " + isEnd + "); ";
 
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                            if (!errqq) {
-                                            }
-                                            else
-                                            {
+                                            if (!errqq) {} else {
                                                 console.log("err 1: " + errqq);
                                             }
                                         });
 
                                         setLeagueBest(id, myCount, appId, curDate, curtime);
                                     }
-                                }
-                                else if (parseInt(curtime) > parseInt(startTime) && parseInt(isEnd) == 1) {
+                                } else if (parseInt(curtime) > parseInt(startTime) && parseInt(isEnd) == 1) {
                                     var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                        if (!errqq) {
-                                        }
-                                        else {
+                                        if (!errqq) {} else {
                                             console.log("err 2: " + errqq);
                                         }
                                     });
                                 }
-                            }
-                            else if (parseInt(isWeekly) > 0) {
+                            } else if (parseInt(isWeekly) > 0) {
                                 var d = new Date();
                                 var n = parseInt(d.getDay());
                                 n += 2;
@@ -764,26 +791,20 @@ function SetLeagueState() {
                                         ", " + endDay + ", " + startMounth + ", " + endMounth + ", " + isActive + ", " + isEnd + "); ";
 
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                        if (!errqq) {
-                                        }
-                                        else {
+                                        if (!errqq) {} else {
                                             console.log("err 3: " + errqq);
                                         }
                                     });
 
                                     setLeagueBest(id, myCount, appId, curDate, curtime);
-                                }
-                                else if (n < parseInt(endDay) && n > parseInt(startDay) && isEnd == 1) {
+                                } else if (n < parseInt(endDay) && n > parseInt(startDay) && isEnd == 1) {
                                     var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                        if (!errqq) {
-                                        }
-                                        else {
+                                        if (!errqq) {} else {
                                             console.log("err 4: " + errqq);
                                         }
                                     });
-                                }
-                                else if (n == parseInt(endDay)) {
+                                } else if (n == parseInt(endDay)) {
                                     if (parseInt(curtime) >= parseInt(endTime) && isEnd == 0) {
                                         var qq = "INSERT INTO `leagueLog` (`lId`, `name`, `des`, `logoAdd`, `startDate`, `startTime`, `endDate`, `endTime`, `playerJoinCount`," +
                                             "`limitPlayerCount`, `appId`, `dateCreated`, `isAutomated`, `isDaily`, `isWeekly`, `isMounthly`, `restHour`, `myCount`," +
@@ -794,38 +815,29 @@ function SetLeagueState() {
                                             ", " + endDay + ", " + startMounth + ", " + endMounth + ", " + isActive + ", " + isEnd + "); ";
 
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                            if (!errqq) {
-                                            }
-                                            else {
+                                            if (!errqq) {} else {
                                                 console.log("err 5: " + errqq);
                                             }
                                         });
 
                                         setLeagueBest(id, myCount, appId, curDate, curtime);
-                                    }
-                                    else if (isEnd == 1) {
+                                    } else if (isEnd == 1) {
                                         var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                            if (!errqq) {
-                                            }
-                                            else {
+                                            if (!errqq) {} else {
                                                 console.log("err 6: " + errqq);
                                             }
                                         });
                                     }
-                                }
-                                else if (n == parseInt(startDay) && parseInt(curtime) >= parseInt(startTime) && isEnd == 1) {
+                                } else if (n == parseInt(startDay) && parseInt(curtime) >= parseInt(startTime) && isEnd == 1) {
                                     var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                        if (!errqq) {
-                                        }
-                                        else {
+                                        if (!errqq) {} else {
                                             console.log("err 7: " + errqq);
                                         }
                                     });
                                 }
-                            }
-                            else if (parseInt(isMounthly) > 0) {
+                            } else if (parseInt(isMounthly) > 0) {
 
                                 var dateHijri = GetCurrentDate();
                                 var y = parseInt(dateHijri.substr(0, 4));
@@ -842,26 +854,20 @@ function SetLeagueState() {
                                         ", " + endDay + ", " + startMounth + ", " + endMounth + ", " + isActive + ", " + isEnd + "); ";
 
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                        if (!errqq) {
-                                        }
-                                        else {
+                                        if (!errqq) {} else {
                                             console.log("err 7: " + errqq);
                                         }
                                     });
 
                                     setLeagueBest(id, myCount, appId, curDate, curtime);
-                                }
-                                else if (day < parseInt(endMounth) && day > parseInt(startMounth) && isEnd == 1) {
+                                } else if (day < parseInt(endMounth) && day > parseInt(startMounth) && isEnd == 1) {
                                     var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                        if (!errqq) {
-                                        }
-                                        else {
+                                        if (!errqq) {} else {
                                             console.log("err 8: " + errqq);
                                         }
                                     });
-                                }
-                                else if (day == parseInt(endMounth)) {
+                                } else if (day == parseInt(endMounth)) {
                                     if (parseInt(curtime) >= parseInt(endTime) && isEnd == 0) {
                                         var qq = "INSERT INTO `leagueLog` (`lId`, `name`, `des`, `logoAdd`, `startDate`, `startTime`, `endDate`, `endTime`, `playerJoinCount`," +
                                             "`limitPlayerCount`, `appId`, `dateCreated`, `isAutomated`, `isDaily`, `isWeekly`, `isMounthly`, `restHour`, `myCount`," +
@@ -872,32 +878,24 @@ function SetLeagueState() {
                                             ", " + endDay + ", " + startMounth + ", " + endMounth + ", " + isActive + ", " + isEnd + "); ";
 
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                            if (!errqq) {
-                                            }
-                                            else {
+                                            if (!errqq) {} else {
                                                 console.log("err 9: " + errqq);
                                             }
                                         });
 
                                         setLeagueBest(id, myCount, appId, curDate, curtime);
-                                    }
-                                    else if (isEnd == 1) {
+                                    } else if (isEnd == 1) {
                                         var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                            if (!errqq) {
-                                            }
-                                            else {
+                                            if (!errqq) {} else {
                                                 console.log("err 10: " + errqq);
                                             }
                                         });
                                     }
-                                }
-                                else if (day == parseInt(startMounth) && parseInt(curtime) >= parseInt(startTime) && isEnd == 1) {
+                                } else if (day == parseInt(startMounth) && parseInt(curtime) >= parseInt(startTime) && isEnd == 1) {
                                     var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                        if (!errqq) {
-                                        }
-                                        else {
+                                        if (!errqq) {} else {
                                             console.log("err 11: " + errqq);
                                         }
                                     });
@@ -905,18 +903,18 @@ function SetLeagueState() {
                             }
                         }
                     }
-                }
-                else {
+                } else {
 
                 }
 
             }
         });
-    }
-    catch (e) {
+    } catch (e) {
         console.log("160: " + e.message);
     }
 }
+
+//saeed
 
 function setLeagueBest(lId, myCount, appId, curDate, curtime) {
     cnt = parseInt(myCount) + 1;
@@ -942,14 +940,13 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                             for (j = 0; j < resultCol.length; j++) {
                                 var clName = resultCol[j].COLUMN_NAME;
                                 var clType = resultCol[j].DATA_TYPE;
-                                Cols.push( clName);
+                                Cols.push(clName);
                                 typs[clName] = clType;
 
                                 if (j == 0) {
                                     k++;
                                     crq += "tb." + clName;
-                                }
-                                else {
+                                } else {
                                     crq += ",tb." + clName;
                                 }
 
@@ -963,17 +960,15 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                                             var olvN = resultOlaviat[j].name;
                                             var olaviatA = resultOlaviat[j].olaviat;
 
-                                            olaviat.push( olvN);
+                                            olaviat.push(olvN);
                                             if (j == 0) {
                                                 k++;
                                                 olvQO += olvN + " DESC ";
-                                            }
-                                            else {
+                                            } else {
                                                 olvQO += "," + olvN + "  DESC ";
                                             }
                                         }
-                                    }
-                                    else {
+                                    } else {
                                         console.log("err errOlaviat: " + errOlaviat);
                                     }
 
@@ -982,7 +977,7 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                                     crq += " ORDER by " + olvQO + "limit 10000";
 
                                     console.log("--- " + crq + " --- ");
-                                    Cols.push( "nickname");
+                                    Cols.push("nickname");
                                     con.query(crq, function (errcrq, resultcrq, fieldscrq) {
                                         if (!errcrq) {
                                             for (j = 0; j < resultcrq.length; j++) {
@@ -993,25 +988,20 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                                                 var rowRq = resultcrq[j];
                                                 for (l = 0; l < rowRq.length; l++) {
                                                     var prop = Cols[l];
-                                                    if (prop == "nickname" || prop == "id")
-                                                    { }
-                                                    else {
+                                                    if (prop == "nickname" || prop == "id") {} else {
                                                         if (k == 0) {
                                                             k++;
                                                             qIns += prop;
                                                             if (typs[prop] == "int") {
                                                                 qValues += rowRq[l];
-                                                            }
-                                                            else {
+                                                            } else {
                                                                 qValues += "' " + rowRq[l] + " '";
                                                             }
-                                                        }
-                                                        else {
+                                                        } else {
                                                             qIns += ", prop";
                                                             if (typs[prop] == "int") {
                                                                 qValues += "," + rowRq[l];
-                                                            }
-                                                            else {
+                                                            } else {
                                                                 qValues += ",' " + rowRq[l] + " '";
                                                             }
                                                         }
@@ -1020,30 +1010,26 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
 
                                                 qIns += " ) values  (" + qValues + ")";
                                                 con.query(qIns, function (errqIns, resultqIns, fieldsqIns) {
-                                                    if (!errqIns) { }
-                                                    else {
+                                                    if (!errqIns) {} else {
                                                         console.log("err errqIns: " + errqIns);
                                                     }
                                                 });
 
                                             }
-                                            
-                                        }
-                                        else {
+
+                                        } else {
                                             console.log("err errqIns: " + errcrq);
                                         }
                                     });
                                 });
 
                             }
-                        }
-                        else {
+                        } else {
                             console.log("err errCol: " + errCol);
                         }
                     });
                 }
-            }
-            else {
+            } else {
 
             }
 
@@ -1053,8 +1039,7 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
 
 function SetDeliverySql(nid, playerId) {
     try {
-        con.query("update notification set isSend=1 where id=" + nid, function (err, result, fields) {
-        });
+        con.query("update notification set isSend=1 where id=" + nid, function (err, result, fields) {});
 
         con.query("SELECT id,count from nodeDelivery where nid=" + nid + " and playerId=" + playerId, function (errsel, resultsel, fieldssel) {
             if (!errsel) {
@@ -1063,11 +1048,10 @@ function SetDeliverySql(nid, playerId) {
                         did = resultsel[j].id;
                         dcount = parseInt(resultsel[j].count);
                         dcount++;
-                        con.query("update nodeDelivery set  count=" + dcount + " where id=" + did, function (errupd, resultupd, fieldsupd) { });
+                        con.query("update nodeDelivery set  count=" + dcount + " where id=" + did, function (errupd, resultupd, fieldsupd) {});
                     }
-                }
-                else {
-                    con.query("insert into nodeDelivery (nid,playerId,count) values (" + nid + "," + playerId + ",1);", function (errupd, resultupd, fieldsupd) { });
+                } else {
+                    con.query("insert into nodeDelivery (nid,playerId,count) values (" + nid + "," + playerId + ",1);", function (errupd, resultupd, fieldsupd) {});
                 }
 
             }
@@ -1083,11 +1067,11 @@ function SetDeliverySql(nid, playerId) {
 function PlayerDisonnectedSql(pid) {
     curDate = GetCurrentDate();
     tm = GetCurrentTime();
-    con.query("update players set 	isConnected=0,disTime='" + tm + "',disDate=" + curDate + " where id=" + pid, function (errupd, resultupd, fieldsupd) { });
+    con.query("update players set 	isConnected=0,disTime='" + tm + "',disDate=" + curDate + " where id=" + pid, function (errupd, resultupd, fieldsupd) {});
 }
 
 function PlayerConnectedSql(pid, pkgs) {
     curDate = GetCurrentDate();
     tm = GetCurrentTime();
-    con.query("update players set 	isConnected=1,lastTime='" + tm + "',lastDate=" + curDate + " where id=" + pid, function (errupd, resultupd, fieldsupd) { });
+    con.query("update players set 	isConnected=1,lastTime='" + tm + "',lastDate=" + curDate + " where id=" + pid, function (errupd, resultupd, fieldsupd) {});
 }

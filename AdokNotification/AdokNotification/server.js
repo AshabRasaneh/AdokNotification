@@ -671,8 +671,8 @@ function SendNoti() {
                     if (noti.oappId != "") {
                         var oapp = noti.oappId.split(",");
                         console.log(oapp);
-                        console.log(oapp.lenght);
-                        for (var i = 0; i < oapp.lenght; i++) {
+                        console.log(oapp.length);
+                        for (var i = 0; i < oapp.length; i++) {
                             var eachN = oapp.split("_");
                             console.log(eachN);
                             var nt = noti;

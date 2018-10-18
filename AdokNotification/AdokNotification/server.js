@@ -653,7 +653,6 @@ function SendNoti() {
                             }
                         }
                     }
-
                 }
                 else {
 
@@ -918,7 +917,7 @@ function SetLeagueState() {
 function setLeagueBest(lId, myCount, appId, curDate, curtime) {
     cnt = parseInt(myCount) + 1;
     q = "select id,uid from apps where id=" + appId;
-    con.query(query, function (err, result, fields) {
+    con.query(q, function (err, result, fields) {
         if (!err) {
 
             if (result.length > 0) {

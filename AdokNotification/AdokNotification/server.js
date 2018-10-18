@@ -649,6 +649,7 @@ function SendNoti() {
             if (parseInt(curDatev) < parseInt(curDateEnd) || (parseInt(curDatev) == parseInt(curDateEnd) && parseInt(hcur) <= parseInt(HAfter))) {
                 if (noti.IsStop == 0) {
                     console.log(Players.has("" + noti.pkgNameAndroid));
+
                     if (Players.has("" + noti.pkgNameAndroid)) {
                         let p = Players.get("" + noti.pkgNameAndroid);
                         for (let idd of p.keys()) {
@@ -666,14 +667,18 @@ function SendNoti() {
                         }
                     }
 
-
+                    console.log(noti.oappId);
                     if (noti.oappId != "") {
                         var oapp = noti.oappId.split(",");
+                        console.log(oapp);
+                        console.log(oapp.lenght);
                         for (var i = 0; i < oapp.lenght; i++) {
                             var eachN = oapp.split("_");
+                            console.log(eachN);
                             var nt = noti;
                             nt.appId = eachN[0];
                             nt.pkgNameAndroid = eachN[1];
+
 
                             console.log(nt.id + " " + nt.appId + " " + nt.pkgNameAndroid);
                             if (Players.has("" + nt.pkgNameAndroid)) {

@@ -365,7 +365,7 @@ function GetNotificationMysql() {
         " notification.isVibrate, apps.devEnvId, notification.iconId, notification.oappId " +
         " FROM notification  inner join apps on notification.appId = apps.id inner join appTags on notification.tagId = appTags.id " +
         " where dateStartSend>= " + dateHejri + " and notification.IsStop = 0 and  notification.isActive = 1 and notification.isTest = 0)";
-        console.log(quer);
+        //console.log(quer);
         con.query(quer,
             function (err, result, fields) {
                 if (!err) {

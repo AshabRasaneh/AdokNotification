@@ -673,7 +673,7 @@ function SendNoti() {
                         console.log(oapp);
                         console.log(oapp.length);
                         for (var i = 0; i < oapp.length; i++) {
-                            var eachN = oapp.split("_");
+                            var eachN = oapp[i].split("_");
                             console.log(eachN);
                             var nt = noti;
                             nt.appId = eachN[0];

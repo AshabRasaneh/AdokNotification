@@ -941,7 +941,7 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                                 Cols.push( clName);
                                 typs[clName] = clType;
 
-                                if (k == 0) {
+                                if (j == 0) {
                                     k++;
                                     crq += "tb." + clName;
                                 }
@@ -960,7 +960,7 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                                             var olaviatA = resultOlaviat[j].olaviat;
 
                                             olaviat.push( olvN);
-                                            if (k == 0) {
+                                            if (j == 0) {
                                                 k++;
                                                 olvQO += olvN + " DESC ";
                                             }

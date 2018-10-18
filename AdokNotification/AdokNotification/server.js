@@ -72,7 +72,7 @@ io.on('connection', function (socket) {
             var pkgName = dt.pkgName;
             var phoneNo = dt.phoneNo;
 
-            console.log('add: ' + playerId);
+            //console.log('add: ' + playerId);
 
             if (dt.hasOwnProperty('pkgs')) {
                 pkgs = dt.pkgs;

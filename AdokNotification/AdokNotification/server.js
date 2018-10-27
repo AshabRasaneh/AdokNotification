@@ -287,14 +287,24 @@ function GetCurrentTime() {
     var minute = "";
     var tm = "";
 
-    Min += 41;
+    //Min += 41;
+    Min -= 20;
     if (Min > 59) {
         Min -= 59;
         h++;
     }
+    
+    if (Min <0) {
+        Min = 59+Min;
+        h--;
+    }
 
     if (h > 24) {
         h = 1;
+    }
+    
+    if (h < 0) {
+        h = 23;
     }
 
     if (h < 10) {

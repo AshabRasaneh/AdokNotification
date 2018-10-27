@@ -923,7 +923,7 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                     var id = row[i].id;
                     var uid = row[i].uid;
                     var tbName = "zz_" + appId + "_" + uid + "_lud";
-                    var crq = "select ";
+                    
                     var Cols = [];
                     var typs = [];
                     var olaviat = [];
@@ -932,6 +932,7 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                     var k = 0;
                     con.query(qCol, function (errCol, resultCol, fieldsCol) {
                         if (!errCol) {
+                            var crq = "select ";
                             for (j = 0; j < resultCol.length; j++) {
                                 var clName = resultCol[j].COLUMN_NAME;
                                 var clType = resultCol[j].DATA_TYPE;

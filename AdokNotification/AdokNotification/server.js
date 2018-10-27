@@ -947,11 +947,12 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                                 }
 
                                 var qOlaviat = "select name,olaviat from leagueData where appId=" + appId + "  and leagueId=" + lId + "  and olaviat>0 order by olaviat DESC";
-                                var olvQO = "";
+                                
                                 k = 0;
 
                                 con.query(qOlaviat, function (errOlaviat, resultOlaviat, fieldsOlaviat) {
                                     if (!errOlaviat) {
+                                        var olvQO = "";
                                         for (j = 0; j < resultOlaviat.length; j++) {
                                             var olvN = resultOlaviat[j].name;
                                             var olaviatA = resultOlaviat[j].olaviat;

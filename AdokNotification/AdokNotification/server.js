@@ -1,5 +1,6 @@
 ﻿var mysql = require('mysql');
 var jalaali = require('jalaali-js')
+var sleep = require('sleep');
 
 var con = mysql.createConnection({
     host: "localhost",
@@ -737,7 +738,7 @@ function SetLeagueState() {
                                                 setLeagueBest(id, myCount, appId, curDate, curtime);
                                             }
                                         });
-
+                                        sleep.msleep(500);
                                         
                                     }
                                 } else if (parseInt(curtime) > parseInt(startTime) && parseInt(isEnd) == 1) {
@@ -747,6 +748,7 @@ function SetLeagueState() {
                                             console.log("err 2: " + errqq);
                                         }
                                     });
+                                    sleep.msleep(500);
                                 }
                             } else if (parseInt(isWeekly) > 0) {
                                 var d = new Date();
@@ -771,7 +773,7 @@ function SetLeagueState() {
                                             setLeagueBest(id, myCount, appId, curDate, curtime);
                                         }
                                     });
-
+                                    sleep.msleep(500);
                                     
                                 } else if (n < parseInt(endDay) && n > parseInt(startDay) && isEnd == 1) {
                                     var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
@@ -780,6 +782,7 @@ function SetLeagueState() {
                                             console.log("err 4: " + errqq);
                                         }
                                     });
+                                    sleep.msleep(500);
                                 } else if (n == parseInt(endDay)) {
                                     if (parseInt(curtime) >= parseInt(endTime) && isEnd == 0) {
                                         var qq = "INSERT INTO `leagueLog` (`lId`, `name`, `des`, `logoAdd`, `startDate`, `startTime`, `endDate`, `endTime`, `playerJoinCount`," +
@@ -796,7 +799,7 @@ function SetLeagueState() {
                                                 setLeagueBest(id, myCount, appId, curDate, curtime);
                                             }
                                         });
-
+                                        sleep.msleep(500);
                                         
                                     } else if (isEnd == 1) {
                                         var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
@@ -805,6 +808,7 @@ function SetLeagueState() {
                                                 console.log("err 6: " + errqq);
                                             }
                                         });
+                                        sleep.msleep(500);
                                     }
                                 } else if (n == parseInt(startDay) && parseInt(curtime) >= parseInt(startTime) && isEnd == 1) {
                                     var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
@@ -813,6 +817,7 @@ function SetLeagueState() {
                                             console.log("err 7: " + errqq);
                                         }
                                     });
+                                    sleep.msleep(500);
                                 }
                             } else if (parseInt(isMounthly) > 0) {
 
@@ -836,6 +841,7 @@ function SetLeagueState() {
                                             setLeagueBest(id, myCount, appId, curDate, curtime);
                                         }
                                     });
+                                    sleep.msleep(500);
 
                                     
                                 } else if (day < parseInt(endMounth) && day > parseInt(startMounth) && isEnd == 1) {
@@ -845,6 +851,7 @@ function SetLeagueState() {
                                             console.log("err 8: " + errqq);
                                         }
                                     });
+                                    sleep.msleep(500);
                                 } else if (day == parseInt(endMounth)) {
                                     if (parseInt(curtime) >= parseInt(endTime) && isEnd == 0) {
                                         var qq = "INSERT INTO `leagueLog` (`lId`, `name`, `des`, `logoAdd`, `startDate`, `startTime`, `endDate`, `endTime`, `playerJoinCount`," +
@@ -861,6 +868,7 @@ function SetLeagueState() {
                                                 setLeagueBest(id, myCount, appId, curDate, curtime);
                                             }
                                         });
+                                        sleep.msleep(500);
 
                                         
                                     } else if (isEnd == 1) {
@@ -870,6 +878,7 @@ function SetLeagueState() {
                                                 console.log("err 10: " + errqq);
                                             }
                                         });
+                                        sleep.msleep(500);
                                     }
                                 } else if (day == parseInt(startMounth) && parseInt(curtime) >= parseInt(startTime) && isEnd == 1) {
                                     var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
@@ -877,7 +886,9 @@ function SetLeagueState() {
                                         if (!errqq) {} else {
                                             console.log("err 11: " + errqq);
                                         }
+
                                     });
+                                    sleep.msleep(500);
                                 }
                             }
                         }

@@ -737,7 +737,7 @@ function SetLeagueState() {
                                                 
                                             }
                                         });
-                                        msleep(500);
+                                        
                                         
                                     }
                                 } else if (parseInt(curtime) > parseInt(startTime) && parseInt(isEnd) == 1) {
@@ -748,7 +748,7 @@ function SetLeagueState() {
                                             console.log("err 2: " + errqq);
                                         }
                                     });
-                                    msleep(500);
+                                    
                                 }
                             } else if (parseInt(isWeekly) > 0) {
                                 var d = new Date();
@@ -773,7 +773,7 @@ function SetLeagueState() {
                                             
                                         }
                                     });
-                                    msleep(500);
+                                    
                                     
                                 } else if (n < parseInt(endDay) && n > parseInt(startDay) && isEnd == 1) {
                                     var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
@@ -783,7 +783,7 @@ function SetLeagueState() {
                                             console.log("err 4: " + errqq);
                                         }
                                     });
-                                    msleep(500);
+                                    
                                 } else if (n == parseInt(endDay)) {
                                     if (parseInt(curtime) >= parseInt(endTime) && isEnd == 0) {
                                         var qq = "INSERT INTO `leagueLog` (`lId`, `name`, `des`, `logoAdd`, `startDate`, `startTime`, `endDate`, `endTime`, `playerJoinCount`," +
@@ -800,7 +800,7 @@ function SetLeagueState() {
                                                 
                                             }
                                         });
-                                        msleep(500);
+                                        
                                         
                                     } else if (isEnd == 1) {
                                         var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
@@ -810,7 +810,7 @@ function SetLeagueState() {
                                                 console.log("err 6: " + errqq);
                                             }
                                         });
-                                        msleep(500);
+                                        
                                     }
                                 } else if (n == parseInt(startDay) && parseInt(curtime) >= parseInt(startTime) && isEnd == 1) {
                                     var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
@@ -819,7 +819,7 @@ function SetLeagueState() {
                                             console.log("err 7: " + errqq);
                                         }
                                     });
-                                    msleep(500);
+                                    
                                 }
                             } else if (parseInt(isMounthly) > 0) {
 
@@ -843,7 +843,7 @@ function SetLeagueState() {
                                             
                                         }
                                     });
-                                    msleep(500);
+                                    
 
                                     
                                 } else if (day < parseInt(endMounth) && day > parseInt(startMounth) && isEnd == 1) {
@@ -854,7 +854,7 @@ function SetLeagueState() {
                                             console.log("err 8: " + errqq);
                                         }
                                     });
-                                    msleep(500);
+                                    
                                 } else if (day == parseInt(endMounth)) {
                                     if (parseInt(curtime) >= parseInt(endTime) && isEnd == 0) {
                                         var qq = "INSERT INTO `leagueLog` (`lId`, `name`, `des`, `logoAdd`, `startDate`, `startTime`, `endDate`, `endTime`, `playerJoinCount`," +
@@ -871,7 +871,7 @@ function SetLeagueState() {
                                                 
                                             }
                                         });
-                                        msleep(500);
+                                        
 
                                         
                                     } else if (isEnd == 1) {
@@ -882,7 +882,7 @@ function SetLeagueState() {
                                                 console.log("err 10: " + errqq);
                                             }
                                         });
-                                        msleep(500);
+                                        
                                     }
                                 } else if (day == parseInt(startMounth) && parseInt(curtime) >= parseInt(startTime) && isEnd == 1) {
                                     var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
@@ -893,7 +893,7 @@ function SetLeagueState() {
                                         }
 
                                     });
-                                    msleep(500);
+                                    
                                 }
                             }
                         }
@@ -934,17 +934,18 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                         if (!errCol) {
                             var crq = "select ";
                             for (j = 0; j < resultCol.length; j++) {
-                                var clName = resultCol[j].COLUMN_NAME;
-                                var clType = resultCol[j].DATA_TYPE;
-                                Cols.push(clName);
-                                typs[clName] = clType;
-
-                                if (j == 0) {
-                                    k++;
-                                    crq += "tb." + clName;
-                                } else {
-                                    crq += ",tb." + clName;
-                                }
+                                    var clName = resultCol[j].COLUMN_NAME;
+                                    var clType = resultCol[j].DATA_TYPE;
+                                    Cols.push(clName);
+                                    typs[clName] = clType;
+                                
+                                    if (j == 0) {
+                                        k++;
+                                        crq += "tb." + clName;
+                                    } else {
+                                        crq += ",tb." + clName;
+                                    }
+                                }   
 
                                 var qOlaviat = "select name,olaviat from leagueData where appId=" + appId + "  and leagueId=" + lId + "  and olaviat>0 order by olaviat DESC";
                                 
@@ -1023,8 +1024,6 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                                     }
 
                                 });
-
-                            }
                         } else {
                             console.log("err errCol: " + errCol);
                         }
@@ -1075,8 +1074,4 @@ function PlayerConnectedSql(pid, pkgs) {
     curDate = GetCurrentDate();
     tm = GetCurrentTime();
     con.query("update players set 	isConnected=1,lastTime='" + tm + "',lastDate=" + curDate + " where id=" + pid, function (errupd, resultupd, fieldsupd) {});
-}
-
-function msleep(n) {
-    Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, n);
 }

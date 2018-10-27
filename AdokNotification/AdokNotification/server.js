@@ -48,7 +48,6 @@ var allNoties = [];
 })();
 
 io.on('connection', function (socket) {
-    //console.log('a user connected');
 
     var myId = -1;
     var pkgs = [];
@@ -60,7 +59,6 @@ io.on('connection', function (socket) {
     socket.emit('new message', dtAdd);
 
     socket.on('disconnect', function () {
-        //console.log('user disconnected');
         PlayerDisonnectedSql(myId);
     });
 
@@ -71,8 +69,6 @@ io.on('connection', function (socket) {
             var playerId = dt.playerId.toString();
             var pkgName = dt.pkgName;
             var phoneNo = dt.phoneNo;
-
-            //console.log('add: ' + playerId);
 
             if (dt.hasOwnProperty('pkgs')) {
                 pkgs = dt.pkgs;
@@ -98,14 +94,8 @@ io.on('connection', function (socket) {
                         canLog = 1;
                     }
 
-                    //if (canLog > 0) {
-                    //console.log(Players.has("" + pkgs[j]) + " " + pkgs[j]);
-                    //}
 
                     if (!Players.has("" + pkgs[j]) && pkgs[j] != "null") {
-                        // if (canLog > 0) {
-                        //console.log(myData.playerId);
-                        //}
 
                         var players = new Map();
                         players.set("" + idd, myData);
@@ -113,10 +103,6 @@ io.on('connection', function (socket) {
                         Players.set("" + pkgs[j], players);
 
                     } else {
-
-                        // if (canLog > 0) {
-                        //console.log(myData.playerId);
-                        //}
 
                         let p = Players.get("" + pkgs[j]);
                         p.set("" + idd, myData);
@@ -179,9 +165,6 @@ io.on('connection', function (socket) {
 
             var nid = dt.nid;
             var idd = playerId;
-
-            // console.log("delivery: " + nid + " " + idd);
-            //console.log(delivery.has("" + nid));
 
             if (delivery.has("" + nid)) {
                 let deliv = delivery.get("" + nid);
@@ -333,7 +316,7 @@ function GetCurrentTime() {
 
     var timeout = setInterval(function () {
         try {
-            //SetLeagueState();
+            SetLeagueState();
         } catch (e) {
             console.log("11: " + e.message);
         }
@@ -343,7 +326,6 @@ function GetCurrentTime() {
 
 function GetNotificationMysql() {
     try {
-        console.log("getNotif " + GetCurrentDate() + " " + GetCurrentTime());
         var dateHejri = GetCurrentDate();
         var quer="(SELECT " +
         " notification.id, notification.appId, notification.title, notification.message, notification.url, notification.timeToLive, notification.dateStartSend," +
@@ -365,7 +347,6 @@ function GetNotificationMysql() {
         " notification.isVibrate, apps.devEnvId, notification.iconId, notification.oappId " +
         " FROM notification  inner join apps on notification.appId = apps.id inner join appTags on notification.tagId = appTags.id " +
         " where dateStartSend>= " + dateHejri + " and notification.IsStop = 0 and  notification.isActive = 1 and notification.isTest = 0)";
-        //console.log(quer);
         con.query(quer,
             function (err, result, fields) {
                 if (!err) {
@@ -424,7 +405,6 @@ function GetNotificationMysql() {
 
                         var additionalData = [];
                         var btns = [];
-                        console.log("noti for send: "+ id);
                         var noti = {
                             id: row[i].id,
                             appId: row[i].appId,
@@ -644,16 +624,12 @@ function SendNoti() {
             }
         } else {
             curDatev = "" + noti.dateStartSend;
-            console.log(noti.id + " " + noti.IsStop);
-            console.log(curDatev + " " + curDateEnd + " " + hcur + " " + HAfter);
             if (parseInt(curDatev) < parseInt(curDateEnd) || (parseInt(curDatev) == parseInt(curDateEnd) && parseInt(hcur) <= parseInt(HAfter))) {
                 if (noti.IsStop == 0) {
-                    console.log(Players.has("" + noti.pkgNameAndroid));
 
                     if (Players.has("" + noti.pkgNameAndroid)) {
                         let p = Players.get("" + noti.pkgNameAndroid);
                         for (let idd of p.keys()) {
-                            console.log(idd);
                             var data = p.get("" + idd);
                             if (delivery.has("" + noti.id)) {
                                 let deliv = delivery.get("" + noti.id);
@@ -661,30 +637,22 @@ function SendNoti() {
                                     data.socket.emit('new message', JSON.stringify(noti));
                                 }
                             } else {
-                                console.log("send Noti " + idd);
                                 data.socket.emit('new message', JSON.stringify(noti));
                             }
                         }
                     }
 
-                    console.log(noti.oappId);
                     if (noti.oappId != "") {
                         var oapp = noti.oappId.split(",");
-                        console.log(oapp);
-                        console.log(oapp.length);
                         for (var i = 0; i < oapp.length; i++) {
                             var eachN = oapp[i].split("_");
-                            console.log(eachN);
                             var nt = noti;
                             nt.appId = eachN[0];
                             nt.pkgNameAndroid = eachN[1];
 
-
-                            console.log(nt.id + " " + nt.appId + " " + nt.pkgNameAndroid);
                             if (Players.has("" + nt.pkgNameAndroid)) {
                                 let p = Players.get("" + nt.pkgNameAndroid);
                                 for (let idd of p.keys()) {
-                                    console.log(idd);
                                     var data = p.get("" + idd);
                                     if (delivery.has("" + nt.id)) {
                                         let deliv = delivery.get("" + nt.id);
@@ -692,7 +660,6 @@ function SendNoti() {
                                             data.socket.emit('new message', JSON.stringify(nt));
                                         }
                                     } else {
-                                        console.log("send Noti " + idd);
                                         data.socket.emit('new message', JSON.stringify(nt));
                                     }
                                 }

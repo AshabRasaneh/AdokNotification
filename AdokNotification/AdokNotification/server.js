@@ -732,9 +732,9 @@ function SetLeagueState() {
                                             ", " + endDay + ", " + startMounth + ", " + endMounth + ", " + isActive + ", " + isEnd + "); ";
                                         console.log("qq01: " + qq);
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                            if (!errqq) {} else {
+                                            if (!errqq) { setLeagueBest(id, myCount, appId, curDate, curtime);} else {
                                                 console.log("err 1: " + errqq);
-                                                setLeagueBest(id, myCount, appId, curDate, curtime);
+                                                
                                             }
                                         });
                                         msleep(500);
@@ -768,9 +768,9 @@ function SetLeagueState() {
                                         ", " + endDay + ", " + startMounth + ", " + endMounth + ", " + isActive + ", " + isEnd + "); ";
                                     console.log("qq03: " + qq);
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                        if (!errqq) {} else {
+                                        if (!errqq) { setLeagueBest(id, myCount, appId, curDate, curtime);} else {
                                             console.log("err 3: " + errqq);
-                                            setLeagueBest(id, myCount, appId, curDate, curtime);
+                                            
                                         }
                                     });
                                     msleep(500);
@@ -795,9 +795,9 @@ function SetLeagueState() {
                                             ", " + endDay + ", " + startMounth + ", " + endMounth + ", " + isActive + ", " + isEnd + "); ";
                                         console.log("qq05: " + qq);
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                            if (!errqq) {} else {
+                                            if (!errqq) { setLeagueBest(id, myCount, appId, curDate, curtime);} else {
                                                 console.log("err 5: " + errqq);
-                                                setLeagueBest(id, myCount, appId, curDate, curtime);
+                                                
                                             }
                                         });
                                         msleep(500);
@@ -838,9 +838,9 @@ function SetLeagueState() {
                                         ", " + endDay + ", " + startMounth + ", " + endMounth + ", " + isActive + ", " + isEnd + "); ";
                                     console.log("qq07: " + qq);
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                        if (!errqq) {} else {
+                                        if (!errqq) { setLeagueBest(id, myCount, appId, curDate, curtime);} else {
                                             console.log("err 7: " + errqq);
-                                            setLeagueBest(id, myCount, appId, curDate, curtime);
+                                            
                                         }
                                     });
                                     msleep(500);
@@ -866,9 +866,9 @@ function SetLeagueState() {
                                             ", " + endDay + ", " + startMounth + ", " + endMounth + ", " + isActive + ", " + isEnd + "); ";
                                         console.log("qq09: " + qq);
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                            if (!errqq) {} else {
+                                            if (!errqq) { setLeagueBest(id, myCount, appId, curDate, curtime);} else {
                                                 console.log("err 9: " + errqq);
-                                                setLeagueBest(id, myCount, appId, curDate, curtime);
+                                                
                                             }
                                         });
                                         msleep(500);

@@ -963,59 +963,63 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                                                 olvQO += "," + olvN + "  DESC ";
                                             }
                                         }
+
+                                        
+                                        crq += ",p.nickname from " + tbName + "  as tb inner join players as p on tb.playerId=p.id ";
+                                        crq += " where myCount=" + myCount + "  and lId=" + lId + "  and isShow=1 ";
+                                        crq += " ORDER by " + olvQO + "limit 10000";
+                                        
+                                        console.log("--- " + crq + " --- ");
+                                        Cols.push("nickname");
+                                        con.query(crq, function (errcrq, resultcrq, fieldscrq) {
+                                            if (!errcrq) {
+                                                for (j = 0; j < resultcrq.length; j++) {
+                                                    var qIns = "insert into  " + tbName + "_res (";
+                                                    var qValues = "(";
+                                                    k = 0;
+                                                    
+                                                    var rowRq = resultcrq[j];
+                                                    for (l = 0; l < rowRq.length; l++) {
+                                                        var prop = Cols[l];
+                                                        if (prop == "nickname" || prop == "id") { } else {
+                                                            if (k == 0) {
+                                                                k++;
+                                                                qIns += prop;
+                                                                if (typs[prop] == "int") {
+                                                                    qValues += rowRq[l];
+                                                                } else {
+                                                                    qValues += "' " + rowRq[l] + " '";
+                                                                }
+                                                            } else {
+                                                                qIns += ", prop";
+                                                                if (typs[prop] == "int") {
+                                                                    qValues += "," + rowRq[l];
+                                                                } else {
+                                                                    qValues += ",' " + rowRq[l] + " '";
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    
+                                                    qIns += " ) values  (" + qValues + ")";
+                                                    con.query(qIns, function (errqIns, resultqIns, fieldsqIns) {
+                                                        if (!errqIns) { } else {
+                                                            console.log("err errqIns: " + errqIns);
+                                                        }
+                                                    });
+
+                                                }
+
+                                            } else {
+                                                console.log("err errqIns: " + errcrq);
+                                            }
+                                        });
+
+
                                     } else {
                                         console.log("err errOlaviat: " + errOlaviat);
                                     }
 
-                                    crq += ",p.nickname from " + tbName + "  as tb inner join players as p on tb.playerId=p.id ";
-                                    crq += " where myCount=" + myCount + "  and lId=" + lId + "  and isShow=1 ";
-                                    crq += " ORDER by " + olvQO + "limit 10000";
-
-                                    console.log("--- " + crq + " --- ");
-                                    Cols.push("nickname");
-                                    con.query(crq, function (errcrq, resultcrq, fieldscrq) {
-                                        if (!errcrq) {
-                                            for (j = 0; j < resultcrq.length; j++) {
-                                                var qIns = "insert into  " + tbName + "_res (";
-                                                var qValues = "(";
-                                                k = 0;
-
-                                                var rowRq = resultcrq[j];
-                                                for (l = 0; l < rowRq.length; l++) {
-                                                    var prop = Cols[l];
-                                                    if (prop == "nickname" || prop == "id") {} else {
-                                                        if (k == 0) {
-                                                            k++;
-                                                            qIns += prop;
-                                                            if (typs[prop] == "int") {
-                                                                qValues += rowRq[l];
-                                                            } else {
-                                                                qValues += "' " + rowRq[l] + " '";
-                                                            }
-                                                        } else {
-                                                            qIns += ", prop";
-                                                            if (typs[prop] == "int") {
-                                                                qValues += "," + rowRq[l];
-                                                            } else {
-                                                                qValues += ",' " + rowRq[l] + " '";
-                                                            }
-                                                        }
-                                                    }
-                                                }
-
-                                                qIns += " ) values  (" + qValues + ")";
-                                                con.query(qIns, function (errqIns, resultqIns, fieldsqIns) {
-                                                    if (!errqIns) {} else {
-                                                        console.log("err errqIns: " + errqIns);
-                                                    }
-                                                });
-
-                                            }
-
-                                        } else {
-                                            console.log("err errqIns: " + errcrq);
-                                        }
-                                    });
                                 });
 
                             }

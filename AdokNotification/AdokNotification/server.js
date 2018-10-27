@@ -734,10 +734,11 @@ function SetLeagueState() {
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
                                             if (!errqq) {} else {
                                                 console.log("err 1: " + errqq);
+                                                setLeagueBest(id, myCount, appId, curDate, curtime);
                                             }
                                         });
 
-                                        setLeagueBest(id, myCount, appId, curDate, curtime);
+                                        
                                     }
                                 } else if (parseInt(curtime) > parseInt(startTime) && parseInt(isEnd) == 1) {
                                     var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
@@ -767,10 +768,11 @@ function SetLeagueState() {
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
                                         if (!errqq) {} else {
                                             console.log("err 3: " + errqq);
+                                            setLeagueBest(id, myCount, appId, curDate, curtime);
                                         }
                                     });
 
-                                    setLeagueBest(id, myCount, appId, curDate, curtime);
+                                    
                                 } else if (n < parseInt(endDay) && n > parseInt(startDay) && isEnd == 1) {
                                     var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
@@ -791,10 +793,11 @@ function SetLeagueState() {
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
                                             if (!errqq) {} else {
                                                 console.log("err 5: " + errqq);
+                                                setLeagueBest(id, myCount, appId, curDate, curtime);
                                             }
                                         });
 
-                                        setLeagueBest(id, myCount, appId, curDate, curtime);
+                                        
                                     } else if (isEnd == 1) {
                                         var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
@@ -830,10 +833,11 @@ function SetLeagueState() {
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
                                         if (!errqq) {} else {
                                             console.log("err 7: " + errqq);
+                                            setLeagueBest(id, myCount, appId, curDate, curtime);
                                         }
                                     });
 
-                                    setLeagueBest(id, myCount, appId, curDate, curtime);
+                                    
                                 } else if (day < parseInt(endMounth) && day > parseInt(startMounth) && isEnd == 1) {
                                     var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
@@ -854,10 +858,11 @@ function SetLeagueState() {
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
                                             if (!errqq) {} else {
                                                 console.log("err 9: " + errqq);
+                                                setLeagueBest(id, myCount, appId, curDate, curtime);
                                             }
                                         });
 
-                                        setLeagueBest(id, myCount, appId, curDate, curtime);
+                                        
                                     } else if (isEnd == 1) {
                                         var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {

@@ -734,7 +734,7 @@ function SetLeagueState() {
                                         console.log("qq01: " + qq);
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
                                             if (!errqq) {
-                                                var qq = "update league set isEnd=1 " + qqjoi + "  where id=" + id;
+                                                var qq = "update league set isEnd=1 " + qqjoi + ",lastCreateTime="+curDate+",lastCreateTime='"+ curtime+"'  where id=" + id;
                                                 console.log("qq02: " + qq);
                                                 con.query(qq, function (errqq, resultqq, fieldsqq) {
                                                     if (!errqq) { } else {
@@ -779,7 +779,7 @@ function SetLeagueState() {
                                     console.log("qq03: " + qq);
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
                                         if (!errqq) {
-                                            var qq = "update league set isEnd=1 " + qqjoi + "  where id=" + id;
+                                            var qq = "update league set isEnd=1 " + qqjoi + ",lastCreateTime="+curDate+",lastCreateTime='"+ curtime+"'  where id=" + id;
                                             console.log("qq02: " + qq);
                                             con.query(qq, function (errqq, resultqq, fieldsqq) {
                                                 if (!errqq) { } else {
@@ -815,7 +815,7 @@ function SetLeagueState() {
                                         console.log("qq05: " + qq);
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
                                             if (!errqq) {
-                                                var qq = "update league set isEnd=1 " + qqjoi + "  where id=" + id;
+                                                var qq = "update league set isEnd=1 " + qqjoi + ",lastCreateTime="+curDate+",lastCreateTime='"+ curtime+"'  where id=" + id;
                                                 console.log("qq02: " + qq);
                                                 con.query(qq, function (errqq, resultqq, fieldsqq) {
                                                     if (!errqq) { } else {
@@ -866,7 +866,7 @@ function SetLeagueState() {
                                     console.log("qq07: " + qq);
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
                                         if (!errqq) { 
-                                            var qq = "update league set isEnd=1 " + qqjoi + "  where id=" + id;
+                                            var qq = "update league set isEnd=1 " + qqjoi + ",lastCreateTime="+curDate+",lastCreateTime='"+ curtime+"'  where id=" + id;
                                             console.log("qq02: " + qq);
                                             con.query(qq, function (errqq, resultqq, fieldsqq) {
                                                 if (!errqq) { } else {
@@ -903,7 +903,7 @@ function SetLeagueState() {
                                         console.log("qq09: " + qq);
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
                                             if (!errqq) { 
-                                                var qq = "update league set isEnd=1 " + qqjoi + "  where id=" + id;
+                                                var qq = "update league set isEnd=1 " + qqjoi + ",lastCreateTime="+curDate+",lastCreateTime='"+ curtime+"'  where id=" + id;
                                                 console.log("qq02: " + qq);
                                                 con.query(qq, function (errqq, resultqq, fieldsqq) {
                                                     if (!errqq) { } else {

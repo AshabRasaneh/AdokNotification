@@ -730,7 +730,7 @@ function SetLeagueState() {
                                             " " + playerJoinCount + ", " + limitPlayerCount + ", " + appId + ", " + dateCreated + ", " + isAutomated + ", " + isDaily + "" +
                                             ", " + isWeekly + ", " + isMounthly + ", " + restHour + ", " + myCount + ", " + lastCreteDate + ", '" + lastCreateTime + "', " + startDay + "" +
                                             ", " + endDay + ", " + startMounth + ", " + endMounth + ", " + isActive + ", " + isEnd + "); ";
-
+                                        console.log("qq01: " + qq);
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
                                             if (!errqq) {} else {
                                                 console.log("err 1: " + errqq);
@@ -742,6 +742,7 @@ function SetLeagueState() {
                                     }
                                 } else if (parseInt(curtime) > parseInt(startTime) && parseInt(isEnd) == 1) {
                                     var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
+                                    console.log("qq02: " + qq);
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
                                         if (!errqq) {} else {
                                             console.log("err 2: " + errqq);
@@ -765,7 +766,7 @@ function SetLeagueState() {
                                         " " + playerJoinCount + ", " + limitPlayerCount + ", " + appId + ", " + dateCreated + ", " + isAutomated + ", " + isDaily + "" +
                                         ", " + isWeekly + ", " + isMounthly + ", " + restHour + ", " + myCount + ", " + lastCreteDate + ", '" + lastCreateTime + "', " + startDay + "" +
                                         ", " + endDay + ", " + startMounth + ", " + endMounth + ", " + isActive + ", " + isEnd + "); ";
-
+                                    console.log("qq03: " + qq);
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
                                         if (!errqq) {} else {
                                             console.log("err 3: " + errqq);
@@ -776,6 +777,7 @@ function SetLeagueState() {
                                     
                                 } else if (n < parseInt(endDay) && n > parseInt(startDay) && isEnd == 1) {
                                     var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
+                                    console.log("qq04: " + qq);
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
                                         if (!errqq) {} else {
                                             console.log("err 4: " + errqq);
@@ -791,7 +793,7 @@ function SetLeagueState() {
                                             " " + playerJoinCount + ", " + limitPlayerCount + ", " + appId + ", " + dateCreated + ", " + isAutomated + ", " + isDaily + "" +
                                             ", " + isWeekly + ", " + isMounthly + ", " + restHour + ", " + myCount + ", " + lastCreteDate + ", '" + lastCreateTime + "', " + startDay + "" +
                                             ", " + endDay + ", " + startMounth + ", " + endMounth + ", " + isActive + ", " + isEnd + "); ";
-
+                                        console.log("qq05: " + qq);
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
                                             if (!errqq) {} else {
                                                 console.log("err 5: " + errqq);
@@ -802,6 +804,7 @@ function SetLeagueState() {
                                         
                                     } else if (isEnd == 1) {
                                         var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
+                                        console.log("qq06: " + qq);
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
                                             if (!errqq) {} else {
                                                 console.log("err 6: " + errqq);
@@ -833,7 +836,7 @@ function SetLeagueState() {
                                         " " + playerJoinCount + ", " + limitPlayerCount + ", " + appId + ", " + dateCreated + ", " + isAutomated + ", " + isDaily + "" +
                                         ", " + isWeekly + ", " + isMounthly + ", " + restHour + ", " + myCount + ", " + lastCreteDate + ", '" + lastCreateTime + "', " + startDay + "" +
                                         ", " + endDay + ", " + startMounth + ", " + endMounth + ", " + isActive + ", " + isEnd + "); ";
-
+                                    console.log("qq07: " + qq);
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
                                         if (!errqq) {} else {
                                             console.log("err 7: " + errqq);
@@ -845,6 +848,7 @@ function SetLeagueState() {
                                     
                                 } else if (day < parseInt(endMounth) && day > parseInt(startMounth) && isEnd == 1) {
                                     var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
+                                    console.log("qq08: " + qq);
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
                                         if (!errqq) {} else {
                                             console.log("err 8: " + errqq);
@@ -860,7 +864,7 @@ function SetLeagueState() {
                                             " " + playerJoinCount + ", " + limitPlayerCount + ", " + appId + ", " + dateCreated + ", " + isAutomated + ", " + isDaily + "" +
                                             ", " + isWeekly + ", " + isMounthly + ", " + restHour + ", " + myCount + ", " + lastCreteDate + ", '" + lastCreateTime + "', " + startDay + "" +
                                             ", " + endDay + ", " + startMounth + ", " + endMounth + ", " + isActive + ", " + isEnd + "); ";
-
+                                        console.log("qq09: " + qq);
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
                                             if (!errqq) {} else {
                                                 console.log("err 9: " + errqq);
@@ -872,6 +876,7 @@ function SetLeagueState() {
                                         
                                     } else if (isEnd == 1) {
                                         var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
+                                        console.log("qq10: " + qq);
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
                                             if (!errqq) {} else {
                                                 console.log("err 10: " + errqq);
@@ -881,6 +886,7 @@ function SetLeagueState() {
                                     }
                                 } else if (day == parseInt(startMounth) && parseInt(curtime) >= parseInt(startTime) && isEnd == 1) {
                                     var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
+                                    console.log("qq11: " + qq);
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
                                         if (!errqq) {} else {
                                             console.log("err 11: " + errqq);

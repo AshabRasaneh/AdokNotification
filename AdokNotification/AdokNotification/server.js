@@ -304,7 +304,7 @@ function GetCurrentTime() {
     }
     
     if (h < 0) {
-        h = 23;
+        h = 24+h;
     }
 
     if (h < 10) {

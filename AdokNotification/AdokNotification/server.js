@@ -682,7 +682,7 @@ function SetLeagueState() {
         var curtime = GetCurrentTime();
 
         var query = "SELECT id,name,des,logoAdd,limitPlayerCount,playerJoinCount,dateCreated,restHour,startDate,startTime,endDate,endTime,isAutomated,isDaily,isWeekly," +
-            "isMounthly, myCount, lastCreteDate, lastCreateTime, startDay, endDay, startMounth, endMounth, isActive, appId, isEnd from league where isActive= 1 and isAutomated= 1";
+            "isMounthly, myCount, lastCreteDate, lastCreateTime, startDay, endDay, startMounth, endMounth, isActive, appId, isEnd,data from league where isActive= 1 and isAutomated= 1";
         con.query(query, function (err, result, fields) {
             if (!err) {
 
@@ -716,6 +716,7 @@ function SetLeagueState() {
                         var isActive = row[i].isActive;
                         var appId = row[i].appId;
                         var isEnd = parseInt(row[i].isEnd);
+                        var data = row[i].data;
 
                         var qqjoi = ",playerJoinCount=0";
 
@@ -725,14 +726,23 @@ function SetLeagueState() {
                                     if (parseInt(isEnd) == 0) {
                                         var qq = "INSERT INTO `leagueLog` (`lId`, `name`, `des`, `logoAdd`, `startDate`, `startTime`, `endDate`, `endTime`, `playerJoinCount`," +
                                             "`limitPlayerCount`, `appId`, `dateCreated`, `isAutomated`, `isDaily`, `isWeekly`, `isMounthly`, `restHour`, `myCount`," +
-                                            "`lastCreteDate`, `lastCreateTime`, `startDay`, `endDay`, `startMounth`, `endMounth`, `isActive`, `isEnd`) " +
+                                            "`lastCreteDate`, `lastCreateTime`, `startDay`, `endDay`, `startMounth`, `endMounth`, `isActive`, `isEnd`, `data`) " +
                                             " VALUES(" + id + ", '" + name + "', '" + des + "', '" + logoAdd + "', " + startDate + ", '" + startTime + "', " + endDate + ", '" + endTime + "'," +
                                             " " + playerJoinCount + ", " + limitPlayerCount + ", " + appId + ", " + dateCreated + ", " + isAutomated + ", " + isDaily + "" +
-                                            ", " + isWeekly + ", " + isMounthly + ", " + restHour + ", " + myCount + ", " + lastCreteDate + ", '" + lastCreateTime + "', " + startDay + "" +
-                                            ", " + endDay + ", " + startMounth + ", " + endMounth + ", " + isActive + ", " + isEnd + "); ";
+                                            ", " + isWeekly + ", " + isMounthly + ", " + restHour + ", " + myCount + ", " + curDate + ", '" + curtime + "', " + startDay + "" +
+                                            ", " + endDay + ", " + startMounth + ", " + endMounth + ", " + isActive + ", " + isEnd + ","+data+"); ";
                                         console.log("qq01: " + qq);
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                            if (!errqq) { setLeagueBest(id, myCount, appId, curDate, curtime);} else {
+                                            if (!errqq) {
+                                                var qq = "update league set isEnd=1 " + qqjoi + "  where id=" + id;
+                                                console.log("qq02: " + qq);
+                                                con.query(qq, function (errqq, resultqq, fieldsqq) {
+                                                    if (!errqq) { } else {
+                                                        console.log("err 2: " + errqq);
+                                                    }
+                                                });
+                                                setLeagueBest(id, myCount, appId, curDate, curtime);
+                                            } else {
                                                 console.log("err 1: " + errqq);
                                                 
                                             }
@@ -761,14 +771,23 @@ function SetLeagueState() {
                                 if ((n > parseInt(endDay) || n < parseInt(startDay)) && isEnd == 0) {
                                     var qq = "INSERT INTO `leagueLog` (`lId`, `name`, `des`, `logoAdd`, `startDate`, `startTime`, `endDate`, `endTime`, `playerJoinCount`," +
                                         "`limitPlayerCount`, `appId`, `dateCreated`, `isAutomated`, `isDaily`, `isWeekly`, `isMounthly`, `restHour`, `myCount`," +
-                                        "`lastCreteDate`, `lastCreateTime`, `startDay`, `endDay`, `startMounth`, `endMounth`, `isActive`, `isEnd`) " +
+                                        "`lastCreteDate`, `lastCreateTime`, `startDay`, `endDay`, `startMounth`, `endMounth`, `isActive`, `isEnd`, `data`) " +
                                         " VALUES(" + id + ", '" + name + "', '" + des + "', '" + logoAdd + "', " + startDate + ", '" + startTime + "', " + endDate + ", '" + endTime + "'," +
                                         " " + playerJoinCount + ", " + limitPlayerCount + ", " + appId + ", " + dateCreated + ", " + isAutomated + ", " + isDaily + "" +
-                                        ", " + isWeekly + ", " + isMounthly + ", " + restHour + ", " + myCount + ", " + lastCreteDate + ", '" + lastCreateTime + "', " + startDay + "" +
-                                        ", " + endDay + ", " + startMounth + ", " + endMounth + ", " + isActive + ", " + isEnd + "); ";
+                                        ", " + isWeekly + ", " + isMounthly + ", " + restHour + ", " + myCount + ", " + curDate + ", '" + curtime + "', " + startDay + "" +
+                                        ", " + endDay + ", " + startMounth + ", " + endMounth + ", " + isActive + ", " + isEnd + ","+data+"); ";
                                     console.log("qq03: " + qq);
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                        if (!errqq) { setLeagueBest(id, myCount, appId, curDate, curtime);} else {
+                                        if (!errqq) {
+                                            var qq = "update league set isEnd=1 " + qqjoi + "  where id=" + id;
+                                            console.log("qq02: " + qq);
+                                            con.query(qq, function (errqq, resultqq, fieldsqq) {
+                                                if (!errqq) { } else {
+                                                    console.log("err 2: " + errqq);
+                                                }
+                                            });
+                                            setLeagueBest(id, myCount, appId, curDate, curtime);
+                                        } else {
                                             console.log("err 3: " + errqq);
                                             
                                         }
@@ -788,14 +807,22 @@ function SetLeagueState() {
                                     if (parseInt(curtime) >= parseInt(endTime) && isEnd == 0) {
                                         var qq = "INSERT INTO `leagueLog` (`lId`, `name`, `des`, `logoAdd`, `startDate`, `startTime`, `endDate`, `endTime`, `playerJoinCount`," +
                                             "`limitPlayerCount`, `appId`, `dateCreated`, `isAutomated`, `isDaily`, `isWeekly`, `isMounthly`, `restHour`, `myCount`," +
-                                            "`lastCreteDate`, `lastCreateTime`, `startDay`, `endDay`, `startMounth`, `endMounth`, `isActive`, `isEnd`) " +
+                                            "`lastCreteDate`, `lastCreateTime`, `startDay`, `endDay`, `startMounth`, `endMounth`, `isActive`, `isEnd`, `data`) " +
                                             " VALUES(" + id + ", '" + name + "', '" + des + "', '" + logoAdd + "', " + startDate + ", '" + startTime + "', " + endDate + ", '" + endTime + "'," +
                                             " " + playerJoinCount + ", " + limitPlayerCount + ", " + appId + ", " + dateCreated + ", " + isAutomated + ", " + isDaily + "" +
-                                            ", " + isWeekly + ", " + isMounthly + ", " + restHour + ", " + myCount + ", " + lastCreteDate + ", '" + lastCreateTime + "', " + startDay + "" +
-                                            ", " + endDay + ", " + startMounth + ", " + endMounth + ", " + isActive + ", " + isEnd + "); ";
+                                            ", " + isWeekly + ", " + isMounthly + ", " + restHour + ", " + myCount + ", " + curDate + ", '" + curtime + "', " + startDay + "" +
+                                            ", " + endDay + ", " + startMounth + ", " + endMounth + ", " + isActive + ", " + isEnd + ","+data+"); ";
                                         console.log("qq05: " + qq);
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                            if (!errqq) { setLeagueBest(id, myCount, appId, curDate, curtime);} else {
+                                            if (!errqq) {
+                                                var qq = "update league set isEnd=1 " + qqjoi + "  where id=" + id;
+                                                console.log("qq02: " + qq);
+                                                con.query(qq, function (errqq, resultqq, fieldsqq) {
+                                                    if (!errqq) { } else {
+                                                        console.log("err 2: " + errqq);
+                                                    }
+                                                });
+                                                setLeagueBest(id, myCount, appId, curDate, curtime);} else {
                                                 console.log("err 5: " + errqq);
                                                 
                                             }
@@ -831,14 +858,23 @@ function SetLeagueState() {
                                 if ((day > parseInt(endMounth) || day < parseInt(startMounth)) && isEnd == 0) {
                                     var qq = "INSERT INTO `leagueLog` (`lId`, `name`, `des`, `logoAdd`, `startDate`, `startTime`, `endDate`, `endTime`, `playerJoinCount`," +
                                         "`limitPlayerCount`, `appId`, `dateCreated`, `isAutomated`, `isDaily`, `isWeekly`, `isMounthly`, `restHour`, `myCount`," +
-                                        "`lastCreteDate`, `lastCreateTime`, `startDay`, `endDay`, `startMounth`, `endMounth`, `isActive`, `isEnd`) " +
+                                        "`lastCreteDate`, `lastCreateTime`, `startDay`, `endDay`, `startMounth`, `endMounth`, `isActive`, `isEnd`, `data`) " +
                                         " VALUES(" + id + ", '" + name + "', '" + des + "', '" + logoAdd + "', " + startDate + ", '" + startTime + "', " + endDate + ", '" + endTime + "'," +
                                         " " + playerJoinCount + ", " + limitPlayerCount + ", " + appId + ", " + dateCreated + ", " + isAutomated + ", " + isDaily + "" +
-                                        ", " + isWeekly + ", " + isMounthly + ", " + restHour + ", " + myCount + ", " + lastCreteDate + ", '" + lastCreateTime + "', " + startDay + "" +
-                                        ", " + endDay + ", " + startMounth + ", " + endMounth + ", " + isActive + ", " + isEnd + "); ";
+                                        ", " + isWeekly + ", " + isMounthly + ", " + restHour + ", " + myCount + ", " + curDate + ", '" + curtime + "', " + startDay + "" +
+                                        ", " + endDay + ", " + startMounth + ", " + endMounth + ", " + isActive + ", " + isEnd + ","+data+"); ";
                                     console.log("qq07: " + qq);
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                        if (!errqq) { setLeagueBest(id, myCount, appId, curDate, curtime);} else {
+                                        if (!errqq) { 
+                                            var qq = "update league set isEnd=1 " + qqjoi + "  where id=" + id;
+                                            console.log("qq02: " + qq);
+                                            con.query(qq, function (errqq, resultqq, fieldsqq) {
+                                                if (!errqq) { } else {
+                                                    console.log("err 2: " + errqq);
+                                                }
+                                            });
+                                            setLeagueBest(id, myCount, appId, curDate, curtime);
+                                        } else {
                                             console.log("err 7: " + errqq);
                                             
                                         }
@@ -859,14 +895,23 @@ function SetLeagueState() {
                                     if (parseInt(curtime) >= parseInt(endTime) && isEnd == 0) {
                                         var qq = "INSERT INTO `leagueLog` (`lId`, `name`, `des`, `logoAdd`, `startDate`, `startTime`, `endDate`, `endTime`, `playerJoinCount`," +
                                             "`limitPlayerCount`, `appId`, `dateCreated`, `isAutomated`, `isDaily`, `isWeekly`, `isMounthly`, `restHour`, `myCount`," +
-                                            "`lastCreteDate`, `lastCreateTime`, `startDay`, `endDay`, `startMounth`, `endMounth`, `isActive`, `isEnd`) " +
+                                            "`lastCreteDate`, `lastCreateTime`, `startDay`, `endDay`, `startMounth`, `endMounth`, `isActive`, `isEnd`, `data`) " +
                                             " VALUES(" + id + ", '" + name + "', '" + des + "', '" + logoAdd + "', " + startDate + ", '" + startTime + "', " + endDate + ", '" + endTime + "'," +
                                             " " + playerJoinCount + ", " + limitPlayerCount + ", " + appId + ", " + dateCreated + ", " + isAutomated + ", " + isDaily + "" +
-                                            ", " + isWeekly + ", " + isMounthly + ", " + restHour + ", " + myCount + ", " + lastCreteDate + ", '" + lastCreateTime + "', " + startDay + "" +
-                                            ", " + endDay + ", " + startMounth + ", " + endMounth + ", " + isActive + ", " + isEnd + "); ";
+                                            ", " + isWeekly + ", " + isMounthly + ", " + restHour + ", " + myCount + ", " + curDate + ", '" + curtime + "', " + startDay + "" +
+                                            ", " + endDay + ", " + startMounth + ", " + endMounth + ", " + isActive + ", " + isEnd + ","+data+"); ";
                                         console.log("qq09: " + qq);
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                            if (!errqq) { setLeagueBest(id, myCount, appId, curDate, curtime);} else {
+                                            if (!errqq) { 
+                                                var qq = "update league set isEnd=1 " + qqjoi + "  where id=" + id;
+                                                console.log("qq02: " + qq);
+                                                con.query(qq, function (errqq, resultqq, fieldsqq) {
+                                                    if (!errqq) { } else {
+                                                        console.log("err 2: " + errqq);
+                                                    }
+                                                });
+                                                setLeagueBest(id, myCount, appId, curDate, curtime);
+                                            } else {
                                                 console.log("err 9: " + errqq);
                                                 
                                             }

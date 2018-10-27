@@ -676,7 +676,7 @@ function SendNoti() {
 
 function SetLeagueState() {
     try {
-
+        console.log(GetCurrentTime());
         console.log("setLeague");
         var curDate = GetCurrentDate();
         var curtime = GetCurrentTime();

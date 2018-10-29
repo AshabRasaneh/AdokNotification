@@ -146,7 +146,7 @@ try {
                     SetDeliverySql(nid, playerId);
                 }
             } catch (e) {
-                console.log("3: " + e.message);
+                console.log("3: " + e.message+" --- "+ data);
             }
         });
 

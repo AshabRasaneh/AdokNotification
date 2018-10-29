@@ -66,87 +66,93 @@ try {
                 if (data && data.byteLength != undefined) {
                     data = new Buffer(data).toString('utf8');
                 }
-                var dt = JSON.parse(data);
-                var playerId = dt.playerId;
-                var pkgName = dt.pkgName;
-                var phoneNo = dt.phoneNo;
 
-                if (dt.hasOwnProperty('pkgs')) {
-                    pkgs = dt.pkgs;
-                }
+                if (!data.includes("GET /socket.io/?EIO=3&transport=polling HTTP/1.1")) {
 
-                var knd = dt.kind;
-                var added = 0;
-                myId = playerId;
 
-                var myData = {
-                    playerId: playerId,
-                    phoneNo: phoneNo,
-                    socket: socket,
-                    pkgs: pkgs,
-                    alive: 0
-                };
-                var d = new Date();
-                var n = d.getTime();
-                myData.alive = n;
 
-                if (knd == "add") {
+                    var dt = JSON.parse(data);
+                    var playerId = dt.playerId;
+                    var pkgName = dt.pkgName;
+                    var phoneNo = dt.phoneNo;
 
-                    if (pkgs != undefined) {
+                    if (dt.hasOwnProperty('pkgs')) {
+                        pkgs = dt.pkgs;
+                    }
+
+                    var knd = dt.kind;
+                    var added = 0;
+                    myId = playerId;
+
+                    var myData = {
+                        playerId: playerId,
+                        phoneNo: phoneNo,
+                        socket: socket,
+                        pkgs: pkgs,
+                        alive: 0
+                    };
+                    var d = new Date();
+                    var n = d.getTime();
+                    myData.alive = n;
+
+                    if (knd == "add") {
+
+                        if (pkgs != undefined) {
+                            for (var j = 0; j < pkgs.length; j++) {
+                                if (!Players.has("" + pkgs[j]) && pkgs[j] != "null") {
+                                    var idd = playerId;
+                                    var players = new Map();
+                                    players.set("" + idd, myData);
+
+                                    Players.set("" + pkgs[j], players);
+
+                                } else {
+
+                                    let p = Players.get("" + pkgs[j]);
+                                    p.set("" + idd, myData);
+                                    Players.set("" + pkgs[j], p);
+                                }
+                            }
+
+                            PlayerConnectedSql(playerId, pkgs);
+                        }
+                    } else if (knd == "Alive") {
+                        var data = {
+                            alive: true,
+                            Meskind: "Alive"
+                        };
                         for (var j = 0; j < pkgs.length; j++) {
-                            if (!Players.has("" + pkgs[j]) && pkgs[j] != "null") {
+                            if (Players.has("" + pkgs[j])) {
                                 var idd = playerId;
-                                var players = new Map();
-                                players.set("" + idd, myData);
-
-                                Players.set("" + pkgs[j], players);
-
-                            } else {
-
                                 let p = Players.get("" + pkgs[j]);
-                                p.set("" + idd, myData);
+                                var data = p.get("" + idd);
+                                data.alive = Date.now();
+                                p.set("" + idd, data);
                                 Players.set("" + pkgs[j], p);
+
+                                socket.emit('new message', data);
                             }
                         }
+                        socket.write(JSON.stringify(data) + "\n");
+                    } else if (knd == "Deliver") {
+                        var nid = dt.nid;
+                        var idd = playerId;
 
-                        PlayerConnectedSql(playerId, pkgs);
-                    }
-                } else if (knd == "Alive") {
-                    var data = {
-                        alive: true,
-                        Meskind: "Alive"
-                    };
-                    for (var j = 0; j < pkgs.length; j++) {
-                        if (Players.has("" + pkgs[j])) {
-                            var idd = playerId;
-                            let p = Players.get("" + pkgs[j]);
-                            var data = p.get("" + idd);
-                            data.alive = Date.now();
-                            p.set("" + idd, data);
-                            Players.set("" + pkgs[j], p);
-
-                            socket.emit('new message', data);
+                        if (delivery.has("" + nid)) {
+                            let deliv = delivery.get("" + nid);
+                            deliv.set("" + idd, 1);
+                            delivery.set("" + nid, deliv);
+                        } else {
+                            let deliv = new Map();
+                            deliv.set("" + idd, 1);
+                            delivery.set("" + nid, deliv);
                         }
-                    }
-                    socket.write(JSON.stringify(data) + "\n");
-                } else if (knd == "Deliver") {
-                    var nid = dt.nid;
-                    var idd = playerId;
 
-                    if (delivery.has("" + nid)) {
-                        let deliv = delivery.get("" + nid);
-                        deliv.set("" + idd, 1);
-                        delivery.set("" + nid, deliv);
-                    } else {
-                        let deliv = new Map();
-                        deliv.set("" + idd, 1);
-                        delivery.set("" + nid, deliv);
+                        SetDeliverySql(nid, playerId);
                     }
-
-                    SetDeliverySql(nid, playerId);
                 }
             } catch (e) {
-                console.log("3: " + e.message+" --- "+ data);
+                console.log("3: " + e.message + " --- " + data);
             }
         });
 

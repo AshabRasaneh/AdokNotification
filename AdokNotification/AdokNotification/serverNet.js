@@ -117,22 +117,22 @@ try {
                             PlayerConnectedSql(playerId, pkgs);
                         }
                     } else if (knd == "Alive") {
-                        var data = {
-                            alive: true,
-                            Meskind: "Alive"
-                        };
-                        for (var j = 0; j < pkgs.length; j++) {
-                            if (Players.has("" + pkgs[j])) {
-                                var idd = playerId;
-                                let p = Players.get("" + pkgs[j]);
-                                var data = p.get("" + idd);
-                                data.alive = Date.now();
-                                p.set("" + idd, data);
-                                Players.set("" + pkgs[j], p);
+                        // var data = {
+                        //     alive: true,
+                        //     Meskind: "Alive"
+                        // };
+                        // for (var j = 0; j < pkgs.length; j++) {
+                        //     if (Players.has("" + pkgs[j])) {
+                        //         var idd = playerId;
+                        //         let p = Players.get("" + pkgs[j]);
+                        //         var data = p.get("" + idd);
+                        //         data.alive = Date.now();
+                        //         p.set("" + idd, data);
+                        //         Players.set("" + pkgs[j], p);
 
-                                socket.write(JSON.stringify(data) + "\n");
-                            }
-                        }
+                        //         socket.write(JSON.stringify(data) + "\n");
+                        //     }
+                        // }
                     } else if (knd == "Deliver") {
                         var nid = dt.nid;
                         var idd = playerId;

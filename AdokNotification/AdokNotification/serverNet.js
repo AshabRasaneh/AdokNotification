@@ -137,6 +137,7 @@ try {
                     } else if (knd == "Deliver") {
                         var nid = dt.nid;
                         var idd = playerId;
+                        console.log(nid+" "+playerId);
 
                         if (delivery.has("" + nid)) {
                             let deliv = delivery.get("" + nid);

@@ -101,10 +101,10 @@ try {
                             for (var j = 0; j < pkgs.length; j++) {
                                 if (!Players.has("" + pkgs[j]) && pkgs[j] != "null") {
                                     var idd = playerId;
-                                    var players = new Map();
-                                    players.set("" + idd, myData);
+                                    var playersm = new Map();
+                                    playersm.set("" + idd, myData);
 
-                                    Players.set("" + pkgs[j], players);
+                                    Players.set("" + pkgs[j], playersm);
 
                                 } else {
 

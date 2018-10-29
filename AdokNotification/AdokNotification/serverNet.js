@@ -602,6 +602,8 @@ function SendNoti() {
 
         var hcur = GetCurrentTime().substr(0, 2);
 
+        console.log("Noti In Send: "+noti.id);
+
         if (noti.isTest > 0) {
             if (noti.pkgNameAndroid != "") {
 
@@ -632,9 +634,10 @@ function SendNoti() {
             }
         } else {
             curDatev = "" + noti.dateStartSend;
+            console.log((parseInt(curDatev) < parseInt(curDateEnd)) +" "+(parseInt(curDatev) == parseInt(curDateEnd) && parseInt(hcur) <= parseInt(HAfter)));
             if (parseInt(curDatev) < parseInt(curDateEnd) || (parseInt(curDatev) == parseInt(curDateEnd) && parseInt(hcur) <= parseInt(HAfter))) {
                 if (noti.IsStop == 0) {
-
+                    console.log(Players.has("" + noti.pkgNameAndroid));
                     if (Players.has("" + noti.pkgNameAndroid)) {
                         let p = Players.get("" + noti.pkgNameAndroid);
                         for (let idd of p.keys()) {

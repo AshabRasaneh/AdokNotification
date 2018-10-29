@@ -137,7 +137,7 @@ try {
                     } else if (knd == "Deliver") {
                         var nid = dt.nid;
                         var idd = playerId;
-                        console.log("delivery.has(nid): "+nid+" "+delivery.has("" + nid));
+                        console.log("Deliver : delivery.has(nid): "+nid+" "+delivery.has("" + nid));
 
                         if (delivery.has("" + nid)) {
                             let deliv = delivery.get("" + nid);
@@ -363,7 +363,6 @@ function GetNotificationMysql() {
 
                     for (var i = 0; i < row.length; i++) {
                         var id = row[i].id;
-                        console.log("noti to Send: "+id);
 
                         var appId = row[i].appId;
                         var oappId = row[i].oappId;
@@ -603,8 +602,6 @@ function SendNoti() {
         var curDateEnd = year + "" + mounth + "" + dayOfMounth;
 
         var hcur = GetCurrentTime().substr(0, 2);
-
-        console.log("Noti In Send: "+noti.id);
 
         if (noti.isTest > 0) {
             if (noti.pkgNameAndroid != "") {

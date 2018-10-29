@@ -55,7 +55,7 @@ var allNoties = [];
 try {
     var decoder = new StringDecoder('utf8');
     server.on('connection', function (socket) {
-        console.log('CONNECTED: ' + socket.remoteAddress + ':' + socket.remotePort);
+        
         var myId = -1;
         var pkgs = [];
 
@@ -68,7 +68,7 @@ try {
                 }
 
                 if (!data.includes("GET /socket.io/?EIO=3&transport=polling HTTP/1.1")) {
-
+                    console.log('CONNECTED: ' + socket.remoteAddress + ':' + socket.remotePort);
 
 
                     var dt = JSON.parse(data);

@@ -67,8 +67,8 @@ try {
                     data = new Buffer(data).toString('utf8');
                 }
 
-                if (!data.includes("GET /socket.io/?EIO=3&transport=polling HTTP/1.1")) {
-                    console.log('CONNECTED: ' + socket.remoteAddress + ':' + socket.remotePort);
+                if (!data.includes("/socket.io/?EIO=3&transport=polling HTTP/1.1")) {
+                    //console.log('CONNECTED: ' + socket.remoteAddress + ':' + socket.remotePort);
 
 
                     var dt = JSON.parse(data);
@@ -130,10 +130,9 @@ try {
                                 p.set("" + idd, data);
                                 Players.set("" + pkgs[j], p);
 
-                                socket.emit('new message', data);
+                                socket.write(JSON.stringify(data) + "\n");
                             }
                         }
-                        socket.write(JSON.stringify(data) + "\n");
                     } else if (knd == "Deliver") {
                         var nid = dt.nid;
                         var idd = playerId;
@@ -362,6 +361,8 @@ function GetNotificationMysql() {
 
                     for (var i = 0; i < row.length; i++) {
                         var id = row[i].id;
+                        console.log("noti to Send: "+id);
+
                         var appId = row[i].appId;
                         var oappId = row[i].oappId;
                         var title = row[i].title;
@@ -608,7 +609,7 @@ function SendNoti() {
                     let p = Players.get("" + noti.pkgNameAndroid);
                     if (p.has("" + idd)) {
                         var data = p.get("" + idd);
-                        data.socket.emit('new message', SON.stringify(noti));
+                        data.socket.write(JSON.stringify(noti) + "\n");
                     }
                 }
 
@@ -623,7 +624,7 @@ function SendNoti() {
                             let p = Players.get("" + nt.pkgNameAndroid);
                             if (p.has("" + idd)) {
                                 var data = p.get("" + idd);
-                                data.socket.emit('new message', SON.stringify(nt));
+                                data.socket.write(JSON.stringify(nt) + "\n");
                             }
                         }
                     }
@@ -641,10 +642,10 @@ function SendNoti() {
                             if (delivery.has("" + noti.id)) {
                                 let deliv = delivery.get("" + noti.id);
                                 if (!deliv.has("" + idd)) {
-                                    data.socket.emit('new message', JSON.stringify(noti));
+                                    data.socket.write(JSON.stringify(noti) + "\n");
                                 }
                             } else {
-                                data.socket.emit('new message', JSON.stringify(noti));
+                                data.socket.write(JSON.stringify(noti) + "\n");
                             }
                         }
                     }
@@ -664,10 +665,10 @@ function SendNoti() {
                                     if (delivery.has("" + nt.id)) {
                                         let deliv = delivery.get("" + nt.id);
                                         if (!deliv.has("" + idd)) {
-                                            data.socket.emit('new message', JSON.stringify(nt));
+                                            data.socket.write(JSON.stringify(nt) + "\n");
                                         }
                                     } else {
-                                        data.socket.emit('new message', JSON.stringify(nt));
+                                        data.socket.write(JSON.stringify(nt) + "\n");
                                     }
                                 }
                             }

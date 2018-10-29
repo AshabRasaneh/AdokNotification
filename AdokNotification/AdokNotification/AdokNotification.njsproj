@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="server.js" />
+    <Compile Include="serverNet.js" />
     <Content Include="package.json" />
     <Content Include="README.md" />
   </ItemGroup>

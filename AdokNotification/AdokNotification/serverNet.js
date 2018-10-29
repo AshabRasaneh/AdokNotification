@@ -67,7 +67,7 @@ try {
                     data = new Buffer(data).toString('utf8');
                 }
 
-                if (!data.includes("/socket.io/?EIO=3&transport=polling HTTP/1.1")) {
+                if (IsJsonString(data)) {
                     //console.log('CONNECTED: ' + socket.remoteAddress + ':' + socket.remotePort);
 
 
@@ -1128,4 +1128,13 @@ function PlayerConnectedSql(pid, pkgs) {
     curDate = GetCurrentDate();
     tm = GetCurrentTime();
     con.query("update players set 	isConnected=1,lastTime='" + tm + "',lastDate=" + curDate + " where id=" + pid, function (errupd, resultupd, fieldsupd) {});
+}
+
+function IsJsonString(str) {
+    try {
+      var json = JSON.parse(str);
+      return true;
+    } catch (e) {
+      return false;
+    }
 }

@@ -97,7 +97,7 @@ try {
                     myData.alive = n;
 
                     if (knd == "add") {
-
+                        console.log(pkgs);
                         if (pkgs != undefined) {
                             for (var j = 0; j < pkgs.length; j++) {
                                 if (!Players.has("" + pkgs[j]) && pkgs[j] != "null") {
@@ -642,6 +642,7 @@ function SendNoti() {
                     if (Players.has("" + noti.pkgNameAndroid)) {
                         let p = Players.get("" + noti.pkgNameAndroid);
                         for (let idd of p.keys()) {
+                            console.log()
                             var data = p.get("" + idd);
                             if (delivery.has("" + noti.id)) {
                                 let deliv = delivery.get("" + noti.id);

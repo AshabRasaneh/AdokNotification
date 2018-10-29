@@ -97,7 +97,7 @@ try {
                     myData.alive = n;
 
                     if (knd == "add") {
-                        console.log(pkgs);
+                        //console.log(pkgs);
                         if (pkgs != undefined) {
                             for (var j = 0; j < pkgs.length; j++) {
                                 if (!Players.has("" + pkgs[j]) && pkgs[j] != "null") {
@@ -137,7 +137,7 @@ try {
                     } else if (knd == "Deliver") {
                         var nid = dt.nid;
                         var idd = playerId;
-                        console.log(nid+" "+playerId);
+                        console.log(nid+" "+delivery.has("" + nid));
 
                         if (delivery.has("" + nid)) {
                             let deliv = delivery.get("" + nid);
@@ -645,8 +645,11 @@ function SendNoti() {
                         for (let idd of p.keys()) {
                             console.log()
                             var data = p.get("" + idd);
+                            console.log(noti.id+" "+delivery.has("" + noti.id));
+
                             if (delivery.has("" + noti.id)) {
                                 let deliv = delivery.get("" + noti.id);
+                                console.log(idd+" "+deliv.has("" + idd));
                                 if (!deliv.has("" + idd)) {
                                     data.socket.write(JSON.stringify(noti) + "\n");
                                 }

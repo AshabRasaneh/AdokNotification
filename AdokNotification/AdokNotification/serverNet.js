@@ -97,9 +97,11 @@ try {
                     myData.alive = n;
 
                     if (knd == "add") {
+                        //if()
                         //console.log(pkgs);
                         if (pkgs != undefined) {
                             for (var j = 0; j < pkgs.length; j++) {
+                                console.log(pkgs[j]);
                                 if (!Players.has("" + pkgs[j]) && pkgs[j] != "null") {
                                     var idd = playerId;
                                     var playersm = new Map();

@@ -363,6 +363,8 @@ function GetNotificationMysql() {
 
                     for (var i = 0; i < row.length; i++) {
                         var id = row[i].id;
+                    
+                    console.log(id);
 
                         var appId = row[i].appId;
                         var oappId = row[i].oappId;

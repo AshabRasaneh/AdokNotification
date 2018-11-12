@@ -1066,16 +1066,17 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                                                 }
 
                                                 qIns += " ) values  (" + qValues + ")";
+                                                console.log("qIns: " + qIns);
                                                 con.query(qIns, function (errqIns, resultqIns, fieldsqIns) {
                                                     if (!errqIns) {} else {
-                                                        console.log("err errqIns: " + errqIns);
+                                                        console.log("err errqIns1: " + errqIns);
                                                     }
                                                 });
 
                                             }
 
                                         } else {
-                                            console.log("err errqIns: " + errcrq);
+                                            console.log("err errqIns2: " + errcrq);
                                         }
                                     });
 

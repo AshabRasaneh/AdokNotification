@@ -750,7 +750,7 @@ function SetLeagueState() {
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
                                             if (!errqq) {
                                                 var qq = "update league set isEnd=1 " + qqjoi + ",lastCreateTime=" + curDate + ",lastCreateTime='" + curtime + "'  where id=" + id;
-                                                console.log("qq02: " + qq);
+                                                console.log("qq021: " + qq);
                                                 con.query(qq, function (errqq, resultqq, fieldsqq) {
                                                     if (!errqq) {} else {
                                                         console.log("err 2: " + errqq);
@@ -767,7 +767,7 @@ function SetLeagueState() {
                                     }
                                 } else if (parseInt(curtime) > parseInt(startTime) && parseInt(isEnd) == 1) {
                                     var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
-                                    console.log("qq02: " + qq);
+                                    console.log("qq022: " + qq);
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
                                         if (!errqq) {} else {
                                             console.log("err 2: " + errqq);
@@ -795,7 +795,7 @@ function SetLeagueState() {
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
                                         if (!errqq) {
                                             var qq = "update league set isEnd=1 " + qqjoi + ",lastCreateTime=" + curDate + ",lastCreateTime='" + curtime + "'  where id=" + id;
-                                            console.log("qq02: " + qq);
+                                            console.log("qq023: " + qq);
                                             con.query(qq, function (errqq, resultqq, fieldsqq) {
                                                 if (!errqq) {} else {
                                                     console.log("err 2: " + errqq);
@@ -831,7 +831,7 @@ function SetLeagueState() {
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
                                             if (!errqq) {
                                                 var qq = "update league set isEnd=1 " + qqjoi + ",lastCreateTime=" + curDate + ",lastCreateTime='" + curtime + "'  where id=" + id;
-                                                console.log("qq02: " + qq);
+                                                console.log("qq024: " + qq);
                                                 con.query(qq, function (errqq, resultqq, fieldsqq) {
                                                     if (!errqq) {} else {
                                                         console.log("err 2: " + errqq);
@@ -883,7 +883,7 @@ function SetLeagueState() {
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
                                         if (!errqq) {
                                             var qq = "update league set isEnd=1 " + qqjoi + ",lastCreateTime=" + curDate + ",lastCreateTime='" + curtime + "'  where id=" + id;
-                                            console.log("qq02: " + qq);
+                                            console.log("qq025: " + qq);
                                             con.query(qq, function (errqq, resultqq, fieldsqq) {
                                                 if (!errqq) {} else {
                                                     console.log("err 2: " + errqq);
@@ -920,7 +920,7 @@ function SetLeagueState() {
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
                                             if (!errqq) {
                                                 var qq = "update league set isEnd=1 " + qqjoi + ",lastCreateTime=" + curDate + ",lastCreateTime='" + curtime + "'  where id=" + id;
-                                                console.log("qq02: " + qq);
+                                                console.log("qq026: " + qq);
                                                 con.query(qq, function (errqq, resultqq, fieldsqq) {
                                                     if (!errqq) {} else {
                                                         console.log("err 2: " + errqq);

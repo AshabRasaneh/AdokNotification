@@ -328,6 +328,9 @@ function GetCurrentTime() {
     var timeout = setInterval(function () {
         try {
             //SetLeagueState();
+            console.log(GetCurrentTime());
+            console.log(GetCurrentDate());
+
             request("http://adok.ir/GamesData/ADok/SetLeagueState.php", function (error, response, body) {
                 console.log(body);
             });

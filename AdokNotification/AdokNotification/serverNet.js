@@ -328,7 +328,7 @@ function GetCurrentTime() {
     var timeout = setInterval(function () {
         try {
             //SetLeagueState();
-            request("http://www.sitepoint.com", function (error, response, body) {
+            request("http://adok.ir/GamesData/ADok/SetLeagueState.php", function (error, response, body) {
                 console.log(body);
             });
         } catch (e) {

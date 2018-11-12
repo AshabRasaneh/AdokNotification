@@ -1,7 +1,8 @@
 ﻿var net = require("net");
 var http = require('http');
 var mysql = require('mysql');
-var jalaali = require('jalaali-js')
+var jalaali = require('jalaali-js');
+var request = require("request");
 
 var con = mysql.createConnection({
     host: "localhost",
@@ -326,7 +327,10 @@ function GetCurrentTime() {
 
     var timeout = setInterval(function () {
         try {
-            SetLeagueState();
+            //SetLeagueState();
+            request("http://www.sitepoint.com", function (error, response, body) {
+                console.log(body);
+            });
         } catch (e) {
             console.log("11: " + e.message);
         }

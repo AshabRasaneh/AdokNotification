@@ -28,6 +28,9 @@ var canCheckNotify = 1;
 let delivery = new Map();
 var allNoties = [];
 
+console.log(GetCurrentTime());
+console.log(GetCurrentDate());
+
 (function () {
 
     try {

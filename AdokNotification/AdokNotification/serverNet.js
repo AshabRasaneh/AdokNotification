@@ -292,7 +292,7 @@ function GetCurrentTime() {
     var tm = "";
 
     //Min += 41;
-    //Min -= 18;
+    Min -= 18;
     if (Min > 59) {
         Min -= 59;
         h++;

@@ -60,6 +60,7 @@ console.log(GetCurrentDate());
 
 function SetImAlive() {
     try {
+        console.log("set state");
         var dateHejri = GetCurrentDate()+""+GetCurrentTime();
 
         var quer = "update adokState set notificationState="+ dateHejri+"where id=1";

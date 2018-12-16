@@ -38,12 +38,14 @@ console.log(GetCurrentDate());
         var timeout = setInterval(function () {
 
             GetNotificationMysql();
-
+            SetImAlive();
         }, 10000);
     } catch (e) {
         console.log("2: " + e.message);
     }
 })();
+
+
 
 (function () {
 
@@ -55,6 +57,21 @@ console.log(GetCurrentDate());
         console.log("2: " + e.message);
     }
 })();
+
+function SetImAlive() {
+    try {
+        var dateHejri = GetCurrentDate()+""+GetCurrentTime();
+
+        var quer = "update adokState set notificationState="+ dateHejri+"where id=1";
+        con.query(quer,
+            function (err, result, fields) {
+            if (!err) {
+            }
+        });
+    } catch (err) {
+        console.log("myError: " + err);
+    }
+}
 
 try {
     var decoder = new StringDecoder('utf8');

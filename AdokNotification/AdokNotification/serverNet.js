@@ -64,7 +64,10 @@ function SetImAlive() {
         var dateHejri = GetCurrentDate()+""+GetCurrentTime();
         console.log("set state:"+dateHejri);
         var quer = "update adokState set notificationState="+ dateHejri+"where id=1";
-        con.query(quer,function (err, result, fields) {
+        con.query(quer, function (err, result, fields) {
+            console.log("err:" + err);
+            console.log("result:" + result);
+
             if (!err) {
             }
         });

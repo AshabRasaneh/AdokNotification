@@ -2,7 +2,7 @@
 var http = require('http');
 var mysql = require('mysql');
 var jalaali = require('jalaali-js');
-var request = require("request");
+
 
 var con = mysql.createConnection({
     host: "localhost",
@@ -326,23 +326,7 @@ function GetCurrentTime() {
     return tm;
 }
 
-(function () {
 
-    var timeout = setInterval(function () {
-        try {
-            //SetLeagueState();
-            console.log(GetCurrentTime());
-            console.log(GetCurrentDate());
-
-            request("http://adok.ir/GamesData/ADok/SetLeagueState.php", function (error, response, body) {
-                console.log(body);
-            });
-        } catch (e) {
-            console.log("11: " + e.message);
-        }
-    }, 30000);
-
-})();
 
 function GetNotificationMysql() {
     try {

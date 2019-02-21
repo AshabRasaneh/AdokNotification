@@ -163,7 +163,7 @@ try {
                     } else if (knd == "Deliver") {
                         var nid = dt.nid;
                         var idd = playerId;
-                        console.log("Deliver : delivery.has(nid): "+nid+" "+delivery.has("" + nid));
+                        //console.log("Deliver : delivery.has(nid): "+nid+" "+delivery.has("" + nid));
 
                         if (delivery.has("" + nid)) {
                             let deliv = delivery.get("" + nid);
@@ -656,12 +656,13 @@ function SendNoti() {
                     if (Players.has("" + noti.pkgNameAndroid)) {
                         let p = Players.get("" + noti.pkgNameAndroid);
                         for (let idd of p.keys()) {
+        console.log("idd"+idd);
                             var data = p.get("" + idd);
-                            console.log("delivery.has(noti.id): "+noti.id+" "+delivery.has("" + noti.id));
+                            //console.log("delivery.has(noti.id): "+noti.id+" "+delivery.has("" + noti.id));
 
                             if (delivery.has("" + noti.id)) {
                                 let deliv = delivery.get("" + noti.id);
-                                console.log("delivery.has(idd2): "+idd+" "+deliv.has("" + idd));1
+                                //console.log("delivery.has(idd2): "+idd+" "+deliv.has("" + idd));1
                                 if (!deliv.has("" + idd)) {
                                     data.socket.write(JSON.stringify(noti) + "\n");
                                 }

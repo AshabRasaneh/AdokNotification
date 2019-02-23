@@ -28,15 +28,17 @@ var canCheckNotify = 1;
 let delivery = new Map();
 var allNoties = [];
 
+var plco = 0;
+
 console.log(GetCurrentTime());
 console.log(GetCurrentDate());
 
 (function () {
-
+    
     try {
         //var c = 0;
         var timeout = setInterval(function () {
-
+            
             GetNotificationMysql();
             SetImAlive();
         }, 10000);
@@ -48,7 +50,7 @@ console.log(GetCurrentDate());
 
 
 (function () {
-
+    
     try {
         var timeout = setInterval(function () {
             SendNoti();
@@ -61,13 +63,13 @@ console.log(GetCurrentDate());
 function SetImAlive() {
     try {
         
-        var dateHejri = GetCurrentDate()+""+GetCurrentTime();
+        var dateHejri = GetCurrentDate() + "" + GetCurrentTime();
         //console.log("set state:"+dateHejri);
-        var quer = "update adokState set notificationState="+ dateHejri+" where id=1";
+        var quer = "update adokState set notificationState=" + dateHejri + " where id=1";
         con.query(quer, function (err, result, fields) {
             //console.log("err:" + err);
             //console.log("result:" + result);
-
+            
             if (!err) {
             }
         });
@@ -80,35 +82,35 @@ try {
     var decoder = new StringDecoder('utf8');
     server.on('connection', function (socket) {
         
-
+        
         var myId = -1;
         var pkgs = [];
-
+        
         socket.on('data', function (data) {
-
+            
             try {
-
+                
                 if (data && data.byteLength != undefined) {
                     data = new Buffer(data).toString('utf8');
                 }
-
+                
                 if (IsJsonString(data)) {
                     //console.log('CONNECTED: ' + socket.remoteAddress + ':' + socket.remotePort);
-
-
+                    
+                    
                     var dt = JSON.parse(data);
                     var playerId = dt.playerId;
                     var pkgName = dt.pkgName;
                     var phoneNo = dt.phoneNo;
-
+                    
                     if (dt.hasOwnProperty('pkgs')) {
                         pkgs = dt.pkgs;
                     }
-
+                    
                     var knd = dt.kind;
                     var added = 0;
                     myId = playerId;
-
+                    
                     var myData = {
                         playerId: playerId,
                         phoneNo: phoneNo,
@@ -119,8 +121,9 @@ try {
                     var d = new Date();
                     var n = d.getTime();
                     myData.alive = n;
-
+                    
                     if (knd == "add") {
+                        plco++;
                         //if()
                         //console.log(pkgs);
                         if (pkgs != undefined) {
@@ -130,17 +133,17 @@ try {
                                     var idd = playerId;
                                     var playersm = new Map();
                                     playersm.set("" + idd, myData);
-
+                                    
                                     Players.set("" + pkgs[j], playersm);
 
                                 } else {
-
+                                    
                                     let p = Players.get("" + pkgs[j]);
                                     p.set("" + idd, myData);
                                     Players.set("" + pkgs[j], p);
                                 }
                             }
-
+                            
                             PlayerConnectedSql(playerId, pkgs);
                         }
                     } else if (knd == "Alive") {
@@ -164,7 +167,7 @@ try {
                         var nid = dt.nid;
                         var idd = playerId;
                         //console.log("Deliver : delivery.has(nid): "+nid+" "+delivery.has("" + nid));
-
+                        
                         if (delivery.has("" + nid)) {
                             let deliv = delivery.get("" + nid);
                             deliv.set("" + idd, 1);
@@ -174,7 +177,7 @@ try {
                             deliv.set("" + idd, 1);
                             delivery.set("" + nid, deliv);
                         }
-
+                        
                         SetDeliverySql(nid, playerId);
                     }
                 }
@@ -182,22 +185,25 @@ try {
                 console.log("3: " + e.message + " --- " + data);
             }
         });
-
+        
         socket.on('close', function (data) {
             try {
+                plco--;
                 PlayerDisonnectedSql(myId);
             } catch (e) {
                 console.log("4: " + e.message);
             }
         });
-
+        
         socket.on('disconnect', function (data) {
+            plco--;
             PlayerDisonnectedSql(myId);
         });
-
-
+        
+        
         socket.on('error', function (data) {
             try {
+                plco--;
                 PlayerDisonnectedSql(myId);
             } catch (e) {
                 console.log("5: " + e.message);
@@ -205,7 +211,7 @@ try {
         });
 
     });
-
+    
     server.listen(_port, _ip);
 } catch (e) {
     console.log("6: " + e.message);
@@ -284,13 +290,13 @@ function GetCurrentDate() {
     } else {
         mounth = "" + m;
     }
-
+    
     if (day < 10) {
         dayOfMounth = "0" + day;
     } else {
         dayOfMounth = "" + day;
     }
-
+    
     var curDate = y + "" + mounth + "" + dayOfMounth;
     return curDate;
 }
@@ -303,40 +309,40 @@ function GetCurrentTime() {
     var offset = 3.8;
     var teh = utc + (3600000 * offset);
     nd = new Date(teh);
-
+    
     var h = nd.getHours();
     var Min = nd.getMinutes();
-
+    
     var hour = "";
     var minute = "";
     var tm = "";
-
+    
     //Min += 41;
     Min -= 30;
     if (Min > 59) {
         Min -= 59;
         h++;
     }
-
+    
     if (Min < 0) {
         Min = 59 + Min;
         h--;
     }
-
+    
     if (h > 24) {
         h = 1;
     }
-
+    
     if (h < 0) {
         h = 24 + h;
     }
-
+    
     if (h < 10) {
         hour = "0" + h;
     } else {
         hour = "" + h;
     }
-
+    
     if (Min < 10) {
         minute = "0" + Min;
     } else {
@@ -373,187 +379,187 @@ function GetNotificationMysql() {
             " where dateStartSend>= " + dateHejri + " and notification.IsStop = 0 and  notification.isActive = 1 and notification.isTest = 0)";
         con.query(quer,
             function (err, result, fields) {
-                if (!err) {
-                    var row = result;
-
-
-                    for (var i = 0; i < row.length; i++) {
-                        var id = row[i].id;
+            if (!err) {
+                var row = result;
+                
+                
+                for (var i = 0; i < row.length; i++) {
+                    var id = row[i].id;
                     
                     console.log(id);
-
-                        var appId = row[i].appId;
-                        var oappId = row[i].oappId;
-                        var title = row[i].title;
-                        var message = row[i].message;
-                        var url = row[i].url;
-                        var timeToLive = row[i].timeToLive;
-                        var dateStartSend = row[i].dateStartSend;
-                        var timeStartSend = row[i].timeStartSend;
-                        var sound = row[i].sound;
-                        var smalIcon = row[i].smalIcon;
-                        var largeIcon = row[i].largeIcon;
-                        var bigPicture = row[i].bigPicture;
-                        var ledColor = row[i].ledColor;
-                        var accentColor = row[i].accentColor;
-                        var gId = row[i].gId;
-                        var priority = row[i].priority;
-                        var pkgNameAndroid = row[i].pkgNameAndroid;
-                        var pkgNameIos = row[i].pkgNameIos;
-                        var kind = row[i].kind;
-                        var AdditionalData = row[i].AdditionalData;
-                        var btns = row[i].btns;
-                        var lastUpdateTime = row[i].lastUpdateTime;
-                        var IsStop = row[i].IsStop;
-                        var bigText = row[i].bigText;
-                        var summary = row[i].summary;
-                        var isTest = row[i].isTest;
-                        var testId = row[i].playerId;
-                        var budget = row[i].budget;
-                        var actionType = row[i].actionType;
-                        var hiddenNoti = row[i].hiddenNoti;
-                        var showTime = row[i].showTime;
-                        var tagName = row[i].tagName;
-                        var chanelId = row[i].chanelId;
-
-                        var dialogTitle = row[i].dialogTitle;
-                        var btnYesText = row[i].btnYesText;
-                        var btnNoText = row[i].btnNoText;
-                        var dialogMessage = row[i].dialogMessage;
-                        var dialogActionType = row[i].dialogActionType;
-                        var dialogActionUrl = row[i].dialogActionUrl;
-                        var isVibrate = row[i].isVibrate;
-                        var devEnvId = row[i].devEnvId;
-
-                        var iconId = row[i].iconId;
-
-                        var chanelName = "";
-                        var chanelDes = "";
-
-                        var additionalData = [];
-                        var btns = [];
-                        var noti = {
-                            id: row[i].id,
-                            appId: row[i].appId,
-                            title: row[i].title,
-                            message: row[i].message,
-                            url: row[i].url,
-                            timeToLive: row[i].timeToLive,
-                            dateStartSend: row[i].dateStartSend,
-                            timeStartSend: row[i].timeStartSend,
-                            sound: row[i].sound,
-                            smalIcon: row[i].smalIcon,
-                            largeIcon: row[i].largeIcon,
-                            bigPicture: row[i].bigPicture,
-                            ledColor: row[i].ledColor,
-                            accentColor: row[i].accentColor,
-                            gId: row[i].gId,
-                            priority: row[i].priority,
-                            pkgNameAndroid: row[i].pkgNameAndroid,
-                            pkgNameIos: row[i].pkgNameIos,
-                            kind: row[i].kind,
-                            bigText: row[i].bigText,
-                            summary: row[i].summary,
-                            actionType: row[i].actionType,
-                            hiddenNoti: row[i].hiddenNoti,
-                            showTime: row[i].showTime,
-                            tagName: row[i].tagName,
-                            chanelId: chanelId,
-                            chanelName: chanelName,
-                            chanelDes: chanelDes,
-                            dialogTitle: dialogTitle,
-                            btnYesText: btnYesText,
-                            btnNoText: btnNoText,
-                            dialogMessage: dialogMessage,
-                            dialogActionType: dialogActionType,
-                            dialogActionUrl: dialogActionUrl,
-                            isVibrate: isVibrate,
-                            devEnvId: devEnvId,
-                            iconId: iconId,
-                            isTest: row[i].isTest,
-                            IsStop: "0",
-                            AdditionalData: additionalData,
-                            btns: btns,
-                            Meskind: "noti",
-                            oappId: oappId
-                        };
-
-                        var curtm = GetCurrentTime();
-
-                        //if (noti.timeToLive > curtm) {
-                        //    if (budget < 10 && noti.isTest == 0) {
-                        //        noti.IsStop = 1;
-                        //    }
-
-                        //}
-                        //else {
-                        //    if (noti.isTest == 0)
-                        //        noti.IsStop = 1;
-                        //}
-                        allNoties[id] = noti;
-                    }
-
-                    allNoties.forEach(function (item, index, object) {
-                        con.query("SELECT id,nId,dtKey,dtValue FROM notiAdditionalData where nId=" + item.id, function (erradd, resultadd, fieldsadd) {
-                            if (!erradd) {
-                                for (j = 0; j < resultadd.length; j++) {
-                                    var dta = {
-                                        "dtKey": resultadd[j].dtKey,
-                                        "dtValue": resultadd[j].dtValue
-                                    };
-                                    var adid = resultadd[j].id;
-                                    var adnid = resultadd[j].nId;
-                                    allNoties[adnid].AdditionalData[j] = dta;
-                                }
-                            }
-                        });
-                    });
-
-                    allNoties.forEach(function (item, index, object) {
-                        con.query("SELECT id,nId,btnText,url,icon,actionType,dialogTitle,btnYesText,	btnNoText,dialogMessage,dialogActionType,dialogActionUrl FROM notiBtn where nId=" + item.id, function (errbtn, resultbtn, fieldsbtn) {
-                            if (!errbtn) {
-                                for (var j = 0; j < resultbtn.length; j++) {
-
-                                    var dtb = {
-                                        "id": resultbtn[j].id,
-                                        "nId": resultbtn[j].nId,
-                                        "btnText": resultbtn[j].btnText,
-                                        "url": resultbtn[j].url,
-                                        "icon": resultbtn[j].icon,
-                                        "dialogTitle": resultbtn[j].dialogTitle,
-                                        "btnYesText": resultbtn[j].btnYesText,
-                                        "btnNoText": resultbtn[j].btnNoText,
-                                        "dialogMessage": resultbtn[j].dialogMessage,
-                                        "dialogActionType": resultbtn[j].dialogActionType,
-                                        "dialogActionUrl": resultbtn[j].dialogActionUrl,
-                                        "actionType": resultbtn[j].actionType
-                                    };
-
-                                    var bid = resultbtn[j].id;
-                                    var bnid = resultbtn[j].nId;
-
-                                    allNoties[bnid].btns[j] = dtb;
-                                }
-                            }
-                        });
-                    });
-
-                    allNoties.forEach(function (item, index, object) {
-                        con.query("SELECT id, name, des FROM  notificationChanels where id=" + item.chanelId, function (errchanel, resultchanel, fieldschanel) {
-                            if (!errchanel) {
-                                if (resultchanel.length > 0) {
-                                    allNoties.forEach(function (item, index, object) {
-                                        if (item.chanelId == chanelId) {
-                                            item.chanelName = resultchanel[0].name;
-                                            item.chanelDes = resultchanel[0].des;
-                                        }
-                                    });
-                                }
-                            }
-                        });
-                    });
+                    
+                    var appId = row[i].appId;
+                    var oappId = row[i].oappId;
+                    var title = row[i].title;
+                    var message = row[i].message;
+                    var url = row[i].url;
+                    var timeToLive = row[i].timeToLive;
+                    var dateStartSend = row[i].dateStartSend;
+                    var timeStartSend = row[i].timeStartSend;
+                    var sound = row[i].sound;
+                    var smalIcon = row[i].smalIcon;
+                    var largeIcon = row[i].largeIcon;
+                    var bigPicture = row[i].bigPicture;
+                    var ledColor = row[i].ledColor;
+                    var accentColor = row[i].accentColor;
+                    var gId = row[i].gId;
+                    var priority = row[i].priority;
+                    var pkgNameAndroid = row[i].pkgNameAndroid;
+                    var pkgNameIos = row[i].pkgNameIos;
+                    var kind = row[i].kind;
+                    var AdditionalData = row[i].AdditionalData;
+                    var btns = row[i].btns;
+                    var lastUpdateTime = row[i].lastUpdateTime;
+                    var IsStop = row[i].IsStop;
+                    var bigText = row[i].bigText;
+                    var summary = row[i].summary;
+                    var isTest = row[i].isTest;
+                    var testId = row[i].playerId;
+                    var budget = row[i].budget;
+                    var actionType = row[i].actionType;
+                    var hiddenNoti = row[i].hiddenNoti;
+                    var showTime = row[i].showTime;
+                    var tagName = row[i].tagName;
+                    var chanelId = row[i].chanelId;
+                    
+                    var dialogTitle = row[i].dialogTitle;
+                    var btnYesText = row[i].btnYesText;
+                    var btnNoText = row[i].btnNoText;
+                    var dialogMessage = row[i].dialogMessage;
+                    var dialogActionType = row[i].dialogActionType;
+                    var dialogActionUrl = row[i].dialogActionUrl;
+                    var isVibrate = row[i].isVibrate;
+                    var devEnvId = row[i].devEnvId;
+                    
+                    var iconId = row[i].iconId;
+                    
+                    var chanelName = "";
+                    var chanelDes = "";
+                    
+                    var additionalData = [];
+                    var btns = [];
+                    var noti = {
+                        id: row[i].id,
+                        appId: row[i].appId,
+                        title: row[i].title,
+                        message: row[i].message,
+                        url: row[i].url,
+                        timeToLive: row[i].timeToLive,
+                        dateStartSend: row[i].dateStartSend,
+                        timeStartSend: row[i].timeStartSend,
+                        sound: row[i].sound,
+                        smalIcon: row[i].smalIcon,
+                        largeIcon: row[i].largeIcon,
+                        bigPicture: row[i].bigPicture,
+                        ledColor: row[i].ledColor,
+                        accentColor: row[i].accentColor,
+                        gId: row[i].gId,
+                        priority: row[i].priority,
+                        pkgNameAndroid: row[i].pkgNameAndroid,
+                        pkgNameIos: row[i].pkgNameIos,
+                        kind: row[i].kind,
+                        bigText: row[i].bigText,
+                        summary: row[i].summary,
+                        actionType: row[i].actionType,
+                        hiddenNoti: row[i].hiddenNoti,
+                        showTime: row[i].showTime,
+                        tagName: row[i].tagName,
+                        chanelId: chanelId,
+                        chanelName: chanelName,
+                        chanelDes: chanelDes,
+                        dialogTitle: dialogTitle,
+                        btnYesText: btnYesText,
+                        btnNoText: btnNoText,
+                        dialogMessage: dialogMessage,
+                        dialogActionType: dialogActionType,
+                        dialogActionUrl: dialogActionUrl,
+                        isVibrate: isVibrate,
+                        devEnvId: devEnvId,
+                        iconId: iconId,
+                        isTest: row[i].isTest,
+                        IsStop: "0",
+                        AdditionalData: additionalData,
+                        btns: btns,
+                        Meskind: "noti",
+                        oappId: oappId
+                    };
+                    
+                    var curtm = GetCurrentTime();
+                    
+                    //if (noti.timeToLive > curtm) {
+                    //    if (budget < 10 && noti.isTest == 0) {
+                    //        noti.IsStop = 1;
+                    //    }
+                    
+                    //}
+                    //else {
+                    //    if (noti.isTest == 0)
+                    //        noti.IsStop = 1;
+                    //}
+                    allNoties[id] = noti;
                 }
-            });
+                
+                allNoties.forEach(function (item, index, object) {
+                    con.query("SELECT id,nId,dtKey,dtValue FROM notiAdditionalData where nId=" + item.id, function (erradd, resultadd, fieldsadd) {
+                        if (!erradd) {
+                            for (j = 0; j < resultadd.length; j++) {
+                                var dta = {
+                                    "dtKey": resultadd[j].dtKey,
+                                    "dtValue": resultadd[j].dtValue
+                                };
+                                var adid = resultadd[j].id;
+                                var adnid = resultadd[j].nId;
+                                allNoties[adnid].AdditionalData[j] = dta;
+                            }
+                        }
+                    });
+                });
+                
+                allNoties.forEach(function (item, index, object) {
+                    con.query("SELECT id,nId,btnText,url,icon,actionType,dialogTitle,btnYesText,	btnNoText,dialogMessage,dialogActionType,dialogActionUrl FROM notiBtn where nId=" + item.id, function (errbtn, resultbtn, fieldsbtn) {
+                        if (!errbtn) {
+                            for (var j = 0; j < resultbtn.length; j++) {
+                                
+                                var dtb = {
+                                    "id": resultbtn[j].id,
+                                    "nId": resultbtn[j].nId,
+                                    "btnText": resultbtn[j].btnText,
+                                    "url": resultbtn[j].url,
+                                    "icon": resultbtn[j].icon,
+                                    "dialogTitle": resultbtn[j].dialogTitle,
+                                    "btnYesText": resultbtn[j].btnYesText,
+                                    "btnNoText": resultbtn[j].btnNoText,
+                                    "dialogMessage": resultbtn[j].dialogMessage,
+                                    "dialogActionType": resultbtn[j].dialogActionType,
+                                    "dialogActionUrl": resultbtn[j].dialogActionUrl,
+                                    "actionType": resultbtn[j].actionType
+                                };
+                                
+                                var bid = resultbtn[j].id;
+                                var bnid = resultbtn[j].nId;
+                                
+                                allNoties[bnid].btns[j] = dtb;
+                            }
+                        }
+                    });
+                });
+                
+                allNoties.forEach(function (item, index, object) {
+                    con.query("SELECT id, name, des FROM  notificationChanels where id=" + item.chanelId, function (errchanel, resultchanel, fieldschanel) {
+                        if (!errchanel) {
+                            if (resultchanel.length > 0) {
+                                allNoties.forEach(function (item, index, object) {
+                                    if (item.chanelId == chanelId) {
+                                        item.chanelName = resultchanel[0].name;
+                                        item.chanelDes = resultchanel[0].des;
+                                    }
+                                });
+                            }
+                        }
+                    });
+                });
+            }
+        });
 
     } catch (err) {
         console.log("myError: " + err);
@@ -562,10 +568,10 @@ function GetNotificationMysql() {
 }
 
 function SendNoti() {
-
+    
     allNoties.forEach(function (item, index, object) {
         var noti = item;
-
+        
         var timeToSend = noti.timeStartSend + noti.timeToLive;
         var sendH = Math.floor(timeToSend / 60);
         var sendM = Math.floor(timeToSend % 60);
@@ -577,11 +583,11 @@ function SendNoti() {
         } else {
             HAfter = sendH;
         }
-
+        
         var yy = parseInt(noti.dateStartSend.toString().substr(0, 4));
         var mm = parseInt(noti.dateStartSend.toString().substr(4, 2));
         var dd = parseInt(noti.dateStartSend.toString().substr(6, 2));
-
+        
         var curDateEnd = "";
         if (Days > 0) {
             dd += Days;
@@ -601,7 +607,7 @@ function SendNoti() {
                 mm++;
             }
         }
-
+        
         var year = "" + yy;
         var mounth = "";
         var dayOfMounth = "";
@@ -610,20 +616,20 @@ function SendNoti() {
         } else {
             mounth = "" + mm;
         }
-
+        
         if (dd < 10) {
             dayOfMounth = "0" + dd;
         } else {
             dayOfMounth = "" + dd;
         }
-
+        
         var curDateEnd = year + "" + mounth + "" + dayOfMounth;
-
+        
         var hcur = GetCurrentTime().substr(0, 2);
-
+        
         if (noti.isTest > 0) {
             if (noti.pkgNameAndroid != "") {
-
+                
                 if (Players.has("" + noti.pkgNameAndroid)) {
                     let p = Players.get("" + noti.pkgNameAndroid);
                     if (p.has("" + idd)) {
@@ -631,7 +637,7 @@ function SendNoti() {
                         data.socket.write(JSON.stringify(noti) + "\n");
                     }
                 }
-
+                
                 if (noti.oappId != "") {
                     var oapp = noti.oappId.split(",");
                     for (var i = 0; i < oapp.lenght; i++) {
@@ -656,52 +662,52 @@ function SendNoti() {
                     if (Players.has("" + noti.pkgNameAndroid)) {
                         let p = Players.get("" + noti.pkgNameAndroid);
                         for (let idd of p.keys()) {
-        console.log("idd"+idd);
-                            var data = p.get("" + idd);
-                            //console.log("delivery.has(noti.id): "+noti.id+" "+delivery.has("" + noti.id));
+        console.log("idd" + idd);
+        var data = p.get("" + idd);
+        //console.log("delivery.has(noti.id): "+noti.id+" "+delivery.has("" + noti.id));
+        
+        if (delivery.has("" + noti.id)) {
+            let deliv = delivery.get("" + noti.id);
+            //console.log("delivery.has(idd2): "+idd+" "+deliv.has("" + idd));1
+            if (!deliv.has("" + idd)) {
+                data.socket.write(JSON.stringify(noti) + "\n");
+            }
+        } else {
+            data.socket.write(JSON.stringify(noti) + "\n");
+        }
+    }
+}
 
-                            if (delivery.has("" + noti.id)) {
-                                let deliv = delivery.get("" + noti.id);
-                                //console.log("delivery.has(idd2): "+idd+" "+deliv.has("" + idd));1
-                                if (!deliv.has("" + idd)) {
-                                    data.socket.write(JSON.stringify(noti) + "\n");
-                                }
-                            } else {
-                                data.socket.write(JSON.stringify(noti) + "\n");
-                            }
-                        }
-                    }
-
-                    if (noti.oappId != "") {
-                        var oapp = noti.oappId.split(",");
-                        for (var i = 0; i < oapp.length; i++) {
-                            var eachN = oapp[i].split("_");
-                            var nt = noti;
-                            nt.appId = eachN[0];
-                            nt.pkgNameAndroid = eachN[1];
-
-                            if (Players.has("" + nt.pkgNameAndroid)) {
-                                let p = Players.get("" + nt.pkgNameAndroid);
-                                for (let idd of p.keys()) {
-                                    var data = p.get("" + idd);
-                                    if (delivery.has("" + nt.id)) {
-                                        let deliv = delivery.get("" + nt.id);
-                                        if (!deliv.has("" + idd)) {
-                                            data.socket.write(JSON.stringify(nt) + "\n");
-                                        }
-                                    } else {
-                                        data.socket.write(JSON.stringify(nt) + "\n");
-                                    }
-                                }
-                            }
-                        }
+if (noti.oappId != "") {
+    var oapp = noti.oappId.split(",");
+    for (var i = 0; i < oapp.length; i++) {
+        var eachN = oapp[i].split("_");
+        var nt = noti;
+        nt.appId = eachN[0];
+        nt.pkgNameAndroid = eachN[1];
+        
+        if (Players.has("" + nt.pkgNameAndroid)) {
+            let p = Players.get("" + nt.pkgNameAndroid);
+            for (let idd of p.keys()) {
+                var data = p.get("" + idd);
+                if (delivery.has("" + nt.id)) {
+                    let deliv = delivery.get("" + nt.id);
+                    if (!deliv.has("" + idd)) {
+                        data.socket.write(JSON.stringify(nt) + "\n");
                     }
                 } else {
-
+                    data.socket.write(JSON.stringify(nt) + "\n");
                 }
             }
         }
-    });
+    }
+}
+} else {
+
+}
+}
+}
+});
 }
 
 function SetLeagueState() {
@@ -710,12 +716,12 @@ function SetLeagueState() {
         console.log("setLeague");
         var curDate = GetCurrentDate();
         var curtime = GetCurrentTime();
-
+        
         var query = "SELECT id,name,des,logoAdd,limitPlayerCount,playerJoinCount,dateCreated,restHour,startDate,startTime,endDate,endTime,isAutomated,isDaily,isWeekly," +
             "isMounthly, myCount, lastCreteDate, lastCreateTime, startDay, endDay, startMounth, endMounth, isActive, appId, isEnd,data from league where isActive= 1 and isAutomated= 1";
         con.query(query, function (err, result, fields) {
             if (!err) {
-
+                
                 if (result.length > 0) {
                     var row = result;
                     for (var i = 0; i < row.length; i++) {
@@ -727,7 +733,7 @@ function SetLeagueState() {
                         var playerJoinCount = row[i].playerJoinCount;
                         var dateCreated = row[i].dateCreated;
                         var restHour = row[i].restHour;
-
+                        
                         var startDate = row[i].startDate;
                         var startTime = row[i].startTime;
                         var endDate = row[i].endDate;
@@ -747,9 +753,9 @@ function SetLeagueState() {
                         var appId = row[i].appId;
                         var isEnd = parseInt(row[i].isEnd);
                         var data = row[i].data;
-
+                        
                         var qqjoi = ",playerJoinCount=0";
-
+                        
                         if (parseInt(curDate) < parseInt(endDate)) {
                             if (parseInt(isDaily) > 0) {
                                 if (parseInt(curtime) > parseInt(endTime)) {
@@ -767,7 +773,7 @@ function SetLeagueState() {
                                                 var qq = "update league set isEnd=1 " + qqjoi + ",lastCreateTime=" + curDate + ",lastCreateTime='" + curtime + "'  where id=" + id;
                                                 console.log("qq021: " + qq);
                                                 con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                                    if (!errqq) {} else {
+                                                    if (!errqq) { } else {
                                                         console.log("err 2: " + errqq);
                                                     }
                                                 });
@@ -784,7 +790,7 @@ function SetLeagueState() {
                                     var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
                                     console.log("qq022: " + qq);
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                        if (!errqq) {} else {
+                                        if (!errqq) { } else {
                                             console.log("err 2: " + errqq);
                                         }
                                     });
@@ -797,7 +803,7 @@ function SetLeagueState() {
                                 if (n > 7) {
                                     n = 1;
                                 }
-
+                                
                                 if ((n > parseInt(endDay) || n < parseInt(startDay)) && isEnd == 0) {
                                     var qq = "INSERT INTO `leagueLog` (`lId`, `name`, `des`, `logoAdd`, `startDate`, `startTime`, `endDate`, `endTime`, `playerJoinCount`," +
                                         "`limitPlayerCount`, `appId`, `dateCreated`, `isAutomated`, `isDaily`, `isWeekly`, `isMounthly`, `restHour`, `myCount`," +
@@ -812,7 +818,7 @@ function SetLeagueState() {
                                             var qq = "update league set isEnd=1 " + qqjoi + ",lastCreateTime=" + curDate + ",lastCreateTime='" + curtime + "'  where id=" + id;
                                             console.log("qq023: " + qq);
                                             con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                                if (!errqq) {} else {
+                                                if (!errqq) { } else {
                                                     console.log("err 2: " + errqq);
                                                 }
                                             });
@@ -828,7 +834,7 @@ function SetLeagueState() {
                                     var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
                                     console.log("qq04: " + qq);
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                        if (!errqq) {} else {
+                                        if (!errqq) { } else {
                                             console.log("err 4: " + errqq);
                                         }
                                     });
@@ -848,7 +854,7 @@ function SetLeagueState() {
                                                 var qq = "update league set isEnd=1 " + qqjoi + ",lastCreateTime=" + curDate + ",lastCreateTime='" + curtime + "'  where id=" + id;
                                                 console.log("qq024: " + qq);
                                                 con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                                    if (!errqq) {} else {
+                                                    if (!errqq) { } else {
                                                         console.log("err 2: " + errqq);
                                                     }
                                                 });
@@ -864,7 +870,7 @@ function SetLeagueState() {
                                         var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
                                         console.log("qq06: " + qq);
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                            if (!errqq) {} else {
+                                            if (!errqq) { } else {
                                                 console.log("err 6: " + errqq);
                                             }
                                         });
@@ -873,19 +879,19 @@ function SetLeagueState() {
                                 } else if (n == parseInt(startDay) && parseInt(curtime) >= parseInt(startTime) && isEnd == 1) {
                                     var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                        if (!errqq) {} else {
+                                        if (!errqq) { } else {
                                             console.log("err 7: " + errqq);
                                         }
                                     });
 
                                 }
                             } else if (parseInt(isMounthly) > 0) {
-
+                                
                                 var dateHijri = GetCurrentDate();
                                 var y = parseInt(dateHijri.substr(0, 4));
                                 var m = parseInt(dateHijri.substr(4, 2));
                                 var day = parseInt(dateHijri.substr(6, 2));
-
+                                
                                 if ((day > parseInt(endMounth) || day < parseInt(startMounth)) && isEnd == 0) {
                                     var qq = "INSERT INTO `leagueLog` (`lId`, `name`, `des`, `logoAdd`, `startDate`, `startTime`, `endDate`, `endTime`, `playerJoinCount`," +
                                         "`limitPlayerCount`, `appId`, `dateCreated`, `isAutomated`, `isDaily`, `isWeekly`, `isMounthly`, `restHour`, `myCount`," +
@@ -900,7 +906,7 @@ function SetLeagueState() {
                                             var qq = "update league set isEnd=1 " + qqjoi + ",lastCreateTime=" + curDate + ",lastCreateTime='" + curtime + "'  where id=" + id;
                                             console.log("qq025: " + qq);
                                             con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                                if (!errqq) {} else {
+                                                if (!errqq) { } else {
                                                     console.log("err 2: " + errqq);
                                                 }
                                             });
@@ -917,7 +923,7 @@ function SetLeagueState() {
                                     var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
                                     console.log("qq08: " + qq);
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                        if (!errqq) {} else {
+                                        if (!errqq) { } else {
                                             console.log("err 8: " + errqq);
                                         }
                                     });
@@ -937,7 +943,7 @@ function SetLeagueState() {
                                                 var qq = "update league set isEnd=1 " + qqjoi + ",lastCreateTime=" + curDate + ",lastCreateTime='" + curtime + "'  where id=" + id;
                                                 console.log("qq026: " + qq);
                                                 con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                                    if (!errqq) {} else {
+                                                    if (!errqq) { } else {
                                                         console.log("err 2: " + errqq);
                                                     }
                                                 });
@@ -954,7 +960,7 @@ function SetLeagueState() {
                                         var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
                                         console.log("qq10: " + qq);
                                         con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                            if (!errqq) {} else {
+                                            if (!errqq) { } else {
                                                 console.log("err 10: " + errqq);
                                             }
                                         });
@@ -964,7 +970,7 @@ function SetLeagueState() {
                                     var qq = "update league set isEnd=0 " + qqjoi + "  where id=" + id;
                                     console.log("qq11: " + qq);
                                     con.query(qq, function (errqq, resultqq, fieldsqq) {
-                                        if (!errqq) {} else {
+                                        if (!errqq) { } else {
                                             console.log("err 11: " + errqq);
                                         }
 
@@ -992,18 +998,18 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
     q = "select id,uid from apps where id=" + appId;
     con.query(q, function (err, result, fields) {
         if (!err) {
-
+            
             if (result.length > 0) {
                 var row = result;
                 for (var i = 0; i < row.length; i++) {
                     var id = row[i].id;
                     var uid = row[i].uid;
                     var tbName = "zz_" + appId + "_" + uid + "_lud";
-
+                    
                     var Cols = [];
                     var typs = [];
                     var olaviat = [];
-
+                    
                     var qCol = "SELECT `COLUMN_NAME`,`DATA_TYPE`  FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA`='kingofmeta_ADok' AND `TABLE_NAME`='" + tbName + "';";
                     var k = 0;
                     con.query(qCol, function (errCol, resultCol, fieldsCol) {
@@ -1014,7 +1020,7 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                                 var clType = resultCol[j].DATA_TYPE;
                                 Cols.push(clName);
                                 typs[clName] = clType;
-
+                                
                                 if (j == 0) {
                                     k++;
                                     crq += "tb." + clName;
@@ -1022,18 +1028,18 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                                     crq += ",tb." + clName;
                                 }
                             }
-
+                            
                             var qOlaviat = "select name,olaviat from leagueData where appId=" + appId + "  and leagueId=" + lId + "  and olaviat>0 order by olaviat DESC";
-
+                            
                             k = 0;
-
+                            
                             con.query(qOlaviat, function (errOlaviat, resultOlaviat, fieldsOlaviat) {
                                 if (!errOlaviat) {
                                     var olvQO = "";
                                     for (j = 0; j < resultOlaviat.length; j++) {
                                         var olvN = resultOlaviat[j].name;
                                         var olaviatA = resultOlaviat[j].olaviat;
-
+                                        
                                         olaviat.push(olvN);
                                         if (j == 0) {
                                             k++;
@@ -1042,12 +1048,12 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                                             olvQO += "," + olvN + "  DESC ";
                                         }
                                     }
-
-
+                                    
+                                    
                                     crq += ",p.nickname from " + tbName + "  as tb inner join players as p on tb.playerId=p.id ";
                                     crq += " where myCount=" + myCount + "  and lId=" + lId + "  and isShow=1 ";
                                     crq += " ORDER by " + olvQO + "limit 10000";
-
+                                    
                                     console.log("--- " + crq + " --- ");
                                     Cols.push("nickname");
                                     con.query(crq, function (errcrq, resultcrq, fieldscrq) {
@@ -1056,11 +1062,11 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                                                 var qIns = "insert into  " + tbName + "_res (";
                                                 var qValues = "(";
                                                 k = 0;
-
+                                                
                                                 var rowRq = resultcrq[j];
                                                 for (l = 0; l < rowRq.length; l++) {
                                                     var prop = Cols[l];
-                                                    if (prop == "nickname" || prop == "id") {} else {
+                                                    if (prop == "nickname" || prop == "id") { } else {
                                                         if (k == 0) {
                                                             k++;
                                                             qIns += prop;
@@ -1079,11 +1085,11 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
                                                         }
                                                     }
                                                 }
-
+                                                
                                                 qIns += " ) values  (" + qValues + ")";
                                                 console.log("qIns: " + qIns);
                                                 con.query(qIns, function (errqIns, resultqIns, fieldsqIns) {
-                                                    if (!errqIns) {} else {
+                                                    if (!errqIns) { } else {
                                                         console.log("err errqIns1: " + errqIns);
                                                     }
                                                 });
@@ -1116,8 +1122,8 @@ function setLeagueBest(lId, myCount, appId, curDate, curtime) {
 
 function SetDeliverySql(nid, playerId) {
     try {
-        con.query("update notification set isSend=1 where id=" + nid, function (err, result, fields) {});
-
+        con.query("update notification set isSend=1 where id=" + nid, function (err, result, fields) { });
+        
         con.query("SELECT id,count from nodeDelivery where nid=" + nid + " and playerId=" + playerId, function (errsel, resultsel, fieldssel) {
             if (!errsel) {
                 if (resultsel.length > 0) {
@@ -1125,10 +1131,10 @@ function SetDeliverySql(nid, playerId) {
                         did = resultsel[j].id;
                         dcount = parseInt(resultsel[j].count);
                         dcount++;
-                        con.query("update nodeDelivery set  count=" + dcount + " where id=" + did, function (errupd, resultupd, fieldsupd) {});
+                        con.query("update nodeDelivery set  count=" + dcount + " where id=" + did, function (errupd, resultupd, fieldsupd) { });
                     }
                 } else {
-                    con.query("insert into nodeDelivery (nid,playerId,count) values (" + nid + "," + playerId + ",1);", function (errupd, resultupd, fieldsupd) {});
+                    con.query("insert into nodeDelivery (nid,playerId,count) values (" + nid + "," + playerId + ",1);", function (errupd, resultupd, fieldsupd) { });
                 }
 
             }
@@ -1144,20 +1150,20 @@ function SetDeliverySql(nid, playerId) {
 function PlayerDisonnectedSql(pid) {
     curDate = GetCurrentDate();
     tm = GetCurrentTime();
-    con.query("update players set 	isConnected=0,disTime='" + tm + "',disDate=" + curDate + " where id=" + pid, function (errupd, resultupd, fieldsupd) {});
+    con.query("update players set 	isConnected=0,disTime='" + tm + "',disDate=" + curDate + " where id=" + pid, function (errupd, resultupd, fieldsupd) { });
 }
 
 function PlayerConnectedSql(pid, pkgs) {
     curDate = GetCurrentDate();
     tm = GetCurrentTime();
-    con.query("update players set 	isConnected=1,lastTime='" + tm + "',lastDate=" + curDate + " where id=" + pid, function (errupd, resultupd, fieldsupd) {});
+    con.query("update players set 	isConnected=1,lastTime='" + tm + "',lastDate=" + curDate + " where id=" + pid, function (errupd, resultupd, fieldsupd) { });
 }
 
 function IsJsonString(str) {
     try {
-      var json = JSON.parse(str);
-      return true;
+        var json = JSON.parse(str);
+        return true;
     } catch (e) {
-      return false;
+        return false;
     }
 }

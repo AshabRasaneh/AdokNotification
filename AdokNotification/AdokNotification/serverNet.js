@@ -668,7 +668,7 @@ function SendNoti() {
                     if (Players.has("" + noti.pkgNameAndroid)) {
                         let p = Players.get("" + noti.pkgNameAndroid);
                         for (let idd of p.keys()) {
-        console.log("idd" + idd);
+        //console.log("idd" + idd);
         var data = p.get("" + idd);
         //console.log("delivery.has(noti.id): "+noti.id+" "+delivery.has("" + noti.id));
         
@@ -1170,7 +1170,7 @@ function IsJsonString(str) {
         var json = JSON.parse(str);
         return true;
     } catch (e) {
-        console.log(str);
+        //console.log(str);
         return false;
     }
 }

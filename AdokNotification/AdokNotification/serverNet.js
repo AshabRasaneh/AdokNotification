@@ -80,6 +80,7 @@ function SetImAlive() {
 
 try {
     var decoder = new StringDecoder('utf8');
+
     server.on('connection', function (socket) {
         
         
@@ -94,6 +95,8 @@ try {
                     data = new Buffer(data).toString('utf8');
                 }
                 
+                
+
                 if (IsJsonString(data)) {
                     //console.log('CONNECTED: ' + socket.remoteAddress + ':' + socket.remotePort);
                     
@@ -125,7 +128,7 @@ try {
                     if (knd == "add") {
                         plco++;
                         //if()
-                        console.log("Connected: "+ playerId);
+                        //console.log("Connected: "+ playerId);
                         if (pkgs != undefined) {
                             for (var j = 0; j < pkgs.length; j++) {
                                 //console.log(pkgs[j]);
@@ -1167,6 +1170,7 @@ function IsJsonString(str) {
         var json = JSON.parse(str);
         return true;
     } catch (e) {
+        console.log(str);
         return false;
     }
 }

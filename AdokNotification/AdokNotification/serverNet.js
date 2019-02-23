@@ -125,7 +125,7 @@ try {
                     if (knd == "add") {
                         plco++;
                         //if()
-                        //console.log(pkgs);
+                        console.log("Connected"+ idd);
                         if (pkgs != undefined) {
                             for (var j = 0; j < pkgs.length; j++) {
                                 //console.log(pkgs[j]);
@@ -188,6 +188,7 @@ try {
         
         socket.on('close', function (data) {
             try {
+                console.log("close: " + myId+" --- "+ data);
                 plco--;
                 PlayerDisonnectedSql(myId);
             } catch (e) {
@@ -196,6 +197,7 @@ try {
         });
         
         socket.on('disconnect', function (data) {
+            console.log("disconnect: " + myId + " --- " + data);
             plco--;
             PlayerDisonnectedSql(myId);
         });
@@ -203,6 +205,7 @@ try {
         
         socket.on('error', function (data) {
             try {
+                console.log("error: " + myId + " --- " + data);
                 plco--;
                 PlayerDisonnectedSql(myId);
             } catch (e) {

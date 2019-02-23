@@ -122,6 +122,8 @@ try {
                     var n = d.getTime();
                     myData.alive = n;
                     
+                    console.log(knd+" "+ myId);
+
                     if (knd == "add") {
                         plco++;
                         //if()
@@ -188,26 +190,32 @@ try {
         
         socket.on('close', function (data) {
             try {
-                console.log("close: " + myId + " --- " + data);
-                plco--;
-                PlayerDisonnectedSql(myId);
+                if (myId > 0) {
+                    console.log("close: " + myId + " --- " + data);
+                    plco--;
+                    PlayerDisonnectedSql(myId);
+                }
             } catch (e) {
                 console.log("4: " + e.message);
             }
         });
         
         socket.on('disconnect', function (data) {
-            console.log("disconnect: " + myId + " --- " + data);
-            plco--;
-            PlayerDisonnectedSql(myId);
+            if (myId > 0) {
+                console.log("disconnect: " + myId + " --- " + data);
+                plco--;
+                PlayerDisonnectedSql(myId);
+            }
         });
         
         
         socket.on('error', function (data) {
             try {
-                console.log("error: " + myId + " --- " + data);
-                plco--;
-                PlayerDisonnectedSql(myId);
+                if (myId > 0) {
+                    console.log("error: " + myId + " --- " + data);
+                    plco--;
+                    PlayerDisonnectedSql(myId);
+                }
             } catch (e) {
                 console.log("5: " + e.message);
             }

@@ -125,7 +125,7 @@ try {
                     if (knd == "add") {
                         plco++;
                         //if()
-                        console.log("Connected"+ idd);
+                        console.log("Connected: "+ playerId);
                         if (pkgs != undefined) {
                             for (var j = 0; j < pkgs.length; j++) {
                                 //console.log(pkgs[j]);

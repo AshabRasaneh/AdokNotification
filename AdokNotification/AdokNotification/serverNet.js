@@ -23,9 +23,9 @@ var _ip = "188.253.2.147";
 
 var _port = 3010;
 
-let Players = new Map();
+Players = new Map();
 var canCheckNotify = 1;
-let delivery = new Map();
+delivery = new Map();
 var allNoties = [];
 
 var plco = 0;
@@ -65,7 +65,7 @@ function SetImAlive() {
         
         var dateHejri = GetCurrentDate() + "" + GetCurrentTime();
         //console.log("set state:"+dateHejri);
-        var quer = "update adokState set notificationState=" + dateHejri + ",plcount="+ plco+" where id=1";
+        var quer = "update adokState set notificationState=" + dateHejri + ",plcount=" + plco + " where id=1";
         con.query(quer, function (err, result, fields) {
             //console.log("err:" + err);
             //console.log("result:" + result);
@@ -125,7 +125,7 @@ try {
                     if (knd == "add") {
                         plco++;
                         //if()
-                        console.log("Connected: "+ playerId);
+                        console.log("Connected: " + playerId);
                         if (pkgs != undefined) {
                             for (var j = 0; j < pkgs.length; j++) {
                                 //console.log(pkgs[j]);
@@ -138,7 +138,7 @@ try {
 
                                 } else {
                                     
-                                    let p = Players.get("" + pkgs[j]);
+                                    p = Players.get("" + pkgs[j]);
                                     p.set("" + idd, myData);
                                     Players.set("" + pkgs[j], p);
                                 }
@@ -169,11 +169,11 @@ try {
                         //console.log("Deliver : delivery.has(nid): "+nid+" "+delivery.has("" + nid));
                         
                         if (delivery.has("" + nid)) {
-                            let deliv = delivery.get("" + nid);
+                            deliv = delivery.get("" + nid);
                             deliv.set("" + idd, 1);
                             delivery.set("" + nid, deliv);
                         } else {
-                            let deliv = new Map();
+                            deliv = new Map();
                             deliv.set("" + idd, 1);
                             delivery.set("" + nid, deliv);
                         }
@@ -188,7 +188,7 @@ try {
         
         socket.on('close', function (data) {
             try {
-                console.log("close: " + myId+" --- "+ data);
+                console.log("close: " + myId + " --- " + data);
                 plco--;
                 PlayerDisonnectedSql(myId);
             } catch (e) {
@@ -354,8 +354,6 @@ function GetCurrentTime() {
     tm = hour + minute;
     return tm;
 }
-
-
 
 function GetNotificationMysql() {
     try {
@@ -634,7 +632,7 @@ function SendNoti() {
             if (noti.pkgNameAndroid != "") {
                 
                 if (Players.has("" + noti.pkgNameAndroid)) {
-                    let p = Players.get("" + noti.pkgNameAndroid);
+                    p = Players.get("" + noti.pkgNameAndroid);
                     if (p.has("" + idd)) {
                         var data = p.get("" + idd);
                         data.socket.write(JSON.stringify(noti) + "\n");
@@ -649,7 +647,7 @@ function SendNoti() {
                         nt.appId = eachN[0];
                         nt.pkgNameAndroid = eachN[1];
                         if (Players.has("" + nt.pkgNameAndroid)) {
-                            let p = Players.get("" + nt.pkgNameAndroid);
+                            p = Players.get("" + nt.pkgNameAndroid);
                             if (p.has("" + idd)) {
                                 var data = p.get("" + idd);
                                 data.socket.write(JSON.stringify(nt) + "\n");
@@ -663,54 +661,54 @@ function SendNoti() {
             if (parseInt(curDatev) < parseInt(curDateEnd) || (parseInt(curDatev) == parseInt(curDateEnd) && parseInt(hcur) <= parseInt(HAfter))) {
                 if (noti.IsStop == 0) {
                     if (Players.has("" + noti.pkgNameAndroid)) {
-                        let p = Players.get("" + noti.pkgNameAndroid);
-                        for (let idd of p.keys()) {
-        console.log("idd" + idd);
-        var data = p.get("" + idd);
-        //console.log("delivery.has(noti.id): "+noti.id+" "+delivery.has("" + noti.id));
-        
-        if (delivery.has("" + noti.id)) {
-            let deliv = delivery.get("" + noti.id);
-            //console.log("delivery.has(idd2): "+idd+" "+deliv.has("" + idd));1
-            if (!deliv.has("" + idd)) {
-                data.socket.write(JSON.stringify(noti) + "\n");
-            }
-        } else {
-            data.socket.write(JSON.stringify(noti) + "\n");
-        }
-    }
-}
-
-if (noti.oappId != "") {
-    var oapp = noti.oappId.split(",");
-    for (var i = 0; i < oapp.length; i++) {
-        var eachN = oapp[i].split("_");
-        var nt = noti;
-        nt.appId = eachN[0];
-        nt.pkgNameAndroid = eachN[1];
-        
-        if (Players.has("" + nt.pkgNameAndroid)) {
-            let p = Players.get("" + nt.pkgNameAndroid);
-            for (let idd of p.keys()) {
-                var data = p.get("" + idd);
-                if (delivery.has("" + nt.id)) {
-                    let deliv = delivery.get("" + nt.id);
-                    if (!deliv.has("" + idd)) {
-                        data.socket.write(JSON.stringify(nt) + "\n");
+                        p = Players.get("" + noti.pkgNameAndroid);
+                        for (idd in p.keys()) {
+                            console.log("idd" + idd);
+                            var data = p.get("" + idd);
+                            //console.log("delivery.has(noti.id): "+noti.id+" "+delivery.has("" + noti.id));
+                            
+                            if (delivery.has("" + noti.id)) {
+                                deliv = delivery.get("" + noti.id);
+                                //console.log("delivery.has(idd2): "+idd+" "+deliv.has("" + idd));1
+                                if (!deliv.has("" + idd)) {
+                                    data.socket.write(JSON.stringify(noti) + "\n");
+                                }
+                            } else {
+                                data.socket.write(JSON.stringify(noti) + "\n");
+                            }
+                        }
+                    }
+                    
+                    if (noti.oappId != "") {
+                        var oapp = noti.oappId.split(",");
+                        for (var i = 0; i < oapp.length; i++) {
+                            var eachN = oapp[i].split("_");
+                            var nt = noti;
+                            nt.appId = eachN[0];
+                            nt.pkgNameAndroid = eachN[1];
+                            
+                            if (Players.has("" + nt.pkgNameAndroid)) {
+                                p = Players.get("" + nt.pkgNameAndroid);
+                                for (idd in p.keys()) {
+                                    var data = p.get("" + idd);
+                                    if (delivery.has("" + nt.id)) {
+                                        deliv = delivery.get("" + nt.id);
+                                        if (!deliv.has("" + idd)) {
+                                            data.socket.write(JSON.stringify(nt) + "\n");
+                                        }
+                                    } else {
+                                        data.socket.write(JSON.stringify(nt) + "\n");
+                                    }
+                                }
+                            }
+                        }
                     }
                 } else {
-                    data.socket.write(JSON.stringify(nt) + "\n");
+
                 }
             }
         }
-    }
-}
-} else {
-
-}
-}
-}
-});
+    });
 }
 
 function SetLeagueState() {

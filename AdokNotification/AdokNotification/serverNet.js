@@ -314,8 +314,8 @@ function GetCurrentTime() {
     var utc = localTime + localOffset;
     var offset = 3.8;
     var teh = utc + (3600000 * offset);
-    nd = new Date(teh);
-    
+    //nd = new Date(teh);
+    nd = new Date();
     var h = nd.getHours();
     var Min = nd.getMinutes();
     

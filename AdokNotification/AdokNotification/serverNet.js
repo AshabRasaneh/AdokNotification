@@ -314,8 +314,8 @@ function GetCurrentTime() {
     var utc = localTime + localOffset;
     var offset = 3.8;
     var teh = utc + (3600000 * offset);
-    //nd = new Date(teh);
-    nd = new Date();
+    nd = new Date(teh);
+    //nd = new Date();
     var h = nd.getHours();
     var Min = nd.getMinutes();
     
@@ -325,8 +325,8 @@ function GetCurrentTime() {
     
     //Min += 41;
     
-    //Min -= 30;
-    /*
+    Min -= 15;
+    
     if (Min > 59) {
         Min -= 59;
         h++;
@@ -344,7 +344,7 @@ function GetCurrentTime() {
     if (h < 0) {
         h = 24 + h;
     }
-     */
+     
     if (h < 10) {
         hour = "0" + h;
     } else {

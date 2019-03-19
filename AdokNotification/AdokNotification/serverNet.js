@@ -325,7 +325,7 @@ function GetCurrentTime() {
     
     //Min += 41;
     
-    Min -= 15;
+    Min -= 17;
     
     if (Min > 59) {
         Min -= 59;

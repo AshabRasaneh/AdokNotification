@@ -324,7 +324,9 @@ function GetCurrentTime() {
     var tm = "";
     
     //Min += 41;
-    Min -= 30;
+    
+    //Min -= 30;
+    /*
     if (Min > 59) {
         Min -= 59;
         h++;
@@ -342,13 +344,13 @@ function GetCurrentTime() {
     if (h < 0) {
         h = 24 + h;
     }
-    
+     */
     if (h < 10) {
         hour = "0" + h;
     } else {
         hour = "" + h;
     }
-    
+   
     if (Min < 10) {
         minute = "0" + Min;
     } else {
